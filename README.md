@@ -23,7 +23,6 @@ We currently run the **MoTeC C185** dash logger.
 This configuration matches the latest firmware as of **July 27, 2025**.
 We use the standard configuration and **do not** use Display Creator scripting.
 **Software Version**: 6.50.0.G3
-(Compatible with Ver. 1.5)
 
 <p align="center">
   <img src="media/C185.png" width="400"/>
