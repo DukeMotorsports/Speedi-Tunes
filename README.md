@@ -7,10 +7,13 @@ Repository for tracking and managing key electronic configurations for the Duke 
 
 ## 1. ECU Tunes
 
-We track ECU tunes at milestone points throughout development.
-We use the **MoTeC M150** ECU. Tunes are conventionally based on **MoTeC Tune 1.4**, though they also run reliably on **Tune 1.5**.
+We track ECU tunes at milestone points throughout development. We use the **MoTeC M150** ECU. 
+**Software Version**: 1.4.0.302
+(Compatible with Ver. 1.5)
 
-![MoTeC M150](media/M150.png)
+<p align="center">
+  <img src="media/M150.png" width="400"/>
+</p>
 
 ---
 
@@ -19,8 +22,12 @@ We use the **MoTeC M150** ECU. Tunes are conventionally based on **MoTeC Tune 1.
 We currently run the **MoTeC C185** dash logger.
 This configuration matches the latest firmware as of **July 27, 2025**.
 We use the standard configuration and **do not** use Display Creator scripting.
+**Software Version**: 6.50.0.G3
+(Compatible with Ver. 1.5)
 
-![MoTeC C185](media/C185.png)
+<p align="center">
+  <img src="media/C185.png" width="400"/>
+</p>
 
 ---
 
@@ -29,8 +36,7 @@ We use the standard configuration and **do not** use Display Creator scripting.
 The Power Distribution Module in use is the **MoTeC PDM30**.
 Current configuration matches our latest validated setup.
 
-![MoTeC PDM30](media/PDM30.png)
+<p align="center">
+  <img src="media/PDM30.png" width="400"/>
+</p>
 
----
-
-Let me know if you’d like this to include file structure descriptions, usage instructions, or change logs.
