@@ -8,7 +8,8 @@ Repository for tracking and managing key electronic configurations for the Duke 
 ## 1. ECU Tunes
 
 We track ECU tunes at milestone points throughout development. We use the **MoTeC M150** ECU.  
-**Software Version**: 1.4.0.302  
+**Tune Software Version**: 1.4.0.302  
+**Build Software Version**: 1.4.0.239  
 (Compatible with Ver. 1.5)
 
 <p align="center">
