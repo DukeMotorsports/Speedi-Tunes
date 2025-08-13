@@ -1,0 +1,724 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC LTC" VersionMajor="1" VersionMinor="9" BuildNumber="2">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0046"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version (1.09.0001)</h4><ul><li><div class="device_help">Add 'Vs' channel to receive from LTCN</div></li></ul><h4 class="device_help">01.09.0000</h4><ul><li><div class="device_help">Update to system 1.4.00.0016</div></li></ul><h4 class="device_help">01.08.0000</h4>
+            <ul class="device_help">
+              <li class="device_help">Changed system to 01.03.17.</li>
+              <li class="device_help">Delete 'Mode' parameter.</li>
+            </ul>
+          <h4 class="device_help">01.06.0007</h4>
+            <ul class="device_help">
+              <li class="device_help">Fix 'Diagnostic' reporting <em class="device_enum">Disabled</em> when 'Sensor State' is <em class="device_enum">Pump Start</em> with LTCN
+                firmwares newer than 1.10</li>
+            </ul>
+            <h4 class="device_help">1.6.0</h4>
+            <ul class="device_help">
+              <li class="device_help">Use MoTeC Types 1.4</li>
+            </ul>
+            <h4 class="device_help">1.5.0</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="LTC Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="OK" ContainerOrder="12">
+    <Help>
+<![CDATA[<p class="device_help">The LTC or PLM is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus Timeout" ContainerOrder="10" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No LTC or PLM CAN messages have been received for longer than 1 second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Heater Open Fault" ContainerOrder="5" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The LTC has detected that the sensor heater is open circuit.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Heater VBAT Short Fault" ContainerOrder="6" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The LTC has detected that the sensor heater is shorted to VBAT.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Heater GND Short Fault" ContainerOrder="7" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The LTC has detected that the sensor heater is shorted to ground.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Shorted Fault" ContainerOrder="8" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The LTC has detected that the sensor is shorted.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Heating Fault" ContainerOrder="9" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The LTC has detected a sensor heating fault.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal Fault" ContainerOrder="4" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The LTC or PLM is reporting an unknown sensor state.</p>
+            <p class="device_help">Please contact MoTeC support.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid CAN Bus" ContainerOrder="3" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The specified can bus is not present on the ECU.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="ADC Reference Fault" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The PLM has detected an ADC reference fault.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Fault" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The PLM has detected a sensor fault.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Control Fault" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The LTC has detected a sensor control fault.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Cold" ContainerOrder="13" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The PLM has detected that the sensor is cold.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Heating" ContainerOrder="14" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The lambda sensor is heating.</p>
+            <p class="device_help">This state is maintained until the sensor is warm enough for normal operation.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="11">
+    <Help>
+<![CDATA[<p class="device_help">LTC and PLM message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Disabled" ContainerOrder="15">
+    <Help>
+<![CDATA[<P class="device_help">The lambda sensor has been disabled.</P>
+            <P class="device_help">The lambda sensor can be disabled when the engine is not running to reduce power consumption.</P>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="LTC Sensor State Enumeration" Storage="enum" Default="Unknown">
+   <Enum Name="Start" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that the sensor is starting.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Diagnostics" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that sensor diagnostics are in progress.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Pre Calibration" ContainerOrder="3" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that it is in the pre calibration state.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Calibration" ContainerOrder="4" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that a sensor calibration is in progress.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Post Calibration" ContainerOrder="5" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that it is in the post calibration state.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Paused" ContainerOrder="6" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that it is paused to save power.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Heating" ContainerOrder="7" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that the sensor is heating.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Running" ContainerOrder="8">
+    <Help>
+<![CDATA[<p class="device_help">The lambda sensor is running.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Cooling" ContainerOrder="9" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC is reporting that the sensor is cooling.</p>
+            <p class="device_help">Refer to the LTC documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Pump Start" ContainerOrder="10" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC or PLM is reporting that the sensor cell pump current is starting.</p>
+            <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Pump Off" ContainerOrder="11" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The LTC or PLM is reporting that the sensor cell pump current is off.</p>
+            <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Control Wait" ContainerOrder="12" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The PLM is reporting that the sensor is in the control wait state.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Pump Wait" ContainerOrder="13" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The PLM is waiting for the sensor to stabilise.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Warm Up" ContainerOrder="14" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The PLM is reporting that the sensor is warming up.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="No Heater" ContainerOrder="15" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The PLM is reporting that the sensor heater can not be detected.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stop" ContainerOrder="16" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The PLM is reporting that the sensor is stopped.</p>
+            <p class="device_help">Refer to the PLM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The current sensor state is unknown.</p>
+            <p class="device_help">This may be due to a CAN bus timeout.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="LTC Index Enumeration" Storage="enum" Default="LTC1 0x460">
+   <Enum Name="LTC1 0x460" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC2 0x461" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC3 0x462" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC4 0x463" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC5 0x464" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC6 0x465" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC7 0x466" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC8 0x467" ContainerOrder="7">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC9 0x468" ContainerOrder="8">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC10 0x469" ContainerOrder="9">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC11 0x46A" ContainerOrder="10">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC12 0x46B" ContainerOrder="11">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC13 0x46C" ContainerOrder="12">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC14 0x46D" ContainerOrder="13">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC15 0x46E" ContainerOrder="14">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC16 0x46F" ContainerOrder="15">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC17 0x470" ContainerOrder="16">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC18 0x471" ContainerOrder="17">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC19 0x472" ContainerOrder="18">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC20 0x473" ContainerOrder="19">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC21 0x474" ContainerOrder="20">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC22 0x475" ContainerOrder="21">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC23 0x476" ContainerOrder="22">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC24 0x477" ContainerOrder="23">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC25 0x478" ContainerOrder="24">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC26 0x479" ContainerOrder="25">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC27 0x47A" ContainerOrder="26">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC28 0x47B" ContainerOrder="27">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC29 0x47C" ContainerOrder="28">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC30 0x47D" ContainerOrder="29">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC31 0x47E" ContainerOrder="30">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTC32 0x47F" ContainerOrder="31">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="LTC Type Enumeration" Storage="enum" Default="LTC">
+   <Enum Name="LTC" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="PLM" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="LTCN" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.LTC">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class receives and decodes CAN data from a MoTeC LTC, LTCN or PLM.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">LTC Index Input Object</h3>
+            <p class="device_help">Controls the address of the messages to be received.</p>
+            <h3 class="device_help">LTC Type Input Object</h3>
+            <p class="device_help">Controls the type of messages to be decoded.</p>
+            <h3 class="device_help">CAN Bus Input Object</h3>
+            <p class="device_help">Controls the CAN bus used to receive messages.</p>
+            <h2 class="device_help">External Dependencies</h2>
+            <p class="device_help">A 'CAN Bus' class is required to initialise the CAN bus.</p>
+            <p class="device_help">The 'LTC.Mode()' library function can be used to enable or disable an LTC to save vehicle battery
+              power.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Diagnostic Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Diagnostic Diagnostic Log Rate"/>
+         <Property Name="Diagnostic Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Diagnostic Diagnostic Logging"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Script" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Value Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="DiagnosticLogRate" DisplayName="Value Diagnostic Log Rate"/>
+         <Property Name="Value Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="DiagnosticLog" DisplayName="Value Diagnostic Logging"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.LTC Index" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.LTC Type" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Temperature">
+        <Props Qty="K">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="-4.00000000000000000e+001" Max="1.25000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal temperature as reported by the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Heater Duty">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Heater duty cycle as received from the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ipn">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="mA" DPS="3" Min="-5.00000000000000010e-003" Max="5.00000000000000010e-003"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The normalised pump cell current as reported by the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor State">
+        <Props Type="::This.LTC Sensor State Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The current sensor state as reported by the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Battery Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="5.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Vehicle battery voltage as received from the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ip">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="mA" DPS="3" Min="-5.00000000000000010e-003" Max="5.00000000000000010e-003"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The pump cell current as reported by the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ri">
+        <Props Qty="ohm">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="5.00000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The sensor cell impedance as reported by the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S" Type="::This.LTC Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the LTC or PLM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fault Bits">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max="255"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal diagnostic information about the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props Qty="LA" Validation="MinMax" ValMin="6.50000000000000020e-001" ValMax="2.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3" Min="6.99999999999999960e-001" Max="1.10000000000000010e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.LTC Index">
+        <Props Type="::This.LTC Index Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Selects the lambda measurement device to be used for this measurement.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used to receive LTC or PLM messages.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.LTC Type">
+        <Props Type="::This.LTC Type Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Sets the type of lambda measurement device.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Serial Number">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The serial number of the LTC or PLM.</p>
+                  <p class="device_help"><em class="device_help">The MoTeC PLM and MoTeC LTCs running a firmware version before 1.04D do not report a serial
+                    number.</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Script">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.50MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKChEaWFnbm9zdGljIGVxIERpYWdub3N0aWMuSW52YWxpZCBDQU4gQnVzKSBvciAoRGlhZ25vc3RpYyBlcSBEaWFnbm9zdGljLk5vdCBpbiBVc2UpKQp7CgkvKiBGaXJtd2FyZSByZXN0YXJ0IHJlcXVpcmVkIHRvIGZpeCB0aGlzICovCn0KZWxzZSBpZiAoTFRDLlRpbWVvdXQoTFRDIEluZGV4LkFzSW50ZWdlcigpKSkKewoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ0FOIEJ1cyBUaW1lb3V0OwoJU2Vuc29yIFN0YXRlID0gU2Vuc29yIFN0YXRlLlVua25vd247CglWYWx1ZSA9IEludGVybmFsIFRlbXBlcmF0dXJlID0gQmF0dGVyeSBWb2x0YWdlID0gSGVhdGVyIER1dHkgPSBJcG4gPSBJcCA9IFJpID0gVnMgPSBDYWxjdWxhdGUuTkFOKCk7Cn0KZWxzZQp7Cglsb2NhbCBsYSA9IExUQy5MYW1iZGEoTFRDIEluZGV4LkFzSW50ZWdlcigpKTsKCVZhbHVlID0gKGxhID4gMCkgPyBsYSA6IENhbGN1bGF0ZS5OQU4oKTsKCUlwbiA9IExUQy5JcG4oTFRDIEluZGV4LkFzSW50ZWdlcigpKTsKCUludGVybmFsIFRlbXBlcmF0dXJlID0gTFRDLkludGVybmFsVGVtcChMVEMgSW5kZXguQXNJbnRlZ2VyKCkpOwoJRmF1bHQgQml0cyA9IExUQy5GYXVsdEJpdHMoTFRDIEluZGV4LkFzSW50ZWdlcigpKTsKCUhlYXRlciBEdXR5ID0gTFRDLkhlYXRlckR1dHkoTFRDIEluZGV4LkFzSW50ZWdlcigpKTsKCUJhdHRlcnkgVm9sdGFnZSA9IExUQy5CYXR0ZXJ5Vm9sdGFnZShMVEMgSW5kZXguQXNJbnRlZ2VyKCkpOwoJSXAgPSBMVEMuSXAoTFRDIEluZGV4LkFzSW50ZWdlcigpKTsKCVJpID0gTFRDLlJpKExUQyBJbmRleC5Bc0ludGVnZXIoKSk7CglGaXJtd2FyZSBWZXJzaW9uID0gTFRDLkZpcm13YXJlVmVyc2lvbihMVEMgSW5kZXguQXNJbnRlZ2VyKCkpOwoJVnMgPSBMVEMuVlMoTFRDIEluZGV4LkFzSW50ZWdlcigpKTsKCQoJd2hlbiAoTFRDIFR5cGUpCgl7CgkJaXMgKExUQyBvciBMVENOKQoJCXsKCQkJbG9jYWwgb2sgPSBTZW5zb3IgU3RhdGUuVmFsaWRhdGUoTFRDLlNlbnNvclN0YXRlKExUQyBJbmRleC5Bc0ludGVnZXIoKSkgKyAxKTsKCQkJU2Vuc29yIFN0YXRlLlNldChMVEMuU2Vuc29yU3RhdGUoTFRDIEluZGV4LkFzSW50ZWdlcigpKSArIDEpOwoJCQlpZiAob2sgZXEgZmFsc2UpCgkJCXsKCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludGVybmFsIEZhdWx0OwoJCQl9CQkJCgkJCWVsc2UgaWYgKChGYXVsdCBCaXRzICYgMHgwNCkgbmVxIDB4MCkKCQkJewoJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSGVhdGVyIE9wZW4gRmF1bHQ7CgkJCX0KCQkJZWxzZSBpZiAoKEZhdWx0IEJpdHMgJiAweDAxKSBuZXEgMHgwKQoJCQl7CgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5IZWF0ZXIgR05EIFNob3J0IEZhdWx0OwoJCQl9CgkJCWVsc2UgaWYgKChGYXVsdCBCaXRzICYgMHgwMikgbmVxIDB4MCkKCQkJewoJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSGVhdGVyIFZCQVQgU2hvcnQgRmF1bHQ7CgkJCX0KCQkJZWxzZSBpZiAoKEZhdWx0IEJpdHMgJiAweDEwKSBuZXEgMHgwKQoJCQl7CgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5TZW5zb3IgU2hvcnRlZCBGYXVsdDsKCQkJfQoJCQllbHNlIGlmICgoRmF1bHQgQml0cyAmIDB4MDgpIG5lcSAweDApCgkJCXsKCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLlNlbnNvciBIZWF0aW5nIEZhdWx0OwoJCQl9CgkJCWVsc2UgaWYgKChGYXVsdCBCaXRzICYgMHgyMCkgbmVxIDB4MCkgCgkJCXsKCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludGVybmFsIEZhdWx0OwoJCQl9CgkJCWVsc2UgaWYgKChGYXVsdCBCaXRzICYgMHg0MCkgbmVxIDB4MCkKCQkJewoJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuU2Vuc29yIENvbnRyb2wgRmF1bHQ7CgkJCX0KCQkJZWxzZSBpZiAoU2Vuc29yIFN0YXRlIGVxIFNlbnNvciBTdGF0ZS5SdW5uaW5nKQoJCQl7CgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKCQkJfQoJCQllbHNlIGlmIChTZW5zb3IgU3RhdGUgZXEgU2Vuc29yIFN0YXRlLkhlYXRpbmcgb3IgU2Vuc29yIFN0YXRlIGVxIFNlbnNvciBTdGF0ZS5QdW1wIFN0YXJ0KQoJCQl7CgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5TZW5zb3IgSGVhdGluZzsKCQkJfQoJCQllbHNlCgkJCXsKCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkRpc2FibGVkOwoJCQl9CgkJCVNlcmlhbCBOdW1iZXIgPSBMVEMuU2VyaWFsTnVtYmVyKExUQyBJbmRleC5Bc0ludGVnZXIoKSk7CgkJfQoJCWlzIChQTE0pCgkJewoJCQlsb2NhbCBzdGF0ZSA9IExUQy5TZW5zb3JTdGF0ZShMVEMgSW5kZXguQXNJbnRlZ2VyKCkpOwoJCQlsb2NhbCBvayA9IHRydWU7CgkJCWlmIChzdGF0ZSBlcSAwKQoJCQl7CgkJCQlTZW5zb3IgU3RhdGUgPSBTZW5zb3IgU3RhdGUuUnVubmluZzsKCQkJfQoJCQllbHNlIGlmIChzdGF0ZSBlcSA2KQoJCQl7CgkJCQlTZW5zb3IgU3RhdGUgPSBTZW5zb3IgU3RhdGUuUHVtcCBPZmY7CgkJCX0KCQkJZWxzZQoJCQl7CgkJCQlvayA9IFNlbnNvciBTdGF0ZS5WYWxpZGF0ZShzdGF0ZSArIDExKTsKCQkJCVNlbnNvciBTdGF0ZS5TZXQoc3RhdGUgKyAxMSk7CgkJCX0KCgkJCWlmIChvayBlcSBmYWxzZSkKCQkJewoJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSW50ZXJuYWwgRmF1bHQ7CgkJCX0JCQkKCQkJZWxzZSBpZiAoKEZhdWx0IEJpdHMgJiAweDA4KSBuZXEgMHgwKQoJCQl7CgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5TZW5zb3IgRmF1bHQ7CgkJCX0KCQkJZWxzZSBpZiAoKEZhdWx0IEJpdHMgJiAweDA0KSBuZXEgMHgwKQoJCQl7CgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5TZW5zb3IgQ29sZDsKCQkJfQoJCQllbHNlIGlmICgoRmF1bHQgQml0cyAmIDB4MjApIG5lcSAweDApCgkJCXsKCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLlNlbnNvciBIZWF0aW5nOwoJCQl9CgkJCWVsc2UgaWYgKChGYXVsdCBCaXRzICYgMHg0MCkgbmVxIDB4MCkKCQkJewoJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQURDIFJlZmVyZW5jZSBGYXVsdDsKCQkJfQoJCQllbHNlIGlmIChTZW5zb3IgU3RhdGUgZXEgU2Vuc29yIFN0YXRlLlJ1bm5pbmcpCgkJCXsKCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJCQl9CgkJCWVsc2UKCQkJewoJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuRGlzYWJsZWQ7CgkJCX0KCQl9Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKENBTiBCdXMgZXEgQ0FOIEJ1cy5Ob3QgaW4gVXNlKQp7CgkvKiBEaWFnbm9zdGljIGxlZnQgYXQgJ05vdCBpbiBVc2UnICovCn0KZWxzZQp7Cglsb2NhbCBvayA9IExUQy5Jbml0KExUQyBJbmRleC5Bc0ludGVnZXIoKSwgTFRDIFR5cGUuQXNJbnRlZ2VyKCksIENBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxKTsKCWlmIChub3Qgb2spCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSW52YWxpZCBDQU4gQnVzOwoJfQoJZWxzZQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkRpc2FibGVkOyAvKiB1bnRpbCB3ZSBnZXQgc29tZSBjYW4gZGF0YSBhbmQgd29yayBvdXQgdGhlIHN0YXRlICovCgl9Cn0KVmFsdWUgPSBJbnRlcm5hbCBUZW1wZXJhdHVyZSA9IEJhdHRlcnkgVm9sdGFnZSA9IEhlYXRlciBEdXR5ID0gSXBuID0gSXAgPSBSaSA9IFZzID0gQ2FsY3VsYXRlLk5BTigpOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Firmware Version">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="4"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The LTC firmware version.</p>
+                  <p class="device_help">The firmware letter is encoded as the third decimal place where 0=A, 1=B, etc. For example 1.042
+                    means 1.04C.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.LTC Index.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.LTC Type.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Vs">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3" Min="4.00000000000000020e-001" Max="5.00000000000000000e-001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The Lambda Sensors&nbsp;voltage used in the control&nbsp;calculation.&nbsp;Not used&nbsp;on the LTC Bosch 4.9.</p><p class="device_help">Received from the LTC or PLM.</p>
+                  <p class="device_help">Refer to the LTC or PLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="Diagnostic"/>
+        <Component Name="Internal Temperature"/>
+        <Component Name="Battery Voltage"/>
+        <Component Name="Serial Number"/>
+        <Component Name="Sensor State"/>
+        <Component Name="Heater Duty"/>
+        <Component Name="Fault Bits"/>
+        <Component Name="Ipn"/>
+        <Component Name="Ip"/>
+        <Component Name="Ri"/>
+        <Component Name="Vs"/>
+        <Component Name="Firmware Version"/>
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="LTC Index">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="LTC Type">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Script"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="LTC"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

@@ -1,0 +1,729 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Types" VersionMajor="1" VersionMinor="4" BuildNumber="3">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0034"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <DataTypes>
+  <Type Name="Mode Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The subsystem is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The subsystem is enabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Bus Enumeration" Storage="enum" Default="CAN Bus 1">
+   <Enum Name="CAN Bus 1" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 2" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 3" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Output Drive Enumeration" Storage="enum" Default="Low Side">
+   <Enum Name="Low Side" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The output will switch to battery negative.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="High Side" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The output will switch to battery positive.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CanBlock Get32 Slot Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 0 Offset 0" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 0 Offset 4" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 1 Offset 0" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 1 Offset 4" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 2 Offset 0" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 2 Offset 4" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 3 Offset 0" ContainerOrder="7">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 3 Offset 4" ContainerOrder="8">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 4 Offset 0" ContainerOrder="9">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 4 Offset 4" ContainerOrder="10">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 5 Offset 0" ContainerOrder="11">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 5 Offset 4" ContainerOrder="12">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 6 Offset 0" ContainerOrder="13">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 6 Offset 4" ContainerOrder="14">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 7 Offset 0" ContainerOrder="15">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 7 Offset 4" ContainerOrder="16">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 8 Offset 0" ContainerOrder="17">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 8 Offset 4" ContainerOrder="18">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 9 Offset 0" ContainerOrder="19">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 9 Offset 4" ContainerOrder="20">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 10 Offset 0" ContainerOrder="21">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 10 Offset 4" ContainerOrder="22">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 11 Offset 0" ContainerOrder="23">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 11 Offset 4" ContainerOrder="24">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 12 Offset 0" ContainerOrder="25">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 12 Offset 4" ContainerOrder="26">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 13 Offset 0" ContainerOrder="27">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 13 Offset 4" ContainerOrder="28">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 14 Offset 0" ContainerOrder="29">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 14 Offset 4" ContainerOrder="30">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 15 Offset 0" ContainerOrder="31">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 15 Offset 4" ContainerOrder="32">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Value Type Enumeration" Storage="enum" Default="Calibrated">
+   <Enum Name="Calibrated" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The received value is in calibrated units.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Raw" ContainerOrder="1">
+    <Help>
+<![CDATA[<P class="device_help">The received value is a raw voltage.</P>
+            <P class="device_help">Raw voltages must always be scaled into 1mV per bit resolution.</P>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CanBlock Get16 Slot Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="E8xx Switch 6" ContainerOrder="90">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Switch 5" ContainerOrder="89">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 10 Offset 4" ContainerOrder="43">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 10 Offset 2" ContainerOrder="42">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 10 Offset 0" ContainerOrder="41">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 9 Offset 6" ContainerOrder="40">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 9 Offset 4" ContainerOrder="39">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 9 Offset 2" ContainerOrder="38">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 9 Offset 0" ContainerOrder="37">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Switch 2" ContainerOrder="86">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 8 Offset 6" ContainerOrder="36">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 8 Offset 4" ContainerOrder="35">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 8 Offset 2" ContainerOrder="34">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 8 Offset 0" ContainerOrder="33">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 7 Offset 6" ContainerOrder="32">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Switch 1" ContainerOrder="85">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 7 Offset 4" ContainerOrder="31">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 7 Offset 2" ContainerOrder="30">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 7 Offset 0" ContainerOrder="29">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 6 Offset 6" ContainerOrder="28">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Frequency 4" ContainerOrder="84">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 6 Offset 4" ContainerOrder="27">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 6 Offset 2" ContainerOrder="26">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 6 Offset 0" ContainerOrder="25">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 5 Offset 6" ContainerOrder="24">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 5 Offset 4" ContainerOrder="23">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 5 Offset 2" ContainerOrder="22">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Frequency 3" ContainerOrder="83">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 5 Offset 0" ContainerOrder="21">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 4 Offset 6" ContainerOrder="20">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 4 Offset 4" ContainerOrder="19">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 4 Offset 2" ContainerOrder="18">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 4 Offset 0" ContainerOrder="17">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 3 Offset 6" ContainerOrder="16">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 3 Offset 4" ContainerOrder="15">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 3 Offset 2" ContainerOrder="14">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 3 Offset 0" ContainerOrder="13">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 2 Offset 6" ContainerOrder="12">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 2 Offset 4" ContainerOrder="11">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 2 Offset 2" ContainerOrder="10">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 2 Offset 0" ContainerOrder="9">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 1 Offset 6" ContainerOrder="8">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 1 Offset 4" ContainerOrder="7">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 1 Offset 2" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 1 Offset 0" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 0 Offset 6" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 0 Offset 4" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 0 Offset 2" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 0 Offset 0" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Switch 3" ContainerOrder="87">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 14 Offset 0" ContainerOrder="57">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV5" ContainerOrder="73">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 13 Offset 4" ContainerOrder="55">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV15 TC7" ContainerOrder="78">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV8" ContainerOrder="81">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV12 TC4" ContainerOrder="72">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV3" ContainerOrder="69">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 15 Offset 6" ContainerOrder="64">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV14 TC6" ContainerOrder="76">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV2" ContainerOrder="66">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 15 Offset 4" ContainerOrder="63">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 13 Offset 6" ContainerOrder="56">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV4" ContainerOrder="70">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV11 TC3" ContainerOrder="71">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Frequency 1" ContainerOrder="79">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV1" ContainerOrder="65">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV16 TC8" ContainerOrder="82">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 10 Offset 6" ContainerOrder="44">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV13 TC5" ContainerOrder="75">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV7" ContainerOrder="77">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Frequency 2" ContainerOrder="80">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV6" ContainerOrder="74">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV9 TC1" ContainerOrder="67">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 13 Offset 2" ContainerOrder="54">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 13 Offset 0" ContainerOrder="53">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 15 Offset 2" ContainerOrder="62">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 12 Offset 2" ContainerOrder="50">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Switch 4" ContainerOrder="88">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 12 Offset 4" ContainerOrder="51">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 12 Offset 6" ContainerOrder="52">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 11 Offset 0" ContainerOrder="45">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 11 Offset 2" ContainerOrder="46">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 14 Offset 2" ContainerOrder="58">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 14 Offset 4" ContainerOrder="59">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 14 Offset 6" ContainerOrder="60">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 15 Offset 0" ContainerOrder="61">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 11 Offset 4" ContainerOrder="47">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 11 Offset 6" ContainerOrder="48">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 12 Offset 0" ContainerOrder="49">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx AV10 TC2" ContainerOrder="68">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Output State Enumeration" Storage="enum" Default="Off">
+   <Help>
+<![CDATA[The requested state of a switched output.]]>
+   </Help>
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The output is currently off.</p>
+            <p class="device_help">The voltage on the output pin is determined by the external load.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The output is currently on.</p>
+            <p class="device_help">The pin is being actively driven to either battery positive or battery negative.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Engine State Enumeration" Storage="enum" Default="Startup">
+   <Enum Name="Startup" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The engine has not cranked or run since the ECU started.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stop" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The engine has cranked or run and is now stationary.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Run" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The engine is currently running.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Crank" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The engine is currently cranking.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+</MoTecM1BuildModuleSet>

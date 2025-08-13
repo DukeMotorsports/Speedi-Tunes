@@ -1,0 +1,3093 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC PDM" VersionMajor="1" VersionMinor="4" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0004"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current version</h4>
+          <ul class="device_help">
+          <li class="device_help">Help and release notes updated</li></ul><h4 class="device_help">01.03.0001</h4><ul class="device_help"><li class="device_help">System changed to 01.03.17.</li><li class="device_help">Mode parameter deleted.</li><li class="device_help">Tags added.</li></ul>
+            <h4 class="device_help">01.01.0007</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="PDM Output State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that the output is off.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that the output is on.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Over Current" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that too much current is being drawn from the output.</p>
+            <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Reserved" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">This value is reserved for future use.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fault" ContainerOrder="4" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that an output fault has occurred.</p>
+            <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="5">
+    <Help>
+<![CDATA[<p class="device_help">The current output state is unknown.</p>
+            <p class="device_help">This may be due to a CAN bus timeout.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="PDM Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Invalid CAN Configuration" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The specified CAN settings are invalid.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus Timeout" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No PDM data has been received for longer than one second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">PDM message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="PDM Global Error Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that there are no errors.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that there is an error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The current PDM error state is unknown.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="PDM Input State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that the input is off.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The PDM is reporting that the input is on.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The current input state is unknown.</p>
+            <p class="device_help">This may be due to a CAN bus timeout.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.PDM">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class receives and decodes CAN data from a MoTeC Power Distribution Module (PDM).</p>
+            <h2 class="device_help">Value Inputs</h2><h3 class="device_help">CAN Bus Input Object</h3>
+            <p class="device_help">Controls the CAN bus used to receive PDM messages. The same CAN Bus needs to be used to transmit 
+            messages to a PDM if implemented. 
+            If <em class="device_enum">Not in Use</em> PDM message reception is disabled.</p>
+            <h3 class="device_help">CAN ID Base Input Object</h3>
+            <p class="device_help">Controls the CAN ID base used to receive PDM messages.</p>
+            <h2 class="device_help">External Dependencies</h2>
+            <p class="device_help">A 'CAN Bus' class is required to initialise the CAN bus.</p>
+            <p class="device_help">Data can be transmitted to the PDM using the 'CanComms' library functions. Refer to the PDM
+              documentation for more information.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID Base" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to a MoTeC Power Distribution Module (PDM) device connected via
+                    CAN.</p>
+                  <p class="device_help">For data to be received from this device the following items must be calibrated:
+                    <ul class="device_help">
+                      <li class="device_help">Configure <em class="device_param">CAN Bus</em>.</li>
+                      <li class="device_help">Set <em class="device_param">CAN ID Base</em>. For a PDM transmitting on its default ID of 0x500 enter 1280.</li>
+                    </ul>
+                    Note that the same CAN Bus needs to be used to transmit messages to a PDM if implemented. Can message receive 
+                    is disabled when <em class="device_param">CAN Bus</em> is <em class="device_enum">Not in Use</em>.
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used to receive PDM messages. Can message receive 
+                    is disabled when <em class="device_param">CAN Bus</em> is <em class="device_enum">Not in Use</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.PDM Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Battery Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Vehicle battery voltage as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Global Error">
+        <Props Type="::This.PDM Global Error Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Global error flag as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal 9V5">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.20000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The voltage of the internal 9.5V power supply as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Temperature">
+        <Props Qty="K">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.20000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal temperature as reported by the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Reset Source">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reset source as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Total Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.50000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Total current as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 1">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 1 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 1.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 1.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 1 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 2">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 2 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 2.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 2.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 2 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 3">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 3 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 3.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 3.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 3 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 4">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 4 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 4.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 4.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 4 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 5">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 5 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 5.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 5.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 5 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 6">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 6 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 6.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 6.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 6 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 7">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 7 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 7.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 7.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 7 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 8">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 8 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 8.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 8.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 8 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 9">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 9 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 9.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 9.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 9 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 10">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 10 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 10.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 10.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 10 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 11">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 11 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 11.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 11.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 11 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 12">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 12 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 12.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 12.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 12 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 13">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 13 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 13.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 13.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 13 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 14">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 14 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 14.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 14.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 14 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 15">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 15 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 15.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 15.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 15 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 16">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 16 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 16.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 16.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 16 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 17">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 17 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 17.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 17.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 17 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 18">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 18 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 18.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 18.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 18 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 19">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 19 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 19.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 19.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 19 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 20">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 20 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 20.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 20.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 20 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 21">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 21 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 21.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 21.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 21 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 22">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 22 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 22.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 22.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 22 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Input 23">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of input 23 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 23.Value">
+        <Props Type="::This.PDM Input State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Input 23.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the input 23 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 1">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 1 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 1.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 1.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 1 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 1.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 1 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 1.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 1 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 2">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 2 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 2.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 2.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 2 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 2.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 2 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 2.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 2 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 3">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 3 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 3.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 3.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 3 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 3.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 3 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 3.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 3 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 4">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 4 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 4.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 4.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 4 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 4.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 4 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 4.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 4 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 5">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 5 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 5.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 5.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 5 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 5.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 5 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 5.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 5 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 6">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 6 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 6.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 6.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 6 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 6.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 6 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 6.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 6 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 7">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 7 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 7.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 7.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 7 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 7.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 7 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 7.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 7 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 8">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 8 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 8.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 8.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 8 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 8.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 8 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 8.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 8 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 9">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 9 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 9.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 9.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 9 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 9.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 9 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 9.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 9 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 10">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 10 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 10.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 10.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 10 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 10.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 10 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 10.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 10 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 11">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 11 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 11.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 11.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 11 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 11.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 11 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 11.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 11 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 12">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 12 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 12.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 12.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 12 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 12.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 12 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 12.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 12 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 13">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 13 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 13.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 13.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 13 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 13.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 13 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 13.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 13 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 14">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 14 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 14.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 14.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 14 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 14.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 14 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 14.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 14 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 15">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 15 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 15.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 15.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 15 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 15.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 15 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 15.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 15 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 16">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 16 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 16.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 16.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 16 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 16.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 16 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 16.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 16 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 17">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 17 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 17.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 17.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 17 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 17.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 17 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 17.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 17 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 18">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 18 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 18.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 18.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 18 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 18.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 18 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 18.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 18 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 19">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 19 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 19.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 19.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 19 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 19.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 19 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 19.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 19 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 20">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 20 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 20.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 20.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 20 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 20.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 20 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 20.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 20 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 21">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 21 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 21.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 21.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 21 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 21.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 21 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 21.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 21 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 22">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 22 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 22.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 22.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 22 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 22.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 22 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 22.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 22 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 23">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 23 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 23.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 23.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 23 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 23.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 23 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 23.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 23 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 24">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 24 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 24.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 24.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 24 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 24.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 24 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 24.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 24 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 25">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 25 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 25.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 25.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 25 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 25.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 25 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 25.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 25 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 26">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 26 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 26.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 26.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 26 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 26.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 26 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 26.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 26 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 27">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 27 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 27.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 27.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 27 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 27.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 27 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 27.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 27 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 28">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 28 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 28.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 28.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 28 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 28.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 28 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 28.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 28 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 29">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 29 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 29.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 29.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 29 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 29.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 29 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 29.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 29 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 30">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 30 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 30.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 30.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 30 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 30.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 30 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 30.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 30 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 31">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 31 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 31.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 31.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 31 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 31.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 31 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 31.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 31 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Output 32">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of output 32 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 32.Value">
+        <Props Type="::This.PDM Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 32.Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="4.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of current being drawn from output 32 as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 32.Load">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current load on output 32 as received from the PDM.</p>
+                  <p class="device_help">Refer to the PDM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 32.Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current voltage at the output 32 pin as received from the PDM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKERpYWdub3N0aWMgZXEgRGlhZ25vc3RpYy5JbnZhbGlkIENBTiBDb25maWd1cmF0aW9uIG9yCglEaWFnbm9zdGljIGVxIERpYWdub3N0aWMuTm90IGluIFVzZSkKewoJLyoKCSAqIERvIG5vdGhpbmcKCSAqLwp9CmVsc2UgaWYgKFBETS5UaW1lb3V0KCkpCnsKCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkNBTiBCdXMgVGltZW91dDsKCUJhdHRlcnkgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCUdsb2JhbCBFcnJvciA9IEdsb2JhbCBFcnJvci5Vbmtub3duOwoJSW50ZXJuYWwgOVY1ID0gQ2FsY3VsYXRlLk5BTigpOwoJUmVzZXQgU291cmNlID0gQ2FsY3VsYXRlLk5BTigpOwoJSW50ZXJuYWwgVGVtcGVyYXR1cmUgPSBDYWxjdWxhdGUuTkFOKCk7CglUb3RhbCBDdXJyZW50ID0gQ2FsY3VsYXRlLk5BTigpOwoJCglleHBhbmQgKG4gPSAxIHRvIDIzKQoJewoJCUlucHV0ICQobikgPSBJbnB1dCAkKG4pLlVua25vd247CgkJSW5wdXQgJChuKS5Wb2x0YWdlID0gQ2FsY3VsYXRlLk5BTigpOwoJfQoJZXhwYW5kIChuID0gMSB0byAzMikKCXsKCQlPdXRwdXQgJChuKSA9IE91dHB1dCAkKG4pLlVua25vd247CgkJT3V0cHV0ICQobikuQ3VycmVudCA9IENhbGN1bGF0ZS5OQU4oKTsKCQlPdXRwdXQgJChuKS5Mb2FkID0gQ2FsY3VsYXRlLk5BTigpOwoJCU91dHB1dCAkKG4pLlZvbHRhZ2UgPSBDYWxjdWxhdGUuTkFOKCk7Cgl9Cn0KZWxzZQp7CglCYXR0ZXJ5IFZvbHRhZ2UgPSBQRE0uQmF0dGVyeVZvbHRhZ2UoKTsKCUdsb2JhbCBFcnJvciA9IFBETS5HbG9iYWxFcnJvcigpID8gR2xvYmFsIEVycm9yLk9uIDogR2xvYmFsIEVycm9yLk9mZjsKCUludGVybmFsIDlWNSA9IFBETS5JbnRlcm5hbDlWNSgpOwoJUmVzZXQgU291cmNlID0gUERNLlJlc2V0U291cmNlKCk7CglJbnRlcm5hbCBUZW1wZXJhdHVyZSA9IFBETS5JbnRlcm5hbFRlbXAoKTsKCVRvdGFsIEN1cnJlbnQgPSBQRE0uVG90YWxDdXJyZW50KCk7CgkKCWV4cGFuZCAobiA9IDEgdG8gMjMpCgl7CgkJSW5wdXQgJChuKSA9IFBETS5JbnB1dFN0YXRlKCQobikgLSAxKSA/IElucHV0ICQobikuT24gOiBJbnB1dCAkKG4pLk9mZjsKCQlJbnB1dCAkKG4pLlZvbHRhZ2UgPSBQRE0uSW5wdXRWb2x0YWdlKCQobikgLSAxKTsKCX0KCWV4cGFuZCAobiA9IDEgdG8gMzIpCgl7CgkJT3V0cHV0ICQobikuU2V0KENvbnZlcnQuVG9JbnRlZ2VyKFBETS5PdXRwdXRTdGF0dXMoJChuKSAtIDEpKSk7CgkJT3V0cHV0ICQobikuQ3VycmVudCA9IFBETS5PdXRwdXRDdXJyZW50KCQobikgLSAxKTsKCQlPdXRwdXQgJChuKS5Mb2FkID0gUERNLk91dHB1dExvYWQoJChuKSAtIDEpOwoJCU91dHB1dCAkKG4pLlZvbHRhZ2UgPSBQRE0uT3V0cHV0Vm9sdGFnZSgkKG4pIC0gMSk7Cgl9CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[QmF0dGVyeSBWb2x0YWdlID0gQ2FsY3VsYXRlLk5BTigpOwpHbG9iYWwgRXJyb3IgPSBHbG9iYWwgRXJyb3IuVW5rbm93bjsKUmVzZXQgU291cmNlID0gQ2FsY3VsYXRlLk5BTigpOwpJbnRlcm5hbCA5VjUgPSBDYWxjdWxhdGUuTkFOKCk7CkludGVybmFsIFRlbXBlcmF0dXJlID0gQ2FsY3VsYXRlLk5BTigpOwpUb3RhbCBDdXJyZW50ID0gQ2FsY3VsYXRlLk5BTigpOwoKZXhwYW5kIChuID0gMSB0byAyMykKewoJSW5wdXQgJChuKSA9IElucHV0ICQobikuVW5rbm93bjsKCUlucHV0ICQobikuVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKfQpleHBhbmQgKG4gPSAxIHRvIDMyKQp7CglPdXRwdXQgJChuKSA9IE91dHB1dCAkKG4pLlVua25vd247CglPdXRwdXQgJChuKS5DdXJyZW50ID0gQ2FsY3VsYXRlLk5BTigpOwoJT3V0cHV0ICQobikuTG9hZCA9IENhbGN1bGF0ZS5OQU4oKTsKCU91dHB1dCAkKG4pLlZvbHRhZ2UgPSBDYWxjdWxhdGUuTkFOKCk7Cn0KCmlmIChDQU4gQnVzIG5lcSBDQU4gQnVzLk5vdCBpbiBVc2UpCnsKCWxvY2FsIG9rID0gUERNLkluaXQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEsIENBTiBJRCBCYXNlKTsKCWlmIChub3Qgb2spCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSW52YWxpZCBDQU4gQ29uZmlndXJhdGlvbjsKCX0KCWVsc2UKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gQnVzIFRpbWVvdXQ7Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID Base">
+        <Props Type="u32" Validation="MinMax" ValMin="8" ValMax="2040" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Format="Hex"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN ID base used to receive PDM messages.</p>
+                  <P class="device_help">This value must be a multiple of 8.</P>
+                  <P class="device_help">For a PDM transmitting on its default ID of 0x500 enter 1280.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN ID Base.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN ID Base">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Diagnostic"/>
+        <Component Name="Battery Voltage"/>
+        <Component Name="Global Error"/>
+        <Component Name="Internal 9V5"/>
+        <Component Name="Internal Temperature"/>
+        <Component Name="Reset Source"/>
+        <Component Name="Total Current"/>
+        <Component Name="Input 1">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 2">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 3">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 4">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 5">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 6">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 7">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 8">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 9">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 10">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 11">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 12">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 13">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 14">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 15">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 16">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 17">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 18">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 19">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 20">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 21">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 22">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Input 23">
+         <Component Name="Value"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 1">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 2">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 3">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 4">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 5">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 6">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 7">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 8">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 9">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 10">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 11">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 12">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 13">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 14">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 15">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 16">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 17">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 18">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 19">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 20">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 21">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 22">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 23">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 24">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 25">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 26">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 27">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 28">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 29">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 30">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 31">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Output 32">
+         <Component Name="Value"/>
+         <Component Name="Current"/>
+         <Component Name="Load"/>
+         <Component Name="Voltage"/>
+        </Component>
+        <Component Name="Update"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="PDM"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

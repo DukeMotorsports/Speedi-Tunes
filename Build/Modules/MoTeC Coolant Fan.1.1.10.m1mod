@@ -1,0 +1,652 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Coolant Fan" VersionMajor="1" VersionMinor="1" BuildNumber="10">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0034"/>
+ <BuildHelp>
+<![CDATA[<H4 class="device_help">Current Version</H4>
+            <UL class="device_help">
+              <LI class="device_help">Add Peak Hold Injector output support.</LI>
+              <LI class="device_help">Add Power Save Delay support.</LI>
+              <LI class="device_help">Duty cycle settings now only used when Frequency &gt; 0.</LI>
+            </UL>
+            <H4 class="device_help">1.1.0005</H4>
+            <UL class="device_help">
+              <LI class="device_help">Initial release.</LI>
+            </UL>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="3"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Coolant Fan Mode Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Fan operation is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Fan operation will be controlled according to coolant temperature, air conditioner clutch, and vehicle
+              speed settings and values.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Test" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">Fan operation will be controlled according to test settings and values.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Coolant Fan"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Coolant Fan.Coolant Fan">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements coolant temperature control by means of a pulse width modulated fan output.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Coolant Temperature</h3>
+            <p class="device_help">Connect to the coolant temperature channel.</p>
+            <h3 class="device_help">Vehicle Speed</h3>
+            <p class="device_help">Connect to the vehicle speed channel.</p>
+            <h3 class="device_help">Air Conditioner Clutch State</h3>
+            <p class="device_help">Connect to the air conditioner clutch state channel. If the project has no air conditioner system,
+              make this input a constant set to Off.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Voltage Event</h3>
+            <p class="device_help">Should be equal to or higher than the Event rate. Higher Voltage Event rates allow for higher logging
+              rates.</p>
+            <h3 class="device_help">Event</h3>
+            <p class="device_help">Typically 10Hz or 50Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Voltage.Update" TargetRef="SelectedTrigger" DisplayName="Voltage Event"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Vehicle Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Air Conditioner Clutch State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Pin.Peak Current" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Pin.Hold Current" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Power Save Delay" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">This system controls coolant temperature by means of a pulse width modulated fan output.</p>
+                  <p class="device_help">For this system to operate the following requirements must be met:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Output Resource</em> must be allocated.</li>
+                      <li class="device_help"><em class="device_param">Mode</em> must be <em class="device_enum">Enabled</em>.</li>
+                      <li class="device_help"><em class="device_param">Frequency</em> must be non-zero for pulse width modulated control, or zero for switched
+                        control.</li>
+                      <li class="device_help"><em class="device_chan">Duty Cycle</em> must be non-zero.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help"><em class="device_chan">Duty Cycle</em> is derived from the <em class="device_chan">Duty Cycle Coolant Temperature</em> and <em class="device_chan">Duty Cycle Air
+                    Conditioner</em> tables:
+                    <ul class="device_help">
+                      <li class="device_help">Whichever value is higher is used for <em class="device_chan">Duty Cycle</em>.</li>
+                      <li class="device_help"><em class="device_chan">Duty Cycle Air Conditioner</em> is invalid unless <em class="device_ref">Air Conditioner Clutch State</em> is
+                        <em class="device_enum">On</em> and <em class="device_param">Enable Air Conditioner Mode</em> is <em class="device_enum">Enabled</em>.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">Fan operation is enabled when:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_ref">Vehicle Speed</em> is less than <em class="device_param">Enable Vehicle Speed Threshold</em> - <em class="device_param">Enable Vehicle
+                        Speed Hysteresis</em>.</li>
+                      <li class="device_help"><em class="device_ref">Coolant Temperature</em> is greater than <em class="device_param">Enable Coolant Temperature Threshold</em>
+                        <p class="device_help">OR</p>
+                      </li>
+                      <li class="device_help"><em class="device_param">Enable Air Conditioner Mode</em> is <em class="device_enum">Enabled</em> and <em class="device_ref">Air Conditioner Clutch State</em> is <em class="device_enum">
+                        On</em>.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">Fan operation is disabled if:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_ref">Vehicle Speed</em> is greater than <em class="device_param">Enable Vehicle Speed Threshold</em>.</li>
+                      <li class="device_help"><em class="device_ref">Coolant Temperature</em> is less than <em class="device_param">Enable Coolant Temperature Threshold</em> - <em class="device_param">
+                        Enable Coolant Temperature Hysteresis</em>.</li>
+                      <li class="device_help"><em class="device_param">Enable Air Conditioner Mode</em> is <em class="device_enum">Enabled</em> and <em class="device_ref">Air Conditioner Clutch State</em> is <em class="device_enum">
+                        Off</em>.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">Fan operation may be tested as follows:
+                    <ul class="device_help">
+                      <li class="device_help">Set <em class="device_param">Mode</em> to <em class="device_enum">Test</em>.</li>
+                      <li class="device_help">Set <em class="device_param">Duty Cycle Test</em> to a non-zero value for pulse width modulated control, or above
+                        50% for switched control.</li>
+                    </ul>
+                    <em class="device_param">Mode</em> should be reset to <em class="device_enum">Enabled</em> upon completion of tests.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode">
+        <Props Type="::This.Coolant Fan Mode Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Enables or disables fan control.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[<p class="device_help">Used in the <em class="device_chan">Enable Coolant Temperature</em> settings and <em class="device_chan">Duty Cycle Coolant Temperature</em>
+                    table.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Vehicle Speed">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Used in the <em class="device_chan">Enable Vehicle Speed</em> settings.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Air Conditioner Clutch State">
+        <Props Type="MoTeC Types.Output State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Reports whether the Air Conditioner Clutch is on or off.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Enable">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Result of all enable calculations. Fan will operate when <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable.Value">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Enable.Coolant Temperature">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Requests fan operation if <em class="device_ref">Coolant Temperature</em> is greater than <em class="device_param">Enable Coolant
+                    Temperature Threshold</em>.</p>
+                  <p class="device_help">Other conditions must also be met for fan operation. See group help for details.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable.Coolant Temperature.Value">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Enable.Coolant Temperature.Threshold">
+        <Props Qty="K" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+        <Comment>
+<![CDATA[<p class="device_help">Fan operation is requested if <em class="device_ref">Coolant Temperature</em> is greater than this value.</p>
+                  <p class="device_help">Other conditions must also be met for fan operation. See group help for details.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Enable.Coolant Temperature.Hysteresis">
+        <Props Qty="K" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Coolant Temperature</em> must drop below the threshold by more than this amount for <em class="device_chan">Enable
+                    Coolant Temperature</em> to be <em class="device_enum">Disabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Enable.Coolant Temperature.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaHlzdCA9IENhbGN1bGF0ZS5IeXN0ZXJlc2lzKENvb2xhbnQgVGVtcGVyYXR1cmUsIFRocmVzaG9sZCAtIEh5c3RlcmVzaXMsIFRocmVzaG9sZCwgMC4wKTsKVmFsdWUgPSBoeXN0IG9yIENhbGN1bGF0ZS5Jc05BTihDb29sYW50IFRlbXBlcmF0dXJlKQoJPyBWYWx1ZS5FbmFibGVkCgk6IFZhbHVlLkRpc2FibGVkOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Enable.Vehicle Speed">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Requests fan operation if <em class="device_ref">Vehicle Speed</em> is less than <em class="device_param">Enable Vehicle Speed Threshold</em>
+                    - <em class="device_param">Enable Vehicle Speed Hysteresis</em>.</p>
+                  <p class="device_help">Other conditions must also be met for fan operation. See group help for details.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable.Vehicle Speed.Value">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Enable.Vehicle Speed.Threshold">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Vehicle Speed</em> must be greater than this value for <em class="device_chan">Enable Vehicle Speed</em> to be <em class="device_enum">
+                    Disabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Enable.Vehicle Speed.Hysteresis">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Vehicle Speed</em> must drop below the threshold by more than this amount for <em class="device_chan">Enable Vehicle
+                    Speed</em> to be <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Enable.Vehicle Speed.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaHlzdCA9IENhbGN1bGF0ZS5IeXN0ZXJlc2lzKFZlaGljbGUgU3BlZWQsIFRocmVzaG9sZCAtIEh5c3RlcmVzaXMsIFRocmVzaG9sZCwgMC4wKTsKVmFsdWUgPSBoeXN0Cgk/IFZhbHVlLkRpc2FibGVkCgk6IFZhbHVlLkVuYWJsZWQ7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Enable.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Update:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcmVxID0KCVRoaXMuQWlyIENvbmRpdGlvbmVyIGVxIFRoaXMuQWlyIENvbmRpdGlvbmVyLkVuYWJsZWQgb3IKCVRoaXMuQ29vbGFudCBUZW1wZXJhdHVyZSBlcSBUaGlzLkNvb2xhbnQgVGVtcGVyYXR1cmUuRW5hYmxlZDsKbG9jYWwgcG93ZXIgPSBEZWxheS5GYWxsaW5nKEVuZ2luZSBTdGF0ZSBlcSBFbmdpbmUgU3RhdGUuUnVuLCBQb3dlciBTYXZlIERlbGF5KTsKCmxvY2FsIGVuID0KCXJlcSBhbmQKCVRoaXMuVmVoaWNsZSBTcGVlZCBlcSBUaGlzLlZlaGljbGUgU3BlZWQuRW5hYmxlZCBhbmQKCXBvd2VyOwoKVmFsdWUgPSBlbgoJPyBWYWx1ZS5FbmFibGVkCgk6IFZhbHVlLkRpc2FibGVkOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Duty Cycle">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">When <em class="device_param">Frequency</em> &gt; 0 and <B class="device_help">Enabled</B>, Duty Cycle is derived from the
+                  <em class="device_chan">Duty Cycle Coolant Temperature</em> and <em class="device_chan">Duty Cycle Air Conditioner</em>
+                  tables. Whichever value is higher is used. The output generates pulse width modulation as follows:
+                    <ul class="device_help">
+                      <li class="device_help">Duty Cycle &gt; 0: Output pulsing to Battery Negative</li>
+                      <li class="device_help">Duty Cycle = 0: Output off</li>
+                      <li class="device_help">Duty Cycle &lt; 0: Output pulsing to Battery Positive (OUT_HB outputs only)</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">When <em class="device_param">Frequency</em> = 0 Duty Cycle is determined from the enable only; the tables are not used:
+                    <ul class="device_help">
+                      <li class="device_help"><B class="device_help">Enabled</B>: Duty Cycle is 100%</li>
+                      <li class="device_help"><B class="device_help">Disabled</B>: Duty Cycle is 0%</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Duty Cycle.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Duty Cycle.Air Conditioner">
+        <Props NumAxes="2">
+         <Axis>
+          <X Source="Parent.Parent.Coolant Temperature" MaxSites="5"/>
+          <Y Source="Parent.Parent.Vehicle Speed" MaxSites="5"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Duty Cycle request related to air conditioner operation.</p>
+                  <p class="device_help">See <em class="device_chan">Duty Cycle</em> for details.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Duty Cycle.Air Conditioner.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Duty Cycle.Air Conditioner.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Duty Cycle.Air Conditioner.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Duty Cycle.Coolant Temperature">
+        <Props NumAxes="2">
+         <Axis>
+          <X Source="Parent.Parent.Coolant Temperature" MaxSites="5"/>
+          <Y Source="Parent.Parent.Vehicle Speed" MaxSites="5"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Duty Cycle request related to coolant temperature.</p>
+                  <p class="device_help">See <em class="device_chan">Duty Cycle</em> for details.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Duty Cycle.Coolant Temperature.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Duty Cycle.Coolant Temperature.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Duty Cycle.Coolant Temperature.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Duty Cycle.Test">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Duty Cycle request for test purposes.</p>
+                  <p class="device_help">See <em class="device_chan">Duty Cycle</em> for details.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Frequency">
+        <Props Qty="Hz" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="2.00000000000000000e+004"/>
+        <Comment>
+<![CDATA[<p class="device_help">Set to zero for switched output control.</p>
+                  <p class="device_help">Set to desired frequency for pulse width modulated control. Typically 100Hz.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Output">
+        <Comment>
+<![CDATA[<p class="device_help">Defines which output resource is used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Frequency">
+        <Props Target="Parent.Parent.Frequency"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Duty Cycle">
+        <Props Target="Parent.Parent.Duty Cycle"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[<p class="device_help">Reports the output pin voltage.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered">
+        <Props>
+         <Locale>
+          <Default Max="1.60000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute">
+        <Props>
+         <Locale>
+          <Default Max="1.60000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoTW9kZSkKewoJaXMgKERpc2FibGVkKQoJewoJCUR1dHkgQ3ljbGUgPSBPdXRwdXQuSXNBY3RpdmUoKQoJCQk/IDAuMAoJCQk6IENhbGN1bGF0ZS5OQU4oKTsKCX0KCWlzIChFbmFibGVkKQoJewoJCWlmIChFbmFibGUgZXEgRW5hYmxlLkVuYWJsZWQpCgkJewoJCQlpZiAoRnJlcXVlbmN5ID4gMC4wKQoJCQl7CgkJCQlsb2NhbCBhaXJvbiA9IEFpciBDb25kaXRpb25lciBDbHV0Y2ggU3RhdGUgZXEgQWlyIENvbmRpdGlvbmVyIENsdXRjaCBTdGF0ZS5PbjsKCQkJCWxvY2FsIGFpcmR1dHkgPSBhaXJvbiA/IER1dHkgQ3ljbGUuQWlyIENvbmRpdGlvbmVyIDogMC4wOwoJCQkJRHV0eSBDeWNsZSA9IENhbGN1bGF0ZS5NYXgoYWlyZHV0eSwgRHV0eSBDeWNsZS5Db29sYW50IFRlbXBlcmF0dXJlKTsKCQkJfQoJCQllbHNlCgkJCXsKCQkJCUR1dHkgQ3ljbGUgPSAxLjA7CgkJCX0KCQl9CgkJZWxzZQoJCXsKCQkJRHV0eSBDeWNsZSA9IDAuMDsKCQl9Cgl9CglpcyAoVGVzdCkKCXsKCQlpZiAoRnJlcXVlbmN5ID4gMC4wKQoJCXsKCQkJRHV0eSBDeWNsZSA9IER1dHkgQ3ljbGUuVGVzdDsKCQl9CgkJZWxzZQoJCXsKCQkJRHV0eSBDeWNsZSA9IDEuMDsKCQl9Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Enable.Air Conditioner">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Requests fan operation if <em class="device_param">Enable Air Conditioner Mode</em> is <em class="device_enum">Enabled</em> and <em class="device_ref">Air Conditioner
+                    Clutch State</em> is <em class="device_enum">On</em>.</p>
+                  <p class="device_help">Other conditions must also be met for fan operation. See group help for details.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable.Air Conditioner.Value">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Enable.Air Conditioner.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Includes <em class="device_ref">Air Conditioner Clutch State</em> in calculations if <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Enable.Air Conditioner.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgdmFsID0KCVRoaXMuTW9kZSBlcSBUaGlzLk1vZGUuRW5hYmxlZCBhbmQKCUFpciBDb25kaXRpb25lciBDbHV0Y2ggU3RhdGUgZXEgQWlyIENvbmRpdGlvbmVyIENsdXRjaCBTdGF0ZS5PbjsKClZhbHVlID0gdmFsCgk/IFZhbHVlLkVuYWJsZWQKCTogVmFsdWUuRGlzYWJsZWQ7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Update"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Drive">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Pin.Drive.Value">
+        <Props Value="SAT"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Peak Current">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Hold Current">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Pin">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information regarding the properties of the electrical output.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Release"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Pin.Hold Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Used in the <em class="device_param">Power Save Delay</em> calculation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power Save Delay.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power Save Delay">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Delay until the fan is disabled:
+		    <ul class="device_help">
+                      <li class="device_help">Set 0 to disable unless the engine is running.</li>
+                      <li class="device_help">Set to a non-zero value to allow the fan to run when the engine is stopped.</li>
+		    </ul>
+		  </p>
+		  <p class="device_help">The fan can operate for this long after <em class="device_ref">Engine State</em> is no longer <em class="device_enum">Run</em>.</p>
+		  <p class="device_help">Normally set to 0 but can be used to manage heat soak after the engine has stopped.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Mode"/>
+        <Component Name="Power Save Delay">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Coolant Temperature"/>
+        <Component Name="Vehicle Speed"/>
+        <Component Name="Air Conditioner Clutch State"/>
+        <Component Name="Engine State"/>
+        <Component Name="Enable">
+         <Component Name="Value"/>
+         <Component Name="Coolant Temperature">
+          <Component Name="Value"/>
+          <Component Name="Threshold"/>
+          <Component Name="Hysteresis"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Air Conditioner">
+          <Component Name="Value"/>
+          <Component Name="Mode"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Vehicle Speed">
+          <Component Name="Value"/>
+          <Component Name="Threshold"/>
+          <Component Name="Hysteresis"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Duty Cycle">
+         <Component Name="Value"/>
+         <Component Name="Air Conditioner">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Coolant Temperature">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Test"/>
+        </Component>
+        <Component Name="Frequency"/>
+        <Component Name="Output">
+         <Component Name="Frequency"/>
+         <Component Name="Duty Cycle"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Pin">
+         <Component Name="Diagnostic"/>
+         <Component Name="Drive">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Peak Current">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Hold Current">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Coolant Fan">
+     <Module Name="Coolant Fan"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

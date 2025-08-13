@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC GPS" VersionMajor="1" VersionMinor="7" BuildNumber="7">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0061"/>
+ <BuildHelp>
+<![CDATA[<H4 class="device_help">Current Version (01.07.0007)</H4>
+<UL>
+<LI>GPS Altitude channel resolution reduced&nbsp;to 1m to increase max altitude when received from dash.</LI>
+<LI>GPS Valid channel incorrect when received from dash bug fixed.</LI>
+<LI>System updated to version 1.4.0.61.</LI></UL>
+<H4 class="device_help">01.07.0006</H4>
+<UL>
+<LI>Help updated with dash screen shots.</LI></UL>
+<H4 class="device_help">01.07.0005</H4>
+<UL>
+<LI>System changed to 01.04.00 </LI>
+<LI class="device_help">Delete CAN Slots.</LI>
+<LI class="device_help">Read GPS information using generic CAN receive starting with a selectable Base ID.</LI>
+<LI class="device_help">Support added for GPS Beacons.</LI></UL>
+<H4 class="device_help">01.05.0010</H4>
+<UL class="device_help">
+<LI class="device_help">Don't use the word 'for' in enumerators to support newer versions of M1 Build.</LI></UL>
+<H4 class="device_help">01.05.0009</H4>
+<UL class="device_help">
+<LI class="device_help">GPS Date requires more than 16 bits to represent. Switch to a 32 bit CAN slot.</LI>
+<LI class="device_help">Allow more update rates.</LI></UL>
+<H4 class="device_help">01.05.0008</H4>
+<UL class="device_help">
+<LI class="device_help">Fix CAN Block receive of 32bit channels</LI>
+<LI class="device_help">Report NAN when not in use or timeout</LI></UL>
+<H4 class="device_help">01.05.0004</H4>
+<UL class="device_help">
+<LI class="device_help">Initial release.</LI></UL>]]>
+ </BuildHelp>
+ <DataTypes>
+  <Type Name="GPS Fix Quality Enumeration" Storage="enum" Default="Invalid">
+   <Enum Name="Invalid" ContainerOrder="1" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver cannot measure enough satellite signal for accurate location determination.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPS" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a standard GPS signal to determine its position.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Differential GPS" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a differential GPS base station to provide increased accuracy.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="PPS" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using the encrypted Precise Positioning System to determine its position.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="RTK" ContainerOrder="5">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a real time kinematic base station to provide increased accuracy.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Float RTK" ContainerOrder="6">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a real time kinematic base station to provide increased accuracy.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Estimated" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using dead reckoning to determine position.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Manual" ContainerOrder="8">
+    <Help>
+<![CDATA[<p class="device_help">The reported location has been manually entered into the GPS receiver.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Simulation" ContainerOrder="9">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is in simulation mode.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting an unknown fix quality value.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="GPS Valid Enumeration" Storage="enum" Default="Unknown">
+   <Enum Name="Valid" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting that position data is valid.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Warning" ContainerOrder="0" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting that position data may be invalid.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting an unknown data valid value.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="GPS Diagnostic" Storage="enum" Default="Not in Use">
+   <Enum Name="OK" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPGGA Timeout" ContainerOrder="5" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No GPGGA messages have been received for longer than the fault delay.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid Interface" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The selected interface does not exist or is incorrectly configured.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPRMC Timeout" ContainerOrder="6" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No GPRMC messages have been received for longer than the fault delay.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Timeout" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No GPS messages have been received for longer than the fault delay.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Wait For GPS Fix" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is operational but has not yet established a position fix.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">GPS message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="GPS Interface Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="RS232 Port" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is connected to the RS232 port.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 1 via STC" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is connected to an STC on CAN bus 1.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 2 via STC" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is connected to an STC on CAN bus 2.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 3 via STC" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is connected to an STC on CAN bus 3.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">GPS message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 1 Decode" ContainerOrder="5">
+    <Help>
+<![CDATA[<p class="device_help">Decoded GPS values are being received on CAN bus 1.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 2 Decode" ContainerOrder="6">
+    <Help>
+<![CDATA[<p class="device_help">Decoded GPS values are being received on CAN bus 2.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 3 Decode" ContainerOrder="7">
+    <Help>
+<![CDATA[<p class="device_help">Decoded GPS values are being received on CAN bus 3.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.GPS">
+     <BuildHelp>
+<![CDATA[<P class="device_help">This class receives and decodes data from a NMEA 0183 compliant GPS receiver.</P>
+<P class="device_help">The GPS receiver must be configured to transmit both GPGGA and GPRMC sentences.</P>
+<H2 class="device_help">Value Inputs</H2>
+<H3 class="device_help">Interface Input Object</H3>
+<P class="device_help">Controls which interface is used to receive GPS messages.</P>
+<H3 class="device_help">CAN ID Base Input Object</H3>
+<P class="device_help">Controls the CAN ID of the received messages.</P>
+<H3 class="device_help">Fault Delay Input Object</H3>
+<P class="device_help">Controls the fault delay.</P>
+<H2 class="device_help">External Dependencies</H2>
+<P class="device_help">If the RS232 interface is selected an 'RS232 Port' class is required to initialise the RS232 port.</P>
+<P class="device_help">If an STC interface is selected a 'CAN Bus' class is required to initialise the CAN bus.</P>
+<P class="device_help">If the interface is configured as a parameter an 'RS232 Port' class and one 'CAN Bus' class per CAN bus is required.</P>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fault.Delay" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Interface" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID Base" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">A GPS receiver can be connected as follows:</p><ul><li><div class="device_help">via the RS232 port of the ECU (set <strong>GPS Interface</strong> to <strong>RS232 Port</strong>).</div></li><li><div class="device_help">via an STC on a CAN bus (set <strong>GPS Interface</strong> to <strong>CAN Bus n via STC</strong>).</div></li><li><div class="device_help">via a MoTeC dash on a CAN Bus (set <strong>GPS Interface</strong> to <strong>CAN Bus n Decode</strong>).</div></li></ul>
+                  <p class="device_help">Data format must be NMEA 0183. The GPRMC and GPGGA messages are decoded. All other messages are
+                    ignored.</p>
+                  <p class="device_help">The serial port baud rate is set in the RS232 group.</p><p class="device_help">If <strong>CAN Bus n Decode</strong> is used, <strong>CAN ID Base</strong> must also be set. Refer to help on CAN ID Base for information on MoTeC dash settings.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.DGPS Update Time">
+        <Props Qty="s" ValMin="0.00000000000000000e+000" ValMax="0.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Differential GPS update time as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.DGPS Station ID">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Differential GPS station ID as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Altitude">
+        <Props Qty="m">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Altitude as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fix Quality">
+        <Props Type="::This.GPS Fix Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Fix quality as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.HDOP">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Horizontal dilution of precision as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Satellites">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Satellite count as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.WGS84 Height">
+        <Props Qty="m">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Height above the WGS84 geoid as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Magnetic Variation">
+        <Props Qty="rad">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">Magnetic variation as received from the GPS receiver.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Valid">
+        <Props Type="::This.GPS Valid Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.000000e+000" Max="0.000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Data valid value as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.GPS Diagnostic">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">Diagnostic information about the GPS receiver.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.FAA Mode">
+        <Props Type="::This.GPS Fix Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">A subset of the information reported in <em class="device_chan">Fix Quality</em>.</p>
+                  <p class="device_help">This value was added to the GPRMC sentence in NMEA 0183 v2.3.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Interface">
+        <Props Type="::This.GPS Interface Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Selects the interface used to receive GPS messages.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Script">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKEludGVyZmFjZS5Bc0ludGVnZXIoKSAtIDQsIENBTiBJRCBCYXNlLCAweDMsIHRydWUpOwoKaWYgKERpYWdub3N0aWMgZXEgRGlhZ25vc3RpYy5Ob3QgaW4gVXNlKQp7CgkvKiBGaXJtd2FyZSByZXN0YXJ0IHJlcXVpcmVkIHRvIGZpeCBpbnRlcmZhY2UgKi8KfQplbHNlIGlmIChJbnRlcmZhY2UgZXEgSW50ZXJmYWNlLkNBTiBCdXMgMSBEZWNvZGUgb3IKICAgIEludGVyZmFjZSBlcSBJbnRlcmZhY2UuQ0FOIEJ1cyAyIERlY29kZSBvcgogICAgSW50ZXJmYWNlIGVxIEludGVyZmFjZS5DQU4gQnVzIDMgRGVjb2RlKQp7CglpZiAoQ2FuQ29tbXMuUnhNZXNzYWdlKGgpKQoJewoJCWxvY2FsIGlkeCA9IENhbkNvbW1zLkdldElEKGgpICYgMHgzOwoJCWlmIChpZHggZXEgMCkKCQl7CgkJCUxhdGl0dWRlID0gQ2FuQ29tbXMuR2V0Rml4ZWQ3RFAoaCwgMCk7CgkJCUxvbmdpdHVkZSA9IENhbkNvbW1zLkdldEZpeGVkN0RQKGgsIDMyKTsKCQkJVGlja3MgPSBDYW5Db21tcy5HZXRUaWNrcyhoKTsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuT0s7CgkJfQoJCWVsc2UgaWYgKERpYWdub3N0aWMgZXEgRGlhZ25vc3RpYy5PSykKCQl7CgkJCWlmIChpZHggZXEgMSkKCQkJewoJCQkJbG9jYWwgPEludGVnZXI+IHRpbWVISE1NU1MgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDAsIDMyKTsJCQkJCQkJLy93aWxsIGdldCBib2d1cyB0aW1lIHZhbHVlcyBpZiBDQU4gdmFsdWUgaXMgb3V0c2lkZSAwIHRvIDIzNTk1OTk5OSByYW5nZQoJCQkJbG9jYWwgPEludGVnZXI+IG1pbGxpc2VjID0gQ2FsY3VsYXRlLk1pbigodGltZUhITU1TUyAvIDEwMDAwMDAwKSwgMjMpICogMzYwMDAwMDsJLy9taWxsaXNlY29uZHMgaW4gdGhlIGhvdXJzIGNvbXBvbmVudAoJCQkJbWlsbGlzZWMgKz0gQ2FsY3VsYXRlLk1pbigoKHRpbWVISE1NU1MgJSAxMDAwMDAwMCkgLyAxMDAwMDApLCA1OSkgKiA2MDAwMDsJCQkvL21pbGxpc2Vjb25kcyBpbiB0aGUgbWludXRlcyBjb21wb25lbnQKCQkJCW1pbGxpc2VjICs9IENhbGN1bGF0ZS5NaW4oKHRpbWVISE1NU1MgJSAxMDAwMDApLCA1OTk5OSk7CQkJCQkJCS8vbWlsbGlzZWMgaW4gdGhlIHNlY29uZHMgY29tcG9uZW50CgkJCQlUaW1lID0gbWlsbGlzZWMgKiAxLjBlLTM7CgkJCQlTcGVlZCA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYpIC8gMzYuMDsKCQkJCUFsdGl0dWRlID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCA0OCwgMTYpOwoJCQl9CgkJCWVsc2UgaWYgKGlkeCBlcSAyKQoJCQl7CgkJCQlEYXRlID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDAsIDI0KTsKCQkJCWxvY2FsIDxVbnNpZ25lZCBJbnRlZ2VyPiB2YWxpZFZhbHVlID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDI0LCA4KTsKCQkJCWlmICh2YWxpZFZhbHVlIGVxIDB4NDEpIC8vNjUKCQkJCXsKCQkJCQlWYWxpZCA9IFZhbGlkLlZhbGlkOwoJCQkJfQoJCQkJZWxzZSAvLzg2CgkJCQl7CgkJCQkJVmFsaWQgPSBWYWxpZC5Vbmtub3duOwoJCQkJfQkJCQkKCQkJCVRydWUgQ291cnNlID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCAzMiwgMTYpICogMS4wZS0xOwoJCQkJSERPUCA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCA0OCwgOCkgKiAxLjBlLTE7CgkJCQlTYXRlbGxpdGVzID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDU2LCA4KTsKCQkJfQoJCQllbHNlIC8qIGlkeCBlcSAzICovCgkJCXsKCQkJCU1hZ25ldGljIFZhcmlhdGlvbiA9IENhbkNvbW1zLkdldEludGVnZXIoaCwgMCwgMTYpICogMS4wZS0xOwoJCQkJREdQUyBTdGF0aW9uIElEID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDE2LCA4KTsKCQkJCURHUFMgVXBkYXRlIFRpbWUgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMjQsIDgpOwoJCQkJRkFBIE1vZGUuU2V0KENhbkNvbW1zLkdldEludGVnZXIoaCwgMzIsIDgpKTsKCQkJCUZpeCBRdWFsaXR5LlNldChDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDQwLCA4KSk7CgkJCQlXR1M4NCBIZWlnaHQgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDQ4LCAxNikgKiAxLjBlLTE7CgkJCX0KCQl9Cgl9CgllbHNlIGlmICgoU3lzdGVtLlRpY2tzU2luY2UoVGlja3MpICogU3lzdGVtLlRpY2tQZXJpb2QoKSkgPj0gRmF1bHQuRGVsYXkpCgl7CgkJVGltZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQlMYXRpdHVkZSA9IFplcm87CgkJTG9uZ2l0dWRlID0gWmVybzsKCQkKCQlGaXggUXVhbGl0eSA9IEZpeCBRdWFsaXR5LlVua25vd247CgkJU2F0ZWxsaXRlcyA9IDA7CgkJSERPUCA9IENhbGN1bGF0ZS5OQU4oKTsKCQlBbHRpdHVkZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQlXR1M4NCBIZWlnaHQgPSBDYWxjdWxhdGUuTkFOKCk7CgkJREdQUyBVcGRhdGUgVGltZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQlER1BTIFN0YXRpb24gSUQgPSAwOwoJCQoJCVZhbGlkID0gVmFsaWQuVW5rbm93bjsKCQlTcGVlZCA9IENhbGN1bGF0ZS5OQU4oKTsKCQlUcnVlIENvdXJzZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQkvKiBob2xkIGRhdGUgKi8KCQlNYWduZXRpYyBWYXJpYXRpb24gPSBDYWxjdWxhdGUuTkFOKCk7CgkJRkFBIE1vZGUgPSBGQUEgTW9kZS5Vbmtub3duOwoKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5UaW1lb3V0OwoJfQp9CmVsc2UgaWYgKEdQUy5Qcm9jZXNzKCkpCnsKCWxvY2FsIGdnYXRvID0gR1BTLlRpbWVvdXRHUEdHQShGYXVsdC5EZWxheSk7Cglsb2NhbCBybWN0byA9IEdQUy5UaW1lb3V0R1BSTUMoRmF1bHQuRGVsYXkpOwoKCWxvY2FsIGQgPSBHUFMgRGlhZ25vc3RpYy5PSzsKCglpZiAoZ2dhdG8pIAoJewoJCWQgPSBkLkdQR0dBIFRpbWVvdXQ7CgkJRml4IFF1YWxpdHkgPSBGaXggUXVhbGl0eS5Vbmtub3duOwoJCVNhdGVsbGl0ZXMgPSBER1BTIFN0YXRpb24gSUQgPSAwOwoJCUhET1AgPSBBbHRpdHVkZSA9IFdHUzg0IEhlaWdodCA9IERHUFMgVXBkYXRlIFRpbWUgPSBDYWxjdWxhdGUuTkFOKCk7Cgl9IAoJZWxzZSAKCXsKCQlGaXggUXVhbGl0eS5TZXQoR1BTLkZpeFF1YWxpdHkoKSk7CgkJU2F0ZWxsaXRlcyA9IEdQUy5OdW1TYXRlbGxpdGVzKCk7CgkJSERPUCA9IEdQUy5IRE9QKCk7CgkJQWx0aXR1ZGUgPSBHUFMuQWx0aXR1ZGUoKTsKCQlXR1M4NCBIZWlnaHQgPSBHUFMuV0dTODRIZWlnaHQoKTsKCQlER1BTIFVwZGF0ZSBUaW1lID0gR1BTLkRHUFNVcGRhdGVUaW1lKCk7CgkJREdQUyBTdGF0aW9uIElEID0gR1BTLkRHUFNTdGF0aW9uSWQoKTsKCX0KCglpZiAocm1jdG8pIAoJewoJCWQgPSBkLkdQUk1DIFRpbWVvdXQ7CgkJVmFsaWQgPSBWYWxpZC5Vbmtub3duOwoJCUZBQSBNb2RlID0gRkFBIE1vZGUuVW5rbm93bjsKCQlTcGVlZCA9IFRydWUgQ291cnNlID0gTWFnbmV0aWMgVmFyaWF0aW9uID0gQ2FsY3VsYXRlLk5BTigpOwoJCS8vIGhvbGQgY3VycmVudCBkYXRlIGlmIHRpbWVvdXQKCX0gCgllbHNlIAoJewoJCVZhbGlkID0gKEdQUy5WYWxpZCgpKSA/IFZhbGlkLlZhbGlkIDogVmFsaWQuV2FybmluZzsKCQlTcGVlZCA9IEdQUy5TcGVlZCgpOwoJCVRydWUgQ291cnNlID0gR1BTLlRydWVDb3Vyc2UoKTsKCQlEYXRlID0gR1BTLkRhdGUoKTsKCQlNYWduZXRpYyBWYXJpYXRpb24gPSBHUFMuTWFnbmV0aWNWYXJpYXRpb24oKTsKCQlGQUEgTW9kZS5TZXQoR1BTLk1vZGUoKSk7Cgl9CgoJaWYgKGdnYXRvIGFuZCBybWN0bykKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5UaW1lb3V0OwoJCVRpbWUgPSBDYWxjdWxhdGUuTkFOKCk7CgkJTGF0aXR1ZGUgPSBMb25naXR1ZGUgPSBaZXJvOwoJfQoJZWxzZQoJewoJCVRpbWUgPSBHUFMuVGltZSgpOwoJCUxhdGl0dWRlID0gR1BTLkxhdGl0dWRlKCk7CgkJTG9uZ2l0dWRlID0gR1BTLkxvbmdpdHVkZSgpOwoJCVRpY2tzID0gR1BTLlJ4VGlja3MoKTsKCgkJaWYgKChGaXggUXVhbGl0eSBlcSBGaXggUXVhbGl0eS5JbnZhbGlkKQoJCQlvciAoRml4IFF1YWxpdHkgZXEgRml4IFF1YWxpdHkuRXN0aW1hdGVkKQoJCQlvciAoVmFsaWQgZXEgVmFsaWQuV2FybmluZykKCQkJb3IgKEZBQSBNb2RlIGVxIEZBQSBNb2RlLkludmFsaWQpCgkJCW9yIChGQUEgTW9kZSBlcSBGQUEgTW9kZS5Fc3RpbWF0ZWQpCgkJKQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuV2FpdCBGb3IgR1BTIEZpeDsKCQl9CgkJZWxzZQoJCXsKCQkJRGlhZ25vc3RpYyA9IGQ7CgkJfQoJfQp9CmVsc2UKewoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSW52YWxpZCBJbnRlcmZhY2U7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoSW50ZXJmYWNlKQp7CglpcyAoTm90IGluIFVzZSkKCXsKCQkvLyBEaXNnbm9zdGljIGlzIGFscmVhZHkgTm90IGluIFVzZQoJfQoJaXMgKENBTiBCdXMgMSBEZWNvZGUgb3IgQ0FOIEJ1cyAyIERlY29kZSBvciBDQU4gQnVzIDMgRGVjb2RlKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLldhaXQgRm9yIEdQUyBGaXg7Cgl9CglpcyAoUlMyMzIgUG9ydCkKCXsKCQlpZiAoR1BTLkluaXRSUzIzMigpKQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuV2FpdCBGb3IgR1BTIEZpeDsKCQl9CgkJZWxzZQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSW52YWxpZCBJbnRlcmZhY2U7CgkJfQoJfQoJaXMgKENBTiBCdXMgMSB2aWEgU1RDIG9yIENBTiBCdXMgMiB2aWEgU1RDIG9yIENBTiBCdXMgMyB2aWEgU1RDKQoJewoJCWlmIChHUFMuSW5pdFNUQyhJbnRlcmZhY2UuQXNJbnRlZ2VyKCkgLSAxKSkKCQl7CgkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLldhaXQgRm9yIEdQUyBGaXg7CgkJfQoJCWVsc2UKCQl7CgkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludmFsaWQgSW50ZXJmYWNlOwoJCX0KCX0KfQovLyBMYXRpdHVkZSBhbmQgTG9uZ2l0dWRlIGFyZSBhbHJlYWR5IHplcm8KU3BlZWQgPSBUcnVlIENvdXJzZSA9IFRpbWUgPSBBbHRpdHVkZSA9IFdHUzg0IEhlaWdodCA9IE1hZ25ldGljIFZhcmlhdGlvbiA9IEhET1AgPSBER1BTIFVwZGF0ZSBUaW1lID0gQ2FsY3VsYXRlLk5BTigpOwpGaXggUXVhbGl0eSA9IEZpeCBRdWFsaXR5LlVua25vd247CkZBQSBNb2RlID0gRkFBIE1vZGUuVW5rbm93bjsKLy8gVmFsaWQgaXMgYWxyZWFkeSBVbmtub3du]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Longitude">
+        <Props Type="s32e7" Qty="rad">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7" Min="-1.80000000000000000e+002" Max="1.80000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Longitude as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Speed">
+        <Props Qty="m/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="km/h" DPS="3" Min="0.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">Speed as received from the GPS receiver.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Date">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">Date as received from the GPS receiver.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.True Course">
+        <Props Qty="rad">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">True course as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time">
+        <Props Qty="s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Format="HH:MM:SS:ss" DPS="3" Min="0.00000000000000000e+000" Max="8.64000000000000000e+004"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Time as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fault">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fault.Delay">
+        <Props Qty="s" Validation="MinMax" ValMin="1.00000000000000000e-003" ValMax="2.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="ms" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The amount of time since a valid message has been received before reporting a fault.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Latitude">
+        <Props Type="s32e7" Qty="rad">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7" Min="-9.00000000000000000e+001" Max="9.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Latitude as received from the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fault.Delay.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Interface.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ticks">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Time of last message reception in ticks.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Zero">
+        <Props Type="s32e7" Value="0.00000000000000000e+000"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID Base">
+        <Props Type="u32" Validation="MinMax" ValMin="4" ValMax="2044" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Format="Hex"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When receiving GPS information via CAN (typically from a MoTeC dash) this address must match the first transmit address used in the sending device.</p><p class="device_help">For MoTeC Dash Manager releases after April 2016 templates are provided using addresses 0x680, 0x681, 0x682, 0x683. </p><h3 class="device_help">Setting Dash Manager to use the supplied templates</h3><ul><li><div class="device_help">Open your existing dash file.</div></li><li><div class="device_help">Select <strong>Connection | Communications</strong>.</div></li><li><div class="device_help">Select the tab for the CAN bus you wish to connect to the M1 ECU.</div></li><li><div class="device_help">Use the <strong>Select</strong> button to add in turn, each of the templates shown below:</div></li></ul><p class="device_help"><img src="data:image/png;base64,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"></p><ul><li><div class="device_help">Save the file and send to the dash.</div></li></ul><h3 class="device_help">M1 Settings</h3><ul><li><div class="device_help">Set the <strong>GPS Interface</strong> to <strong>CAN Bus n Decode</strong>.</div></li><li><div class="device_help">Set the <strong>GPS CAN ID Base</strong> to 0x680.</div></li><li><div class="device_help">Set the <strong>GPS Fault Delay</strong> to 2000ms.</div></li><li><div class="device_help">Set <strong>CAN Bus n Mode</strong> to match the bus speed from the dash.<br></div></li></ul><h3 class="device_help">Detailed information on the CAN message structure</h3><p class="device_help">The ID of the first CAN message to receive from the GPS system. This ID must be a factor of 4, ending in hex values 
+				  0, 4, 8, or C. The maximum rate CAN messages can be received is 80Hz for all messages, (20Hz per message).</p>
+				  <p class="device_help">Starting with this ID, the following messages are received:</p>
+                  <p class="device_help">On the message with the defined ID Base (this message must be received to receive subsequent messages):
+                  <ul class="device_help">
+                  <li class="device_help"><em class="device_chan">Latitude</em>: Bytes 0-3 as a 32 bit fixed point (7dps) value.</li>
+                  <li class="device_help"><em class="device_chan">Longitude</em>: Bytes 4-7 as a 32 bit fixed point (7dps) value.</li>
+                  </ul>
+                  <p></p>
+                  <p class="device_help">On the message with the ID of the defined ID Base + 1:
+                  <ul class="device_help">
+                  <li class="device_help"><em class="device_chan">Time</em>: Bytes 0-3 (32 bit unsigned value) in HHMMSS.sss format, for example 224736978 for 22:47:36.978 .</li>
+                  <li class="device_help"><em class="device_chan">Speed</em>: Bytes 4-5 (16 bit unsigned value) in 0.1 km/h resolution.</li>
+                  <li class="device_help"><em class="device_chan">Altitude</em>: Bytes 6-7 (16 bit signed value) in 0.1m resolution.</li>
+                  </ul>
+                  <p></p>
+                  <p class="device_help">On the message with the ID of the defined ID Base + 2:
+                  <ul class="device_help">
+                  <li class="device_help"><em class="device_chan">Date</em>: Bytes 0-2 (24 bit unsigned value) in DDMMYY format.</li>
+                  <li class="device_help"><em class="device_chan">Valid</em>: Byte 3 (8 bit signed value) reporting the state of the position information. See <em class="device_chan">Valid</em> for
+                  values of this information.</li>
+                  <li class="device_help"><em class="device_chan">True Course</em> information value: Byte 4-5 (16 bit signed value) in 0.1º resolution.</li>
+                  <li class="device_help"><em class="device_chan">HDOP</em> information value: Byte 6 (8 bit unsigned value) in 0.1 resolution. Horizontal dilution of precision.</li>
+                  <li class="device_help"><em class="device_chan">Satellites</em>: Byte 7 (8 bit unsigned value). Number of satellites.</li>
+                  </ul>
+                  <p></p>
+                  <p class="device_help">On the message with the ID of the defined ID Base + 3:
+                  <ul class="device_help">
+                  <li class="device_help"><em class="device_chan">Magnetic Variation</em> information value: Bytes 0-1 (16 bit signed value) in 0.1º resolution.</li>
+                  <li class="device_help"><em class="device_chan">DGPS Station ID</em>: Byte 2 (8 bit unsigned value).</li>
+                  <li class="device_help"><em class="device_chan">DGPS Update Time</em>: Byte 3 (8 bit unsigned value) in 1s resolution.</li>
+                  <li class="device_help"><em class="device_chan">FAA Mode</em>: Byte 4 (8 bit signed value). See <em class="device_chan">FAA Mode</em> for values of this information.</li>
+                  <li class="device_help"><em class="device_chan">Fix Quality</em>: Byte 5 (8 bit signed value). See <em class="device_chan">Fix Quality</em> for values of this information.</li>
+                  <li class="device_help"><em class="device_chan">WGS84 Height</em> above the geoid: Byte 6-7 (16 bit signed value) in 0.1m resolution.</li>
+                  </ul>
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN ID Base.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Interface">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN ID Base">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Diagnostic"/>
+        <Component Name="Latitude"/>
+        <Component Name="Longitude"/>
+        <Component Name="Speed"/>
+        <Component Name="True Course"/>
+        <Component Name="Date"/>
+        <Component Name="Time"/>
+        <Component Name="Altitude"/>
+        <Component Name="WGS84 Height"/>
+        <Component Name="Magnetic Variation"/>
+        <Component Name="Satellites"/>
+        <Component Name="HDOP"/>
+        <Component Name="DGPS Station ID"/>
+        <Component Name="DGPS Update Time"/>
+        <Component Name="Fix Quality"/>
+        <Component Name="FAA Mode"/>
+        <Component Name="Valid"/>
+        <Component Name="Ticks"/>
+        <Component Name="Fault">
+         <Component Name="Delay">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Script"/>
+        <Component Name="Startup"/>
+        <Component Name="Zero"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="GPS"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

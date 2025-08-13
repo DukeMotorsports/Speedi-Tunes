@@ -1,0 +1,502 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Anti Lag" VersionMajor="1" VersionMinor="1" BuildNumber="8">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0034"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Add 'Engine Speed Limit Fuel Margin' value input.</li>
+            </ul>
+            <h4 class="device_help">01.01.0005</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="3"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Anti Lag Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Exhaust Temperature High" ContainerOrder="3" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is disabled because the current exhaust temperature exceeds the shutdown threshold.
+            </p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Time Limit" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is disabled it was active for longer than the shutdown threshold.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Coolant Temperature High" ContainerOrder="4" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is disabled because the current coolant temperature exceeds the shutdown threshold.
+            </p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is enabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Anti Lag State Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Armed" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is armed.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The Anti Lag system is controlling one or more engine parameters.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Anti Lag"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Anti Lag.Throttle Based Anti Lag">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements a throttle based anti lag system.</p>
+            <h2 class="device_help">Methods</h2>
+            <h3 class="device_help">SetEnable</h3>
+            <p class="device_help">The SetEnable method enables or disables the anti lag system.</p>
+            <p class="device_help">For example, a switch could be used to enable anti lag:</p>
+<pre class="device_help">Anti Lag.SetEnable(Switch eq Switch.On ? true : false);</pre>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Coolant Temperature Input Object</h3>
+            <p class="device_help">Connect to the coolant temperature channel.</p>
+            <h3 class="device_help">Exhaust Temperature Input Object</h3>
+            <p class="device_help">Connect to the exhaust temperature channel.</p>
+            <h3 class="device_help">Throttle Position Input Object</h3>
+            <p class="device_help">Connect to the throttle position channel.</p>
+            <h3 class="device_help">Mode Input Object</h3>
+            <p class="device_help">Usually set as a parameter.</p>
+            <p class="device_help">Allows the user to manually disable anti lag in their calibration.</p>
+            <h3 class="device_help">Ignition Timing Limit Advance Input Object</h3>
+            <p class="device_help">Usually configured as a table with the axes 'Engine Speed' and 'Throttle Position'.</p>
+            <h3 class="device_help">Fuel Volume Trim Input Object</h3>
+            <p class="device_help">Usually configured as a table with the axes 'Engine Speed' and 'Throttle Position'.</p>
+            <h3 class="device_help">Ignition Cut Input Object</h3>
+            <p class="device_help">Usually configured as a table with the axes 'Engine Speed' and 'Throttle Position'.</p>
+            <h3 class="device_help">Fuel Cut Input Object</h3>
+            <p class="device_help">Usually configured as a table with the axes 'Engine Speed' and 'Throttle Position'.</p>
+            <h3 class="device_help">Engine Speed Limit Input Object</h3>
+            <p class="device_help">Usually configured as a table with the axis 'Throttle Position'.</p>
+            <h3 class="device_help">Engine Speed Limit Fuel Margin Input Object</h3>
+            <p class="device_help">Usually configured as a parameter.</p>
+            <h3 class="device_help">Boost Aim Input Object</h3>
+            <p class="device_help">Usually configured as a table with the axis 'Engine Speed'.</p>
+            <h3 class="device_help">Throttle Aim Input Object</h3>
+            <p class="device_help">Usually configured as a table with the axis 'Engine Speed' and 'Throttle Pedal'.</p>
+            <h2 class="device_help">External Dependencies</h2>
+            <p class="device_help">The outputs of this class:
+              <ul class="device_help">
+                <li class="device_help">Ignition Timing Limit Advance</li>
+                <li class="device_help">Fuel Volume Trim</li>
+                <li class="device_help">Ignition Cut</li>
+                <li class="device_help">Fuel Cut</li>
+                <li class="device_help">Engine Speed Limit</li>
+                <li class="device_help">Boost Aim</li>
+                <li class="device_help">Throttle Aim</li>
+              </ul>
+              must be integrated into the parent project.
+            </p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Exhaust Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Cut" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Cut" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Cut" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Cut" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Cut" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Cut" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Cut" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Cut" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Cut" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Cut" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Cut" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Cut" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Position" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit Fuel Margin" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">The Anti Lag system assists in building boost pressure while the engine is in overrun.</p>
+                  <p class="device_help">The following conditions must be met for anti lag to enable:
+                    <ul class="device_help">
+                      <li class="device_help">The system must be armed (see below).</li>
+                      <li class="device_help">Exhaust temperature must be below <em class="device_param">Shutdown Exhaust Temperature</em>.</li>
+                      <li class="device_help">Coolant temperature must be below <em class="device_param">Shutdown Coolant Temperature</em>.</li>
+                      <li class="device_help">The value of the <em class="device_ref">Ignition Cut</em> table must be greater than zero.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">To arm the anti lag system <em class="device_ref">Throttle Position</em> must exceed <em class="device_param">Arm Throttle Position</em> for
+                    <em class="device_param">Arm Delay</em> seconds.</p>
+                  <p class="device_help">Once anti lag is enabled, it will disable if any of the following occur:
+                    <ul class="device_help">
+                      <li class="device_help">exhaust temperature exceeds <em class="device_param">Shutdown Exhaust Temperature</em></li>
+                      <li class="device_help">coolant temperature exceeds <em class="device_param">Shutdown Coolant Temperature</em></li>
+                      <li class="device_help"><em class="device_chan">Time</em> exceeds <em class="device_param">Shutdown Time</em></li>
+                      <li class="device_help">the value of the <em class="device_ref">Ignition Cut</em> table is zero.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">During operation of the anti lag system:
+                    <ul class="device_help">
+                      <li class="device_help">ignition timing is set to the value of the <em class="device_ref">Ignition Timing Limit Advance</em> table</li>
+                      <li class="device_help">boost aim is set to the value of the <em class="device_ref">Boost Aim</em> table</li>
+                      <li class="device_help">throttle aim is set to the value of the <em class="device_ref">Throttle Aim</em> table</li>
+                      <li class="device_help">a fuel volume trim set by the <em class="device_ref">Fuel Volume Trim</em> table is applied</li>
+                      <li class="device_help">ignition cut set by the <em class="device_ref">Ignition Cut</em> table is applied if it is greater than 1%</li>
+                      <li class="device_help">fuel cut set by the <em class="device_ref">Fuel Cut</em> table is applied.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">While the anti lag system is disabled:
+                    <ul class="device_help">
+                      <li class="device_help">an engine speed limit set by the <em class="device_ref">Engine Speed Limit</em> table and <em class="device_ref">Engine Speed Limit
+                        Fuel Margin</em> parameter is applied.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help"><em class="device_ref">Engine Speed Limit</em> can be the active engine speed limit if it is the lowest engine speed
+                    limit in the calibration, and Anti Lag is disabled. Set to a value above the maximum engine speed
+                    limit if not required.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[<p class="device_help">The current coolant temperature.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Exhaust Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[<p class="device_help">The current exhaust temperature.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.Anti Lag State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of the Anti Lag system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.Anti Lag Diagnostic Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the source of any problems with Anti Lag.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time">
+        <Props Qty="s">
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="3.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Time for which Anti Lag has been enabled.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the overall operation of Anti Lag.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the overall operation of Anti Lag.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Arm">
+        <Comment>
+<![CDATA[<p class="device_help">Conditions which must be met for the Anti Lag system to arm.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Arm.Throttle Position">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Throttle Position</em> must exceed <em class="device_param">Arm Throttle Position</em> for <em class="device_param">Arm Delay</em> seconds for
+                    Anti Lag to arm.</p>
+                  <p class="device_help">Typically 80%.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Arm.Delay">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="ms"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Throttle Position</em> must exceed <em class="device_param">Arm Throttle Position</em> for <em class="device_param">Arm Delay</em> seconds for
+                    Anti Lag to arm.</p>
+                  <p class="device_help">Typically 1000mS.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Shutdown">
+        <Comment>
+<![CDATA[<p class="device_help">Conditions controlling when Anti Lag will shut down.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Shutdown.Exhaust Temperature">
+        <Props Qty="K" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Exhaust Temperature</em> must be below this value for Anti Lag to enable.</p>
+                  <p class="device_help">Anti Lag will disable if <em class="device_ref">Exhaust Temperature</em> exceeds this value during operation.</p>
+                  <p class="device_help">Set to 0 to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Shutdown.Coolant Temperature">
+        <Props Qty="K" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Coolant Temperature</em> must be below this value for Anti Lag to enable.</p>
+                  <p class="device_help">Anti Lag will disable if <em class="device_ref">Coolant Temperature</em> exceeds this value during operation.</p>
+                  <p class="device_help">Set to 0 to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Shutdown.Time">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+        <Comment>
+<![CDATA[<p class="device_help">Maximum time allowed in Anti Lag.</p>
+                  <p class="device_help">This time is used to limit exhaust temperature.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.SetEnable">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="enable" Type="bool" Attrs="0"/>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[RW5hYmxlID0gaW4uZW5hYmxlCgk/IEVuYWJsZS5FbmFibGVkCgk6IEVuYWJsZS5EaXNhYmxlZDsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZXQgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKbG9jYWwgdHBpbiA9IERlbGF5LlJpc2luZyhUaHJvdHRsZSBQb3NpdGlvbiA+IEFybS5UaHJvdHRsZSBQb3NpdGlvbiwKCUFybS5EZWxheQopOwpsb2NhbCBkaWFnc3RhYmxlID0gQ2FsY3VsYXRlLlN0YWJsZShEaWFnbm9zdGljLkFzSW50ZWdlcigpLCAwLjEpOwoKaWYgKChNb2RlIGVxIE1vZGUuRGlzYWJsZWQpIG9yCgkoRW5hYmxlIGVxIEVuYWJsZS5EaXNhYmxlZCkKKQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5Ob3QgaW4gVXNlOwp9CmVsc2UgaWYgKChTaHV0ZG93bi5FeGhhdXN0IFRlbXBlcmF0dXJlID4gMC4wKSBhbmQKCShFeGhhdXN0IFRlbXBlcmF0dXJlID4gU2h1dGRvd24uRXhoYXVzdCBUZW1wZXJhdHVyZSkKKQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5FeGhhdXN0IFRlbXBlcmF0dXJlIEhpZ2g7Cn0KZWxzZSBpZiAoKFNodXRkb3duLkNvb2xhbnQgVGVtcGVyYXR1cmUgPiAwLjApIGFuZAoJKENvb2xhbnQgVGVtcGVyYXR1cmUgPiBTaHV0ZG93bi5Db29sYW50IFRlbXBlcmF0dXJlKQopCnsKCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkNvb2xhbnQgVGVtcGVyYXR1cmUgSGlnaDsKfQplbHNlIGlmICgoVGltZSA+IDAuMCkgYW5kCgkoVGltZSA+IFNodXRkb3duLlRpbWUpCikKewoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuVGltZSBMaW1pdDsKfQplbHNlIGlmIChkaWFnc3RhYmxlKQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKfQoKd2hlbiAoU3RhdGUpCnsKCWlzIChEaXNhYmxlZCkKCXsKCQlUaW1lID0gMC4wOwoJCWlmICgoRGlhZ25vc3RpYyBlcSBEaWFnbm9zdGljLk9LKSBhbmQKCQkJdHBpbgoJCSkKCQl7CgkJCVN0YXRlID0gU3RhdGUuQXJtZWQ7CgkJfQoJfQoJaXMgKEFybWVkKQoJewoJCVRpbWUgPSAwLjA7CgkJaWYgKERpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuT0spCgkJewoJCQlTdGF0ZSA9IFN0YXRlLkRpc2FibGVkOwoJCX0KCQllbHNlIGlmIChJZ25pdGlvbiBDdXQgPiAwLjApCgkJewoJCQlTdGF0ZSA9IFN0YXRlLkVuYWJsZWQ7CgkJfQoJfQoJaXMgKEVuYWJsZWQpCgl7CgkJaWYgKChEaWFnbm9zdGljIG5lcSBEaWFnbm9zdGljLk9LKSBvcgoJCQkoSWduaXRpb24gQ3V0IDw9IDAuMCkpCgkJewoJCQlTdGF0ZSA9IFN0YXRlLkRpc2FibGVkOwoJCX0KCQllbHNlCgkJewoJCQlUaW1lICs9IGV0OwoJCX0KCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Position">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The current throttle position.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Timing Limit Advance">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.00000000000000000e+001" ValMax="9.00000000000000000e+001">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Ignition timing when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fuel Volume Trim">
+        <Props Qty="ratio" Validation="MinMax" ValMin="5.00000000000000000e-001" ValClampMax="false">
+         <Locale>
+          <Default Unit="%Trim"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Fuel volume trim applied when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Cut">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Ignition cut applied when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fuel Cut">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Fuel cut applied when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed Limit">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="6.00000000000000000e+003" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine speed limit applied when <em class="device_chan">State</em> is not <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Boost Aim">
+        <Props Qty="dPa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="kPa g"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Boost aim when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Aim">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Throttle aim when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed Limit Fuel Margin">
+        <Props Qty="rad/s" ValClampMin="false" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The fuel margin used for <em class="device_ref">Engine Speed Limit</em>.</p>
+                  <p class="device_help">Set to a positive value to cut ignition, then fuel. Set to a negative value to cut fuel, then
+                    ignition.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Coolant Temperature"/>
+        <Component Name="Exhaust Temperature"/>
+        <Component Name="Throttle Position"/>
+        <Component Name="State"/>
+        <Component Name="Diagnostic"/>
+        <Component Name="Time"/>
+        <Component Name="Enable"/>
+        <Component Name="Mode"/>
+        <Component Name="Arm">
+         <Component Name="Throttle Position"/>
+         <Component Name="Delay"/>
+        </Component>
+        <Component Name="Shutdown">
+         <Component Name="Exhaust Temperature"/>
+         <Component Name="Coolant Temperature"/>
+         <Component Name="Time"/>
+        </Component>
+        <Component Name="Ignition Timing Limit Advance"/>
+        <Component Name="Fuel Volume Trim"/>
+        <Component Name="Ignition Cut"/>
+        <Component Name="Fuel Cut"/>
+        <Component Name="Engine Speed Limit"/>
+        <Component Name="Engine Speed Limit Fuel Margin"/>
+        <Component Name="Boost Aim"/>
+        <Component Name="Throttle Aim"/>
+        <Component Name="SetEnable"/>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Anti Lag">
+     <Module Name="Throttle Based Anti Lag"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

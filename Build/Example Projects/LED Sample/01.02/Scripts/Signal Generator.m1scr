@@ -1,0 +1,22 @@
+when (Type)
+{
+	is (Sawtooth)
+	{
+		Signal = Counter / 360.0 ;
+	}
+	is (Square)
+	{
+		if (Counter > 180)
+		{
+			Signal = 1.0;
+		}
+		else
+		{
+			Signal = 0.0;
+		}
+	}
+	is (Sine)
+	{
+		Signal = ((Calculate.FastSin(Counter) + 1.0) * 0.5);
+	}
+}

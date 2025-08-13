@@ -1,0 +1,962 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC SDC3" VersionMajor="1" VersionMinor="1" BuildNumber="5">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0044"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial Release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="SDC3 Mode Enumeration" Storage="enum" Default="Open">
+   <Enum Name="Open" ContainerOrder="0">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Mode 1" ContainerOrder="1">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Mode 2" ContainerOrder="2">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Mode 3" ContainerOrder="3">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Mode 4" ContainerOrder="4">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Lock" ContainerOrder="5">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="SDC3 Engine Load Axis Selection Enumeration" Storage="enum" Default="Torque">
+   <Enum Name="Torque" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help"><em class="device_item">Engine Load Axis</em> is based on <em class="device_item">Torque</em>.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Inlet Manifold Pressure" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help"><em class="device_item">Engine Load Axis</em> is based on <em class="device_item">Inlet Manifold Pressure</em>.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Throttle Position" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help"><em class="device_item">Engine Load Axis</em> is based on <em class="device_item">Throttle Position</em>.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="SDC3 Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="OK" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The SDC3 is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus Timeout" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No SDC3 data has been received for longer than 500mS.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">SDC3 control is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid CAN Bus" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The selected CAN Bus is not available on this hardware.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fault" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">A fault has occurred.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="SDC3 Brake State Enumeration" Storage="enum" Default="Unknown">
+   <Enum Name="Unknown" ContainerOrder="1">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Fault" ContainerOrder="0">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="3">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Off" ContainerOrder="2">
+    <Help>
+<![CDATA[<!-- Empty -->]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.SDC3">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class is used to control an SDC3 module in slave mode.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">CAN Bus, Vehicle Speed, Wheel Speed Rear Drive, Wheel Speed Front Drive, Engine Displacement, Engine Cylinders, 
+			Engine Load, Constants rAir, Constants standardTemperature, Ambient Pressure Standard, Inlet Manifold Pressure, 
+			Throttle Position, Hand Brake, VDC State, and Brake State.</h3>
+            <p class="device_help">Connect to the respectively named channels in the project.</p>
+            <h2 class="device_help">Data Types</h2>
+            <h3 class="device_help">Hand Brake, VDC State, Brake State</h3>
+            <p class="device_help">Connect to the data types of the respective channels in the project.</p>
+            <p class="device_help"/>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Update Event</h3>
+            <p class="device_help">Set to 50Hz event.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props DefValue="This.Value">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="Brake State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Brake State" TargetRef="Type" DisplayName="Brake State Data Type"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Hand Brake Data Type" Creation="Custom" Visible="1" TargetCpt="This.Hand Brake" TargetRef="Type" DisplayName="Hand Brake Data Type"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Update Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Update Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="VDC State Data Type" Creation="Custom" Visible="1" TargetCpt="This.VDC State" TargetRef="Type" DisplayName="VDC State Data Type"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Vehicle Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Wheel Speed Front Drive" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Wheel Speed Rear Drive" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ambient Pressure Standard" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Manifold Pressure" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Position" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Hand Brake" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.VDC State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Brake State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Torque" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to Control of the Motec SDC3 centre differential control Module used in 
+				  the Subaru STI MY15 or similar vehicles.</p>
+                  <p class="device_help">The centre differential control strategy is setup and tuned here in the ECU, but follows the same strategy as
+				  the stand alone SDC3 module using SDC3 Manager for Subaru STI MY08 to MY12 vehicles. The SDC3 User manual can also be
+				  used as a reference to tune the M1 control strategy.</p>
+				  <p class="device_help">With this method, the SDC3 Module acts as a slave or dumb device. The M1 ECU calculates the required amount
+				  of lock based on the tuning and control strategy and sends a 'Lock' amount via CAN to the SDC3. The SDC3 sends back
+				  diagnostic information only. The ECU also sends the OE DCCD CAN data to the vehicle, rather then the SDC3 module.</p>
+				  <p class="device_help">Note: If the <em class="device_param">CAN Bus</em> parameter is set to <em class="device_enum">Not in Use</em> the controller and CAN receive / transmit are 
+				  disabled. This must be set if the OE DCCD unit is fitted as CAN errors will occur otherwise.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Vehicle Speed">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Wheel Speed Rear Drive">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Wheel Speed Front Drive">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Manifold Pressure">
+        <Props Qty="Pa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Position">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Hand Brake">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.VDC State">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Brake State">
+        <Props Type="::This.SDC3 Brake State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Load Axis Selection">
+        <Props Type="::This.SDC3 Engine Load Axis Selection Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines which method is used to calculate <em class="device_chan">Engine Load Axis</em> used on the axis of the 
+					Acceleration and Brake tables.</p>
+					<p class="device_help">If <em class="device_param">Engine Load Axis Selection</em> is <em class="device_enum">Torque</em>, <em class="device_chan">Engine Load Axis</em> is the ratio of <em class="device_ref">
+					  Torque</em> to 422Nm, the maximum torque the EJ207 engine makes as standard. Eg. If <em class="device_ref">Torque</em> was equal
+					  to 422Nm, the <em class="device_chan">Engine Load Axis</em> would equal 100%.</p>
+					<p class="device_help">If <em class="device_param">Engine Load Axis Selection</em> is <em class="device_enum">Inlet Manifold Pressure</em>, <em class="device_chan">Engine Load Axis</em> is
+					  equal to <em class="device_ref">Inlet Manifold Pressure</em> / 101.325kPa (standard atmospheric pressure at sea level).</p>
+					<p class="device_help">If <em class="device_param">Engine Load Axis Selection</em> is <em class="device_enum">Throttle Position</em>, <em class="device_chan">Engine Load Axis</em> is equal
+					  to <em class="device_ref">Throttle Position</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Control.Accelerate">
+        <Props NumAxes="3">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Axis>
+          <X Source="Parent.Parent.Vehicle Speed" MaxSites="15"/>
+          <Y Source="Parent.Parent.Engine Load Axis" MaxSites="11"/>
+          <Z Source="Parent.Parent.Mode"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of differential lock to apply when <em class="device_ref">Brake State</em> is <em class="device_enum">Off</em>.</p><p class="device_help">The lock percentage for when <em class="device_item">Mode</em> is <em class="device_enum">Open</em> is typically 0% and when <em class="device_item">Mode</em> is <em class="device_enum">Lock</em> typically 100%, but these modes&nbsp;can be used like any other mode for automatic operation.</p><p class="device_help">See <em class="device_chan">Control</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Control.Accelerate.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Control.Accelerate.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Control.Accelerate.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Control.Brake">
+        <Props NumAxes="3">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Axis>
+          <X Source="Parent.Parent.Vehicle Speed" MaxSites="15"/>
+          <Y Source="Parent.Parent.Engine Load Axis" MaxSites="11"/>
+          <Z Source="Parent.Parent.Mode"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of differential lock to apply when&nbsp;<em class="device_ref">Brake State</em> is <em class="device_enum">On</em>.</p>
+	<p class="device_help">The lock percentage for when <em class="device_item">Mode</em> is <em class="device_enum">Open</em> is typically 0% and when <em class="device_item">Mode</em> is <em class="device_enum">Lock</em> typically 100%, but these modes&nbsp;can be used like any other mode for automatic operation.</p><p class="device_help">See <em class="device_chan">Control</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Control.Brake.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Control.Brake.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Control.Brake.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Control.Slip">
+        <Props NumAxes="2">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Axis>
+          <X Source="Parent.Parent.Engine Load Axis" MaxSites="11"/>
+          <Y Source="Parent.Parent.Mode"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Amount of wheel slip to allow before additional lock is applied.</p><p class="device_help">The&nbsp;slip allowed&nbsp;when <em class="device_item">Mode</em> is <em class="device_enum">Open</em>&nbsp;or <em class="device_enum">Lock</em> is typically very high (100km/h) so that the slip&nbsp;calculation does not apply any lock when in these modes, but these modes&nbsp;can be used like any other mode for automatic operation.</p><p class="device_help">The amount of lock added to Control is determind by this table and the <em class="device_item">Control Slip Maximum</em> and <em class="device_item">Control Slip Range </em>parameters.</p><p class="device_help"><em class="device_item">Wheel Speed Rear Drive</em> - <em class="device_item">Wheel Speed Front Drive</em> calculate the <em class="device_item">Wheel Slip</em> value (negative slip&nbsp;myltiplied by&nbsp;-1).</p><p class="device_help">Slip control factor = (<em class="device_item">Wheel Slip</em> - this desired slip table) / <em class="device_item">Control Slip Range</em></p><p class="device_help">Slip control factor's range is limited from 0 to 1.</p><p class="device_help">Slip lock = Slip control factor * <em class="device_item">Control Slip Maximum</em>.</p><p class="device_help">Example: If <em class="device_chan">Mode N Slip</em> is 5km/h, <em class="device_param">Slip Maximum</em> is 10% and <em class="device_param">Slip Range</em> is 10km/h. If the 					rear wheels are travelling at 80km/k and the front wheels at 70km/h, the slip is 10km/h which is 5km/h over the 					desired slip. 5km/h over is half way through this <em class="device_param">Slip Range</em> so the additional lock applied to the differential 					would be half of the <em class="device_param">Slip Maximum</em> (5%).<br></p><p class="device_help">See <em class="device_chan">Control</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Control.Slip.Value">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h" Min="0.00000000000000000e+000" Max="1.38900000000000010e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Control.Slip.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Control.Slip.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Engine Load Axis">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="2.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">This is used on the axis of the&nbsp;<em class="device_item">Control Accelerate</em> and <em class="device_item">Control Brake</em> tables.</p><p class="device_help">The calculation of this value depends on the selection of <em class="device_param">Engine Load Axis Selection</em> where the result is related to the 
+				  load on the engine, but normalised to a percentage unit.</p>
+				  <p class="device_help"><br></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Slip Maximum">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Maximum amount of additional differential lock to apply due to wheel slip.</p>
+					<p class="device_help">Set to 0 to disable slip control.</p>
+					<p class="device_help">See <em class="device_chan">Control Slip</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Slip Range">
+        <Props Qty="m/s" Validation="MinMax" ValMin="2.99999999999999990e-002" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The amount of wheel slip over the desired slip (set in the <em class="device_chan">Mode N Slip</em> table) to add the maximum amount of 
+					additional lock (set in <em class="device_param">Slip Maximum</em>) to the differential.</p>
+					<p class="device_help">See <em class="device_chan">Control Slip</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Mode">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_chan">Mode</em> reports the selected differential lock setting. Change this value by pressing the DCCD 'Plus' and 'Minus' control 
+					buttons. Note the 'Auto/Manual' switch has no effect. Modes 1 to 4 are 'Automatic' modes depending on how they are tuned and so
+					the OE automatic settings can not be selected (not needed).</p>
+					<p class="device_help">The mode setting is stored after the ECU is powered off.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Mode.Value">
+        <Props Type="::This.SDC3 Mode Enumeration" Storage="Flash">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Mode.Plus">
+        <Props Type="::Hardware.av_switch.sw_state">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the state of the DCCD 'Plus' mode button located on the centre console.</p>
+					<p class="device_help">Pressing the button&nbsp;increments the <em class="device_chan">Mode</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Mode.Minus">
+        <Props Type="::Hardware.av_switch.sw_state">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the state of the DCCD 'Minus' mode button located on the centre console.</p>
+					<p class="device_help">Pressing the button&nbsp;decrements the <em class="device_chan">Mode</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Mode.Auto Manual">
+        <Props Type="::Hardware.av_switch.sw_state">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the state of the DCCD 'Auto/Manual' mode button located on the centre console.</p>
+					<p class="device_help">Pressing this has no effect when using the Motec SDC3. The mode always&nbsp;reports 'manual' to the instrument cluster, but the modes 
+					1 to 4 are 'auto' type modes depending on how they are tuned, not just a fixed lock amount like the OE DCCD.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.CAN">
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.CAN.Diagnostic">
+        <Props Type="::This.SDC3 Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports if the ECU is receiving CAN messages from the SDC3 module.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the differential lock value sent to the SDC3 module that directly related to the amount of lock applied to the differential.</p><p class="device_help">This is calculated from the differential control strategy consisting of -</p><ul class="device_help"><li class="device_help"><em class="device_chan">Mode</em> is an axis of the&nbsp;<em class="device_item">Control Accelerate</em>, <em class="device_item">Control Brake</em> and <em class="device_item">Control Slip</em> tables so that different setting can be used based on the <em class="device_item">Mode</em> selection.</li><li class="device_help">The <em class="device_item">Control Accelerate</em> table is used when the <em class="device_ref">Brake State</em> is <em class="device_enum">Off</em>.</li><li class="device_help">The <em class="device_item">Control Brake</em> table is used when the <em class="device_ref">Brake State</em> is <em class="device_enum">On</em>.</li><li class="device_help">The <em class="device_item">Control Slip</em> table sets the amount of wheel slip to allow before additional lock is applied.</li><li class="device_help">If the hand brake is on, the lock amount is set to 0%.</li><li class="device_help">If the stability control is active and <em class="device_param">VDC Mode</em> is <em class="device_enum">Enabled</em>, then lock is set to <em class="device_param">VDC Lock</em>.</li></ul><p class="device_help">The <em class="device_item">Control Accelerate</em> and <em class="device_item">Control Brake</em> tables allow the differential lock to be tuned based on <em class="device_ref">Vehicle Speed</em> and <em class="device_chan">Engine Load Axis</em>					to the drivers preference. Tuning can drastically effect the attitude of the car on corner turn in and corner exit, as well as straight 					line acceleration. The road surface also has a large impact on differential lock tuning.</p><p class="device_help">Control diagram -</p><p class="device_help"><img src="data:image/gif;base64,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"></p><p class="device_help"><br></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Value">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.VDC">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to the amount of lock to apply if the vehicles stability control is actively correcting the direction of travel.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.VDC.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">If this is <em class="device_enum">Enabled</em> and the <em class="device_ref">VDC State</em> (stability control) reports <em class="device_enum">On</em> then the <em class="device_chan">Control</em> lock value is set to <em class="device_param">VDC Lock</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.VDC.Lock">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">If <em class="device_param">VDC Mode</em> is <em class="device_enum">Enabled</em> and the <em class="device_ref">VDC State</em> (stability control) reports <em class="device_enum">On</em> then the <em class="device_chan">Control</em> lock value is set to this value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Solenoid">
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information received from the SDC3 module about the differential control solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Average Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The running average electrical current through the differential control solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Minimum Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The running minimum electrical current through the differential control solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Maximum Current">
+        <Props Qty="A">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The running maximum electrical current through the differential control solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Positive Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The voltage at the differential control solenoid positive pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Negative Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The voltage at the differential control solenoid negative pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Duty Cycle">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The PWM duty cycle of the differential control solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Open Circuit">
+        <Props Type="::This.SDC3 Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports <em class="device_enum">Fault</em> if an open circuit is detected on the differential control solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Solenoid.Output Stuck">
+        <Props Type="::This.SDC3 Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports <em class="device_enum">Fault</em> if the differential control solenoid output driver is stuck.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Internal">
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information received from the SDC3 module about internal items.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal.Battery Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Supply voltage to the SDC3 module.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal.CAN Diagnostic">
+        <Props Type="::This.SDC3 Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports <em class="device_enum">Fault</em> if the SDC3 module is not receiving the command message from the M1 ECU.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal.Output Circuit">
+        <Props Type="::This.SDC3 Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports <em class="device_enum">Fault</em> if there is and internal fault with the output circuit.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal.Temperature">
+        <Props Qty="K">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.00000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal temperature of the SDC3 module.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal.Firmware Version">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current firmware version loaded in the SDC3 Module.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal.Current Limit">
+        <Props Type="::This.SDC3 Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports <em class="device_enum">Fault</em> if the differential output reaches the internal current limit.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Wheel Slip">
+        <Props Qty="m/s">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="km/h" Min="-1.38900000000000010e+001" Max="1.38900000000000010e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">This shows the difference in front to rear wheel speeds.</p>
+				  <p class="device_help">It is the primary input to the calculation for differential lock applied due to wheel slip.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.CAN.Transmit 10Hz">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCmxvY2FsIG9rID0gdHJ1ZTsKbG9jYWwgYnVzID0gUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxOwoKLyoKICoJVHggT0UgRENDRCBDQU4gbWVzc2FnZQogKgkweDM4MAogKi8Kc3RhdGljIGxvY2FsIHJvbGwgPSAweDA7CnJvbGwgPSAocm9sbCArIDB4MSkgJiAweEY7CmxvY2FsIGZhdWx0TGFtcCA9IFBhcmVudC5Tb2xlbm9pZC5PcGVuIENpcmN1aXQgbmVxIFNvbGVub2lkLk9wZW4gQ2lyY3VpdC5PSyBvcgoJCQkJUGFyZW50LlNvbGVub2lkLk91dHB1dCBTdHVjayBuZXEgU29sZW5vaWQuT3V0cHV0IFN0dWNrLk9LIG9yCgkJCQlQYXJlbnQuSW50ZXJuYWwuQ0FOIERpYWdub3N0aWMgbmVxIEludGVybmFsLkNBTiBEaWFnbm9zdGljLk9LIG9yCgkJCQlQYXJlbnQuSW50ZXJuYWwuT3V0cHV0IENpcmN1aXQgbmVxIEludGVybmFsLk91dHB1dCBDaXJjdWl0Lk9LIG9yCgkJCQlQYXJlbnQuSW50ZXJuYWwuQ3VycmVudCBMaW1pdCBuZXEgSW50ZXJuYWwuQ3VycmVudCBMaW1pdC5PSzsKCmxvY2FsIGJ5dGUwID0gKGZhdWx0TGFtcCA/IDB4MTAgOiAweDApICsgcm9sbDsKbG9jYWwgYnl0ZTEgPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKFBhcmVudC5Nb2RlLkFzSW50ZWdlcigpICsgMSk7CkNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsICAwLCAgOCwgYnl0ZTApOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgIDgsICA4LCBieXRlMSk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCA1NiwgIDgsIChieXRlMCArIGJ5dGUxKSAmIDB4RkYpOwpvayA9IENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDM4MCk7CgpvayA9IG9rOwoK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Mode.Update">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[CmxvY2FsIHBsdXNFZGdlID0gQ2hhbmdlLlRvKFBsdXMgZXEgUGx1cy5Pbik7CmxvY2FsIG1pbnVzRWRnZSA9IENoYW5nZS5UbyhNaW51cyBlcSBNaW51cy5Pbik7CgppZiAocGx1c0VkZ2UgYW5kIFZhbHVlIG5lcSBWYWx1ZS5Mb2NrKQp7CglWYWx1ZS5TZXQoVmFsdWUuQXNJbnRlZ2VyKCkgKyAxKTsKCVN5c3RlbS5QcmVzZXJ2ZSgpOwp9CmVsc2UgaWYgKG1pbnVzRWRnZSBhbmQgVmFsdWUgbmVxIFZhbHVlLk9wZW4pCnsKCVZhbHVlLlNldChWYWx1ZS5Bc0ludGVnZXIoKSAtIDEpOwoJU3lzdGVtLlByZXNlcnZlKCk7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.CAN.Transmit 50Hz">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCmxvY2FsIG9rID0gdHJ1ZTsKbG9jYWwgYnVzID0gUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxOwoKQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgIDAsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKFBhcmVudC5Db250cm9sICogMjAwLjApKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDMyLCAzMiwgMHg0QzRGNDM0Qik7CQkvL0FTQ0lJICJMT0NLIgpvayA9IENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDE2MCk7CgovKglTREMzIFNvbGVub2lkIEN1cnJlbnQgc2V0dGluZ3MuIFVzZXMgZGVmYXVsdHMgaWYgQ0FOIG1lc3NhZ2Ugbm90IHNlbnQuCglDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CglzZXR0aW5ncyBpbiBieXRlcyAwIHRvIDUKCUNhbkNvbW1zLlNldEludGVnZXIoaCwgNDgsIDE2LCAweDQ0NTApOwkJLy9BU0NJSSAiRFAiCglvayA9IENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDE2MSk7CiovCgpvayA9IG9rOwoK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Control.Update">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[CmxvY2FsIGV0ID0gU3lzdGVtLkVsYXBzZWRUaW1lKCk7Cgpsb2NhbCBzbGlwQ29udCA9IENhbGN1bGF0ZS5NaW4oQ2FsY3VsYXRlLk1heChDYWxjdWxhdGUuQWJzb2x1dGUoV2hlZWwgU2xpcCkgLSBTbGlwLCAwLjApIC8gU2xpcCBSYW5nZSAqIFNsaXAgTWF4aW11bSwgU2xpcCBNYXhpbXVtKTsgCgppZiAoSGFuZCBCcmFrZSBlcSBIYW5kIEJyYWtlLk9uKQp7CglWYWx1ZSA9IDAuMDsKfQplbHNlIGlmIChWREMgU3RhdGUgZXEgVkRDIFN0YXRlLk9uIGFuZCBQYXJlbnQuVkRDLk1vZGUgZXEgUGFyZW50LlZEQy5Nb2RlLkVuYWJsZWQpCnsKCVZhbHVlID0gUGFyZW50LlZEQy5Mb2NrOwp9CmVsc2UgCnsKCWxvY2FsIGRlYyA9IERlY2F5ID4gMC4wID8gRGVjYXkgOiBDYWxjdWxhdGUuSW5maW5pdHkoKTsJLy9lZmZlY3RpdmUgZGlzYWJsZSBvZiB0aGUgZGVjYXkgdmFsdWUKCWlmIChCcmFrZSBTdGF0ZSBlcSBCcmFrZSBTdGF0ZS5PbikKCXsKCQlWYWx1ZSA9IENhbGN1bGF0ZS5NYXgoQ2FsY3VsYXRlLk1pbihCcmFrZSArIHNsaXBDb250LCAxLjApLCBWYWx1ZSAtIChkZWMgKiBldCkpOwoJfQoJZWxzZQoJewoJCVZhbHVlID0gQ2FsY3VsYXRlLk1heChDYWxjdWxhdGUuTWluKEFjY2VsZXJhdGUgKyBzbGlwQ29udCwgMS4wKSwgVmFsdWUgLSAoZGVjICogZXQpKTsKCX0KfQkKCg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.CAN.Receive 50Hz">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgcnhMaW5nZXIgPSBmYWxzZTsKbG9jYWwgbm9UaW1lb3V0ID0gdHJ1ZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHgxNjQKICovCmggPSBDYW5Db21tcy5SeE9wZW5TdGFuZGFyZChQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEsIDB4MTY0LCAweDAwMCwgdHJ1ZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKSBvciByeDsKcnhMaW5nZXIgPSBEZWxheS5GYWxsaW5nKHJ4LCAwLjIpOwpub1RpbWVvdXQgPSBub1RpbWVvdXQgYW5kIHJ4TGluZ2VyOwoKaWYgKHJ4TGluZ2VyKQp7CglNb2RlLlBsdXMgCQkJCSAgPSBDYW5Db21tcy5HZXRCaXQJCQkgICAoaCwgIDcpID8gTW9kZS5QbHVzLk9uIDogTW9kZS5QbHVzLk9mZjsKCU1vZGUuTWludXMgCQkJCSAgPSBDYW5Db21tcy5HZXRCaXQJCQkgICAoaCwgIDYpID8gTW9kZS5NaW51cy5PbiA6IE1vZGUuTWludXMuT2ZmOwoJTW9kZS5BdXRvIE1hbnVhbCAJCSAgPSBDYW5Db21tcy5HZXRCaXQJCQkgICAoaCwgIDUpID8gTW9kZS5BdXRvIE1hbnVhbC5PbiA6IE1vZGUuQXV0byBNYW51YWwuT2ZmOwoJU29sZW5vaWQuQXZlcmFnZSBDdXJyZW50ICA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAgOCwgIDgpICogMC4xOwkJLy8wLjFBCglTb2xlbm9pZC5NaW5pbXVtIEN1cnJlbnQgID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDE2LCAgOCkgKiAwLjE7CQkvLzAuMUEKCVNvbGVub2lkLk1heGltdW0gQ3VycmVudCAgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMjQsICA4KSAqIDAuMTsJCS8vMC4xQQoJU29sZW5vaWQuUG9zaXRpdmUgVm9sdGFnZSA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgIDgpICogMC4xOwkJLy8wLjFWCglTb2xlbm9pZC5OZWdhdGl2ZSBWb2x0YWdlID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQwLCAgOCkgKiAwLjE7CQkvLzAuMVYKCVNvbGVub2lkLkR1dHkgQ3ljbGUgCSAgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgNDgsIDE2KSAqIDAuMDAxOwkvLzAuMSUKfQplbHNlCnsKCU1vZGUuUGx1cyAJCQkJICA9IE1vZGUuUGx1cy5PZmY7CglNb2RlLk1pbnVzIAkJCSAgIAkgID0gTW9kZS5NaW51cy5PZmY7CglNb2RlLkF1dG8gTWFudWFsIAkJICA9IE1vZGUuQXV0byBNYW51YWwuT2ZmOwoJU29sZW5vaWQuQXZlcmFnZSBDdXJyZW50ICA9IENhbGN1bGF0ZS5OQU4oKTsKCVNvbGVub2lkLk1pbmltdW0gQ3VycmVudCAgPSBDYWxjdWxhdGUuTkFOKCk7CglTb2xlbm9pZC5NYXhpbXVtIEN1cnJlbnQgID0gQ2FsY3VsYXRlLk5BTigpOwoJU29sZW5vaWQuUG9zaXRpdmUgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCVNvbGVub2lkLk5lZ2F0aXZlIFZvbHRhZ2UgPSBDYWxjdWxhdGUuTkFOKCk7CglTb2xlbm9pZC5EdXR5IEN5Y2xlIAkgID0gQ2FsY3VsYXRlLk5BTigpOwp9CgovKgogKiAweDE2NQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgMHgxNjUsIDB4MDAwLCB0cnVlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpIG9yIHJ4OwpyeExpbmdlciA9IERlbGF5LkZhbGxpbmcocngsIDAuMik7Cm5vVGltZW91dCA9IG5vVGltZW91dCBhbmQgcnhMaW5nZXI7CgppZiAocnhMaW5nZXIpCnsKCUludGVybmFsLkNBTiBEaWFnbm9zdGljICAgPSBDYW5Db21tcy5HZXRiaXQJCQkgICAoaCwgIDUpID8gSW50ZXJuYWwuQ0FOIERpYWdub3N0aWMuRmF1bHQJOiBJbnRlcm5hbC5DQU4gRGlhZ25vc3RpYy5PSzsJCglTb2xlbm9pZC5PdXRwdXQgU3R1Y2sgCSAgPSBDYW5Db21tcy5HZXRiaXQJCQkgICAoaCwgIDYpID8gU29sZW5vaWQuT3V0cHV0IFN0dWNrLkZhdWx0IAk6IFNvbGVub2lkLk91dHB1dCBTdHVjay5PSzsKCVNvbGVub2lkLk9wZW4gQ2lyY3VpdAkgID0gQ2FuQ29tbXMuR2V0Qml0CQkJICAgKGgsICA3KSA/IFNvbGVub2lkLk9wZW4gQ2lyY3VpdC5GYXVsdCAJOiBTb2xlbm9pZC5PcGVuIENpcmN1aXQuT0s7CglJbnRlcm5hbC5DdXJyZW50IExpbWl0CSAgPSBDYW5Db21tcy5HZXRiaXQJCQkgICAoaCwgMTQpID8gSW50ZXJuYWwuQ3VycmVudCBMaW1pdC5GYXVsdCAJOiBJbnRlcm5hbC5DdXJyZW50IExpbWl0Lk9LOwoJSW50ZXJuYWwuT3V0cHV0IENpcmN1aXQgICA9IENhbkNvbW1zLkdldGJpdAkJCSAgIChoLCAxNSkgPyBJbnRlcm5hbC5PdXRwdXQgQ2lyY3VpdC5GYXVsdAk6IEludGVybmFsLk91dHB1dCBDaXJjdWl0Lk9LOwoJSW50ZXJuYWwuQmF0dGVyeSBWb2x0YWdlICA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgMTYpICogMC4wMTsJCS8vMC4wMVYKCUludGVybmFsLlRlbXBlcmF0dXJlIAkgID0gQ2FuQ29tbXMuR2V0SW50ZWdlcgkJICAgKGgsIDMyLCAxNikgKiAxLjA7CQkvLzFkZWdDCglJbnRlcm5hbC5GaXJtd2FyZSBWZXJzaW9uID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQ4LCAxNikgKiAwLjAxOwkJLy91bml0bGVzcwp9CmVsc2UKewoJSW50ZXJuYWwuQ0FOIERpYWdub3N0aWMgICA9IFBhcmVudC5JbnRlcm5hbC5DQU4gRGlhZ25vc3RpYy5DQU4gQnVzIFRpbWVvdXQ7CQoJU29sZW5vaWQuT3V0cHV0IFN0dWNrIAkgID0gUGFyZW50LlNvbGVub2lkLk91dHB1dCBTdHVjay5DQU4gQnVzIFRpbWVvdXQ7CglTb2xlbm9pZC5PcGVuIENpcmN1aXQJICA9IFBhcmVudC5Tb2xlbm9pZC5PcGVuIENpcmN1aXQuQ0FOIEJ1cyBUaW1lb3V0OwoJSW50ZXJuYWwuQ3VycmVudCBMaW1pdAkgID0gUGFyZW50LkludGVybmFsLkN1cnJlbnQgTGltaXQuQ0FOIEJ1cyBUaW1lb3V0OwoJSW50ZXJuYWwuT3V0cHV0IENpcmN1aXQgICA9IFBhcmVudC5JbnRlcm5hbC5PdXRwdXQgQ2lyY3VpdC5DQU4gQnVzIFRpbWVvdXQ7CglJbnRlcm5hbC5CYXR0ZXJ5IFZvbHRhZ2UgID0gQ2FsY3VsYXRlLk5BTigpOwoJSW50ZXJuYWwuVGVtcGVyYXR1cmUgCSAgPSBDYWxjdWxhdGUuTkFOKCk7CglJbnRlcm5hbC5GaXJtd2FyZSBWZXJzaW9uID0gQ2FsY3VsYXRlLk5BTigpOwp9CgoKRGlhZ25vc3RpYyA9IG5vVGltZW91dCA/IERpYWdub3N0aWMuT0sgOiBEaWFnbm9zdGljLkNBTiBCdXMgVGltZW91dDsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[Ci8vaW5pdGlsaXNlIHZhbHVlcwoKaWYgKENBTiBCdXMgZXEgQ0FOIEJ1cy5Ob3QgaW4gVXNlKQp7CglFbmdpbmUgTG9hZCBBeGlzID0gQ2FsY3VsYXRlLk5BTigpOwoJV2hlZWwgU2xpcCA9IENhbGN1bGF0ZS5OQU4oKTsKCUNvbnRyb2wgPSBDYWxjdWxhdGUuTkFOKCk7CgoJTW9kZS5QbHVzIAkJCQkgID0gTW9kZS5QbHVzLk9mZjsKCU1vZGUuTWludXMgCQkJICAgCSAgPSBNb2RlLk1pbnVzLk9mZjsKCU1vZGUuQXV0byBNYW51YWwgCQkgID0gTW9kZS5BdXRvIE1hbnVhbC5PZmY7CglTb2xlbm9pZC5BdmVyYWdlIEN1cnJlbnQgID0gQ2FsY3VsYXRlLk5BTigpOwoJU29sZW5vaWQuTWluaW11bSBDdXJyZW50ICA9IENhbGN1bGF0ZS5OQU4oKTsKCVNvbGVub2lkLk1heGltdW0gQ3VycmVudCAgPSBDYWxjdWxhdGUuTkFOKCk7CglTb2xlbm9pZC5Qb3NpdGl2ZSBWb2x0YWdlID0gQ2FsY3VsYXRlLk5BTigpOwoJU29sZW5vaWQuTmVnYXRpdmUgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCVNvbGVub2lkLkR1dHkgQ3ljbGUgCSAgPSBDYWxjdWxhdGUuTkFOKCk7CglJbnRlcm5hbC5DQU4gRGlhZ25vc3RpYyAgID0gSW50ZXJuYWwuQ0FOIERpYWdub3N0aWMuQ0FOIEJ1cyBUaW1lb3V0OwkKCVNvbGVub2lkLk91dHB1dCBTdHVjayAJICA9IFNvbGVub2lkLk91dHB1dCBTdHVjay5DQU4gQnVzIFRpbWVvdXQ7CglTb2xlbm9pZC5PcGVuIENpcmN1aXQJICA9IFNvbGVub2lkLk9wZW4gQ2lyY3VpdC5DQU4gQnVzIFRpbWVvdXQ7CglJbnRlcm5hbC5DdXJyZW50IExpbWl0CSAgPSBJbnRlcm5hbC5DdXJyZW50IExpbWl0LkNBTiBCdXMgVGltZW91dDsKCUludGVybmFsLk91dHB1dCBDaXJjdWl0ICAgPSBJbnRlcm5hbC5PdXRwdXQgQ2lyY3VpdC5DQU4gQnVzIFRpbWVvdXQ7CglJbnRlcm5hbC5CYXR0ZXJ5IFZvbHRhZ2UgID0gQ2FsY3VsYXRlLk5BTigpOwoJSW50ZXJuYWwuVGVtcGVyYXR1cmUgCSAgPSBDYWxjdWxhdGUuTkFOKCk7CglJbnRlcm5hbC5GaXJtd2FyZSBWZXJzaW9uID0gQ2FsY3VsYXRlLk5BTigpOwoJQ0FOLkRpYWdub3N0aWMJCQkgID0gQ0FOLkRpYWdub3N0aWMuTm90IGluIFVzZTsKfQ==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props SelectedTrigger="$(Parent.Update:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[CmlmIChDQU4gQnVzIG5lcSBDQU4gQnVzLk5vdCBpbiBVc2UpCnsKCXdoZW4gKFRoaXMuRW5naW5lIExvYWQgQXhpcyBTZWxlY3Rpb24pCgl7CgkJaXMgKFRvcnF1ZSkKCQl7CgkJCUVuZ2luZSBMb2FkIEF4aXMgPSBUb3JxdWUgLyA0MjIuMDsJLy80MjJObSBpcyB0aGUgc3RhbmRhcmQgbWF4IHRvcnF1ZSBzcGVjIGZvciB0aGUgRUoyMDcuCgkJfQoJCWlzIChJbmxldCBNYW5pZm9sZCBQcmVzc3VyZSkKCQl7CgkJCUVuZ2luZSBMb2FkIEF4aXMgPSBJbmxldCBNYW5pZm9sZCBQcmVzc3VyZSAvIEFtYmllbnQgUHJlc3N1cmUgU3RhbmRhcmQ7CgkJfQoJCWlzIChUaHJvdHRsZSBQb3NpdGlvbikKCQl7CgkJCUVuZ2luZSBMb2FkIEF4aXMgPSBUaHJvdHRsZSBQb3NpdGlvbjsKCQl9Cgl9CgoJV2hlZWwgU2xpcCA9IFdoZWVsIFNwZWVkIFJlYXIgRHJpdmUgLSBXaGVlbCBTcGVlZCBGcm9udCBEcml2ZTsKfQ==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ambient Pressure Standard">
+        <Props Qty="Pa">
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Torque">
+        <Props Qty="N.m"/>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[CnN0YXRpYyBsb2NhbCBjID0gNDsKCmlmIChDQU4gQnVzIG5lcSBDQU4gQnVzLk5vdCBpbiBVc2UpCnsKCUNBTi5SZWNlaXZlIDUwSHooKTsKCU1vZGUuVXBkYXRlKCk7CglDb250cm9sLlVwZGF0ZSgpOwoJQ0FOLlRyYW5zbWl0IDUwSHooKTsKCglpZiAoYyBlcSA0KQkvLzEwSHogcmF0ZSBvZmYgNTBIeiByYXRlCgl7CgkJQ0FOLlRyYW5zbWl0IDEwSHooKTsKCQljID0gMDsKCX0KCWVsc2UKCXsKCQljICs9IDE7Cgl9Cn0KCQ==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Decay">
+        <Props Qty="ratio/s" Validation="Positive Gain">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>The maximum rate that the <em class="device_item">Control</em> lock amount can fall. This may prevent oscilations in the <em class="device_item">Control</em> where&nbsp;lock amount is applied due to slip and the&nbsp;slip is then reduced which removes the amount of lock allowing the slip to return.</p><p>By reducing the <em class="device_item">Control</em> lock more slowly after a slip event, the chance of oscilation is reduced.<br></p><p>Set to 0 to disable.</p><p>Note, reductions in <em class="device_item">Control</em> due to the handbrake or VDC (if enabled) ignore this <em class="device_item">Control Decay</em> setting. The&nbsp;lock is reduced&nbsp;immeadiatly.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Vehicle Speed"/>
+        <Component Name="Wheel Speed Rear Drive"/>
+        <Component Name="Wheel Speed Front Drive"/>
+        <Component Name="Torque"/>
+        <Component Name="Ambient Pressure Standard"/>
+        <Component Name="Inlet Manifold Pressure"/>
+        <Component Name="Throttle Position"/>
+        <Component Name="Hand Brake"/>
+        <Component Name="VDC State"/>
+        <Component Name="Brake State"/>
+        <Component Name="Engine Load Axis Selection"/>
+        <Component Name="Engine Load Axis"/>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+         <Component Name="Plus"/>
+         <Component Name="Minus"/>
+         <Component Name="Update"/>
+         <Component Name="Auto Manual"/>
+        </Component>
+        <Component Name="CAN">
+         <Component Name="Receive 50Hz"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Transmit 50Hz"/>
+         <Component Name="Transmit 10Hz"/>
+        </Component>
+        <Component Name="Control">
+         <Component Name="Value"/>
+         <Component Name="Update"/>
+         <Component Name="Accelerate">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Brake">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Slip">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Slip Maximum"/>
+         <Component Name="Slip Range"/>
+         <Component Name="Decay"/>
+        </Component>
+        <Component Name="VDC">
+         <Component Name="Mode"/>
+         <Component Name="Lock"/>
+        </Component>
+        <Component Name="Startup"/>
+        <Component Name="Update"/>
+        <Component Name="Calculation"/>
+        <Component Name="Solenoid">
+         <Component Name="Average Current"/>
+         <Component Name="Minimum Current"/>
+         <Component Name="Maximum Current"/>
+         <Component Name="Positive Voltage"/>
+         <Component Name="Negative Voltage"/>
+         <Component Name="Duty Cycle"/>
+         <Component Name="Open Circuit"/>
+         <Component Name="Output Stuck"/>
+        </Component>
+        <Component Name="Internal">
+         <Component Name="Battery Voltage"/>
+         <Component Name="CAN Diagnostic"/>
+         <Component Name="Output Circuit"/>
+         <Component Name="Temperature"/>
+         <Component Name="Firmware Version"/>
+         <Component Name="Current Limit"/>
+        </Component>
+        <Component Name="Wheel Slip"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="SDC3"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

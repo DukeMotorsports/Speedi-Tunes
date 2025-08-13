@@ -1,0 +1,522 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Ambient Pressure" VersionMajor="1" VersionMinor="3" BuildNumber="2">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0016"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">'Ambient Pressure' class imported from 'MoTeC Input' module.</li>
+              <li class="device_help">Update to system 01.04.</li>
+              <li class="device_help">Add tags.</li>
+              <li class="device_help">Use 'Pressure' class for sensor to include calibration support.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC Input" VersionMajor="1" VersionMinor="10" VersionBuild="1"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Ambient Pressure Estimate Diagnostic Enumeration" Storage="enum" Default="Startup">
+   <Enum Name="Unstable" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The value of the fall back pressure sensor deviates by more than 0.5kPa from its filtered value in a 1s
+              timespan.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Fault" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">No valid pressure sensor fall back value is available.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Startup" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Initial value.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Engine Running" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help"><em class="device_item">Engine State</em> is not <em class="device_enum">Startup</em> or <em class="device_enum">Stop</em>.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stable" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The value of the fall back pressure sensor is stable.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Update" ContainerOrder="5" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The ambient pressure estimate has been updated.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Within Tolerance" ContainerOrder="6">
+    <Help>
+<![CDATA[<p class="device_help">The actual ambient pressure is within a 0.1kPa range of the last stored value.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Ambient Pressure State Enumeration" Storage="enum" Default="Sensor">
+   <Enum Name="Sensor" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Measured value.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Default" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The defined default value.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Estimated" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">Estimated value based on the value of a fall back pressure sensor.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Standard" ContainerOrder="3" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Constant value of 101.325kPa.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Input"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Input.Specialised.Ambient Pressure">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class provides an ambient pressure value. The value is determined based on the voltage signal of a
+              wired sensor.</p>
+            <p class="device_help">If no sensor is available, an estimated value can be calculated based on an external pressure sensor when
+              the engine is stalled. This estimated ambient pressure is saved in a flash backed channel. If there is no
+              valid external pressure sensor value or an estimated value could not yet been determined, the <em class="device_param">Default</em>
+              value will be used if it is greater than zero. Otherwise a standard value of (101.325kPa) will be used.</p>
+            <p class="device_help">This class supports sensors where the output voltage is either absolute or ratiometric. Diagnostic
+              information about the quality of the sensor value is provided.</p>
+            <h2 class="device_help">Integration</h2>
+            <p class="device_help">The ambient pressure class has an internal sensor which is updated at the rate specified by the 'Sensor Event'
+              attribute. In order for the current ambient pressure to be determined the 'Update' method must be called.
+            </p>
+            <p class="device_help">The 'Update' method needs one argument representing a fall back pressure that will be used to determine
+              the estimated ambient pressure when the engine is stalled and the fall back pressure is stable and within
+              the valid range for the ambient pressure. This fall back pressure can for example originate from an airbox
+              pressure sensor or an inlet manifold pressure sensor. The pressure at these positions can be assumed to be
+              the ambient pressure when the engine is not running.</p>
+            <p class="device_help">If no external pressure sensors are in the project, call the method as follows:</p>
+<pre class="device_help">Ambient.Pressure.Update(Calculate.NAN());</pre>
+            <p class="device_help">If an airbox pressure and a manifold pressure sensor are fitted the following example is suitable:</p>
+<pre class="device_help">local pres = Calculate.NAN();
+
+if (Airbox.Pressure.Sensor.Diagnostic.AsInteger() &gt; 0)
+{
+	pres = Airbox.Pressure;
+}
+else if (Inlet.Manifold.Pressure.Sensor.Diagnostic.AsInteger() &gt; 0)
+{
+	pres = Inlet.Manifold.Pressure.Sensor;
+}
+
+Ambient.Pressure.Update(pres);</pre>
+            <p class="device_help">The help for the Ambient Pressure class in the project should state the possible sources for the estimated
+              ambient pressure.</p>
+            <h2 class="device_help">Hardware</h2>
+            <h3 class="device_help">Sensor Resource Object</h3>
+            <p class="device_help">It is recommended to define this as a parameter, except if the sensor wiring in the application is
+              completely clear (can be a constant then).</p>
+            <h2 class="device_help">Input</h2>
+            <h3 class="device_help">Engine State</h3>
+            <p class="device_help">Connect to the Engine State channel. The calculation of the estimated ambient pressure is
+              only enabled if this value is <em class="device_enum">Startup</em> or <em class="device_enum">Stop</em>.</p>
+            <h3 class="device_help">Default</h3>
+            <p class="device_help">Normally a parameter but can reference a channel if an equivalent signal can be calculated when the
+              sensor fails and an estimate is not available.</p>
+            <h3 class="device_help">Sensor Voltage Filter</h3>
+            <p class="device_help">Filter time constant of the 3rd order butterworth input filter.</p>
+            <h3 class="device_help">Sensor Voltage Reference</h3>
+            <p class="device_help">Voltage reference for ratiometric sensors. Normally a parameter in generic applications. For targeted applications it may be set as a constant.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Sensor Voltage Event</h3>
+            <p class="device_help">For diagnostic purpose (to detect disturbances on the voltage pin) it is recommended to have an event
+              rate of 100Hz, but it must be at least the same event rate as Sensor Event.</p>
+            <h3 class="device_help">Sensor Event</h3>
+            <p class="device_help">This is the event rate at which the internal sensor value is updated. As the ambient pressure usually
+              does not change fast, a low event rate can be chosen. 10Hz is recommended.</p>
+            <h2 class="device_help">Methods</h2>
+            <h3 class="device_help">Update</h3>
+            <p class="device_help">The update method is called to update the ambient pressure estimate. The method takes an argument which
+              is the value of an external pressure sensor. If no pressure sensor is fitted, or if a fault has been
+              detected pass the value NAN.</p>
+            <p class="device_help">It is recommended to call this method at 10Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value">
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Engine State Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine State" TargetRef="Target" DisplayName="Engine State Input Object"/>
+         <Property Name="Estimate Diagnostic Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Estimate.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Estimate Diagnostic Diagnostic Log Rate"/>
+         <Property Name="Estimate Diagnostic Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Estimate.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Estimate Diagnostic Diagnostic Logging"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Sensor Event" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Event" DisplayName="Sensor Event"/>
+         <Property Name="Sensor Value Tags" Creation="Custom" Visible="1" TargetCpt="This.Sensor.Value" TargetRef="UserTags" DisplayName="Sensor Value Tags"/>
+         <Property Name="Sensor Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Voltage Event" DisplayName="Sensor Voltage Event"/>
+         <Property Name="State Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.State" TargetRef="DiagnosticLogRate" DisplayName="State Diagnostic Log Rate"/>
+         <Property Name="State Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.State" TargetRef="DiagnosticLog" DisplayName="State Diagnostic Logging"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Value Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="DiagnosticLogRate" DisplayName="Value Diagnostic Log Rate"/>
+         <Property Name="Value Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="DiagnosticLog" DisplayName="Value Diagnostic Logging"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Sensor.Voltage.Reference" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Sensor.Voltage" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Default" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Sensor" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Sensor" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Sensor" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">The absolute ambient pressure.</p>
+                  <p class="device_help">The source of this value is indicated by <em class="device_chan">State</em>:</p>
+                  <ul class="device_help">
+                    <li class="device_help">If <em class="device_chan">State</em> is <em class="device_enum">Sensor</em>, the quality of the value is indicated by <em class="device_chan">Sensor Diagnostic
+                      </em>.</li>
+                    <li class="device_help">If <em class="device_chan">State</em> is <em class="device_enum">Estimated</em>, the quality of the value is indicated by <em class="device_chan">Estimate
+                      Diagnostic</em>.</li>
+                    <li class="device_help">If <em class="device_chan">State</em> is <em class="device_enum">Default</em>, the value equals the defined <em class="device_param">Default</em> value.</li>
+                    <li class="device_help">If <em class="device_chan">State</em> is <em class="device_enum">Standard</em>, the value is set to a constant value of 101.325kPa.</li>
+                  </ul>
+                  <h2 class="device_help">Configuration</h2>
+                  <p class="device_help">The sensor can be configured by calibrating the following items. Some of them may not be exposed if
+                    they are already defined in this project.
+                    <ul class="device_help">
+                      <li class="device_help">Set <em class="device_param">Sensor Resource</em> to an available input pin.</li>
+                      <li class="device_help">Set <em class="device_param">Sensor Voltage Reference</em> to the power supply connected to the sensor.</li>
+                      <li class="device_help">Set <em class="device_param">Sensor Voltage Filter</em>.</li>
+                      <li class="device_help">Select the appropriate <em class="device_item">Sensor Calibration</em> or calibrate the sensor manually.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props DefaultLogRate="1S" DiagnosticLogRate="1S" Qty="Pa" Validation="MinMax" ValMin="5.00000000000000000e+003" ValMax="1.10000000000000000e+005">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa a" Min="8.00000000000000000e+004" Max="1.10000000000000000e+005"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props DefaultLogRate="1S" DiagnosticLogRate="1S" Type="::This.Ambient Pressure State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the source of the current ambient pressure value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Standard">
+        <Props Qty="Pa" Value="1.01325000000000000e+005">
+         <Locale>
+          <Default Unit="kPa a" DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Standard atmospheric pressure at sea level.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The current engine state.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Default">
+        <Props Qty="Pa" Validation="MinMax" ValMin="5.00000000000000000e+004" ValMax="1.50000000000000000e+005" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa a"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Default ambient pressure. Used when no sensor value and no valid estimate is available.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Estimate">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Estimated ambient pressure.</p>
+                  <p class="device_help">The condition of the value is indicated by <em class="device_chan">Estimate Diagnostic</em>.</p>
+                  <p class="device_help">Estimate is based on a fall back pressure sensor. If the engine is stalled and a valid pressure
+                    value is available, Estimate can be updated. This is done if the pressure value deviates by less
+                    than 0.5kPa within 1s and the difference to the last determined Estimated value is greater than
+                    0.1kPa.</p>
+                  <p class="device_help">The most recent value is preserved in non-volatile memory to ensure a reasonable estimate is
+                    available when the ECU powers up.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Estimate.Value">
+        <Props DefaultLogRate="1S" DiagnosticLogRate="1S" Qty="Pa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+006" Storage="Flash">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+          <Entry Value="Input"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa a" Min="8.00000000000000000e+004" Max="1.20000000000000000e+005"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Estimate.Diagnostic">
+        <Props Type="::This.Ambient Pressure Estimate Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports diagnostic information about the Estimate.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Estimate.Tolerance">
+        <Props Qty="Pa" Value="1.00000000000000000e+002">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Estimate.Deadband">
+        <Props Qty="Pa" Value="5.00000000000000000e+002">
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Estimate.Delay">
+        <Props Qty="s" Value="1.00000000000000000e+000"/>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Update">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="pressure" Type="f32" Attrs="0">
+           <Description>
+<![CDATA[<p>The pressure used for ambient pressure estimation. This value is generally either an airbox
+                          pressure or a manifold pressure.</p>
+                        <p>Set to NAN when no value is available.</p>]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[<p>This method updates the ambient pressure estimate.</p>
+                    <p>It should be called at 10Hz.</p>
+                    <p>The method takes one argument called 'pressure'. It represents the value of a pressure sensor
+                      that sometimes measures ambient pressure (for example, an airbox pressure sensor or a manifold
+                      pressure sensor). The value is sampled when the engine is stalled.</p>
+                    <p>If no pressure sensor value is available pass an argument of NAN.</p>]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[<!-- Empty -->]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[<!-- No return value -->]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[LyoKICogVXBkYXRlIGJhcm9tZXRyaWMgcHJlc3N1cmUgZXN0aW1hdGUgd2hlbiBlbmdpbmUgaXMgc3RhbGxlZCBhbmQgcHJlc3N1cmUgaXMgc3RhYmxlLgogKi8KbG9jYWwgbWFwb2sgPSBWYWx1ZS5WYWxpZGF0ZShpbi5wcmVzc3VyZSk7CgovKgogKiBHaXZlIG1hbmlmb2xkIHByZXNzdXJlIEVzdGltYXRlLkRlbGF5IHRpbWUgdG8gc3RhYmlsaXNlCiAqIGFmdGVyIHRoZSBlbmdpbmUgc3RhbGxzLgogKi8KbG9jYWwgc3RhbGwgPSBEZWxheS5SaXNpbmcoCglFbmdpbmUgU3RhdGUgZXEgRW5naW5lIFN0YXRlLlN0YXJ0dXAgb3IgRW5naW5lIFN0YXRlIGVxIEVuZ2luZSBTdGF0ZS5TdG9wLAoJRXN0aW1hdGUuRGVsYXkKKTsKCi8qCiAqIElmIHRoZSBsYXN0IHNhbXBsZSBvZiB0aGUgZmlsdGVyIHJlc2V0IHdhcyBub2lzeSBpdAogKiBjYW4gdGFrZSBhIGxvbmcgdGltZSB0byBmaWx0ZXIgYmFjayB0byB0aGUgcmVhbCB2YWx1ZS4KICogUmVzZXQgaW4gdGhpcyBjYXNlLgogKi8KbG9jYWwgdW5zdGFibGUgPSBEZWxheS5SaXNpbmcoCglFc3RpbWF0ZS5EaWFnbm9zdGljIGVxIEVzdGltYXRlLkRpYWdub3N0aWMuVW5zdGFibGUsCglFc3RpbWF0ZS5EZWxheQopOwoKLyoKICogSWYgbWFuaWZvbGQgcHJlc3N1cmUgaXMgdHJlbmRpbmcgZm9yIHNvbWUgcmVhc29uIHJlc2V0dGluZwogKiB0aGUgZmlsdGVyIHdoZW4gd2UgbmVlZCBhbiB1cGRhdGUgaW1wcm92ZXMgb3VyIHJlc3BvbnNlLgogKgogKiBOb3RlIHRoYXQgdGhlIGZpbHRlciBpcyBiYXNpY2FsbHkgZm9yIGRldGVjdGluZyBzdGFiaWxpdHksCiAqIG5vdCByZWFsbHkgZm9yIGZpbHRlcmluZyB0aGUgc2lnbmFsIHNvIHRoaXMgaXMgb2suCiAqLwpsb2NhbCB1cGRhdGVkID0gRXN0aW1hdGUuRGlhZ25vc3RpYyBlcSBFc3RpbWF0ZS5EaWFnbm9zdGljLlVwZGF0ZTsKCmxvY2FsIGZpbHRlcmVkID0gRmlsdGVyLkZpcnN0T3JkZXIoCglpbi5wcmVzc3VyZSwKCTEuMCwKCW5vdCBzdGFsbCBvciB1bnN0YWJsZSBvciB1cGRhdGVkCik7Cgpsb2NhbCBzdGFibGUgPSAoQ2FsY3VsYXRlLkFic29sdXRlKGluLnByZXNzdXJlIC0gZmlsdGVyZWQpIDw9IEVzdGltYXRlLkRlYWRiYW5kKSBhbmQgbWFwb2s7CmxvY2FsIGRvdXBkYXRlID0gTGlicmFyeS5EZWxheS5SaXNpbmcoc3RhYmxlIGFuZCBzdGFsbCwgRXN0aW1hdGUuRGVsYXkpOwoKaWYgKGRvdXBkYXRlKQp7CQoJaWYgKENhbGN1bGF0ZS5BYnNvbHV0ZShFc3RpbWF0ZSAtIGZpbHRlcmVkKSA+IEVzdGltYXRlLlRvbGVyYW5jZSkKCXsKCQlFc3RpbWF0ZS5EaWFnbm9zdGljID0gRXN0aW1hdGUuRGlhZ25vc3RpYy5VcGRhdGU7CgkJRXN0aW1hdGUgPSBmaWx0ZXJlZDsKCQlTeXN0ZW0uUHJlc2VydmUoKTsKCX0KCWVsc2UKCXsKCQlFc3RpbWF0ZS5EaWFnbm9zdGljID0gRXN0aW1hdGUuRGlhZ25vc3RpYy5XaXRoaW4gVG9sZXJhbmNlOwoJfQp9CmVsc2UgaWYgKG5vdCBzdGFsbCkKewoJRXN0aW1hdGUuRGlhZ25vc3RpYyA9IEVzdGltYXRlLkRpYWdub3N0aWMuRW5naW5lIFJ1bm5pbmc7Cn0KZWxzZSBpZiAobm90IG1hcG9rKQp7CglFc3RpbWF0ZS5EaWFnbm9zdGljID0gRXN0aW1hdGUuRGlhZ25vc3RpYy5TZW5zb3IgRmF1bHQ7Cn0KZWxzZSBpZiAoc3RhYmxlKQp7CglFc3RpbWF0ZS5EaWFnbm9zdGljID0gRXN0aW1hdGUuRGlhZ25vc3RpYy5TdGFibGU7Cn0KZWxzZQp7CglFc3RpbWF0ZS5EaWFnbm9zdGljID0gRXN0aW1hdGUuRGlhZ25vc3RpYy5VbnN0YWJsZTsKfQoKLyoKICogRGVjaWRlIHdoZXJlIGFtYmllbnQgcHJlc3N1cmUgY29tZXMgZnJvbQogKi8KaWYgKFNlbnNvci5EaWFnbm9zdGljLkFzSW50ZWdlcigpID49IFNlbnNvci5EaWFnbm9zdGljLk9LLkFzSW50ZWdlcigpKQp7CglWYWx1ZSA9IFNlbnNvcjsKCVN0YXRlID0gU3RhdGUuU2Vuc29yOwp9CmVsc2UgaWYgKEVzdGltYXRlID4gMC4wKQp7CglWYWx1ZSA9IEVzdGltYXRlOwoJU3RhdGUgPSBTdGF0ZS5Fc3RpbWF0ZWQ7Cn0KZWxzZSBpZiAoRGVmYXVsdCA+IDAuMCkKewoJVmFsdWUgPSBEZWZhdWx0OwoJU3RhdGUgPSBTdGF0ZS5EZWZhdWx0Owp9CmVsc2UKewoJVmFsdWUgPSBTdGFuZGFyZDsKCVN0YXRlID0gU3RhdGUuU3RhbmRhcmQ7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Default.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Sensor.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor.Resource.Value"/>
+       <Component Classname="BuiltIn.Calibration" Name="Base.Sensor.Calibration"/>
+       <Component Classname="_CalibrationSchema.Absolute_Pressure_1" Name="Base.Sensor.Calibration.Absolute Pressure 1"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Diagnostic Low"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Diagnostic High"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Sensor Output"/>
+       <Component Classname="BuiltIn.CalFuncUser" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Transform"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Diagnostic"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Time"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.Low"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.High"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Diagnostic.Delay">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="_IOMethod.ratio" Name="Base.Sensor.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Normalised Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Voltage.Reference"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Voltage.Reference.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Reserve"/>
+       <Component Classname="MoTeC Input.Absolute Pressure" Name="Base.Sensor">
+        <Comment>
+<![CDATA[<p class="device_help">Ambient pressure sensor. This is a calibrated sensor value.</p>
+                  <p class="device_help">The quality of this value is indicated by <em class="device_chan">Sensor Diagnostic</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Update"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Release"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Resolution"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Sensor.Calculation"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Diagnostic.Delay.Value">
+        <Props Value="2.00000000000000010e-001"/>
+       </Component>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Translation.Value"/>
+       <Component Classname="BuiltIn.CalibrationTable" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Translation"/>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Translation.X"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Sensor.Translation"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Translation.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Sensor.Translation.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Sensor.Translation.Update"/>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Translation.Value"/>
+       <Component Classname="BuiltIn.CalibrationTable" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Translation"/>
+       <Component Classname="_CalibrationSchema.Absolute_Pressure_2" Name="Base.Sensor.Calibration.Absolute Pressure 2"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Sensor Output"/>
+       <Component Classname="BuiltIn.CalFuncUser" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Transform"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Diagnostic High"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Diagnostic Low"/>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Translation.X"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="State"/>
+        <Component Name="Standard"/>
+        <Component Name="Engine State"/>
+        <Component Name="Default">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Estimate">
+         <Component Name="Value"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Tolerance"/>
+         <Component Name="Deadband"/>
+         <Component Name="Delay"/>
+        </Component>
+        <Component Name="Sensor">
+         <Component Name="Value"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Calibration">
+          <Component Name="Absolute Pressure 1">
+           <Component Name="Translation">
+            <Component Name="Value"/>
+            <Component Name="X"/>
+           </Component>
+           <Component Name="Diagnostic Low"/>
+           <Component Name="Diagnostic High"/>
+           <Component Name="Sensor Output"/>
+           <Component Name="Transform"/>
+          </Component>
+          <Component Name="Absolute Pressure 2">
+           <Component Name="Translation">
+            <Component Name="Value"/>
+            <Component Name="X"/>
+           </Component>
+           <Component Name="Diagnostic Low"/>
+           <Component Name="Diagnostic High"/>
+           <Component Name="Sensor Output"/>
+           <Component Name="Transform"/>
+          </Component>
+         </Component>
+         <Component Name="Diagnostic">
+          <Component Name="Value"/>
+          <Component Name="Time"/>
+          <Component Name="Low"/>
+          <Component Name="High"/>
+          <Component Name="Delay">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Normalised Filtered"/>
+          <Component Name="Absolute"/>
+          <Component Name="Filter">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reference">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+          <Component Name="Input Impedance"/>
+          <Component Name="Input Source"/>
+          <Component Name="Input Bandwidth"/>
+          <Component Name="Input Minimum"/>
+          <Component Name="Input Maximum"/>
+          <Component Name="Input Resolution"/>
+         </Component>
+         <Component Name="Translation">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Calculation"/>
+        </Component>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Input.Specialised"/>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Input">
+     <ModuleGroup Name="Specialised">
+      <Module Name="Ambient Pressure"/>
+     </ModuleGroup>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

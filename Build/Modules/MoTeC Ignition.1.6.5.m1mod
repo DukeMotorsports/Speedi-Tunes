@@ -1,0 +1,643 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Ignition" VersionMajor="1" VersionMinor="6" BuildNumber="5">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0034"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Add voltage measurement for ignition outputs.</li><li class="device_help">Allow value inputs for Knock Level</li>
+            </ul>
+            <h4 class="device_help">01.06.0003</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="3"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Ignition Output Mode Enumeration" Storage="enum" Default="Normal">
+   <Enum Name="Normal" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Trims and Limits on Ignition Timing are active.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Check Timing" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The ignition advance is set to Ignition Timing to support testing with a timing light.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Knock State Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The Knock control is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The Knock control is enabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Transient" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The Knock control holds the previous value.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Ignition"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Ignition.Single Spark Plug">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements an individual ignition output.</p>
+            <p class="device_help">Implementation notes:</p>
+            <p class="device_help"><em class="device_item">Output Resource</em>: Will be connected to an ignition output. If the respective pin is not yet known,
+              it can be set up as an IO Resource Parameter and later be defined in the package.</p>
+            <p class="device_help">Usually the project will have an Ignition State channel that defines the enable conditions for the
+              ignition (for example if the engine run switch is enabled), which can be connected to <em class="device_ref">Output Enable</em>.
+            </p>
+            <p class="device_help"><em class="device_item">Output Firing Edge</em> is determined by the Ignition Driver device in use.</p>
+            <p class="device_help"><em class="device_ref">Output Timing</em>, <em class="device_ref">Output Restrike Angle</em>, <em class="device_ref">Output Restrike Count</em> and the Limit-inputs
+              must also be defined externally. <em class="device_ref">Output Timing</em> is usually dependant upon various factors like
+              Engine Speed, Inlet Manifold Pressure, Engine Load, Coolant Temperature and others.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Output.SetTiming" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Output Enable Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Enable" TargetRef="Target" DisplayName="Output Enable Component"/>
+         <Property Name="Restrike Angle Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Angle" TargetRef="Target" DisplayName="Restrike Angle Component"/>
+         <Property Name="Restrike Count Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Count" TargetRef="Target" DisplayName="Restrike Count Component"/>
+         <Property Name="Timing Target Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Timing" TargetRef="Target" DisplayName="Timing Target Component"/>
+         <Property Name="Timing Validation Maximum" Creation="Custom" Visible="1" TargetCpt="This.Output.Timing" TargetRef="ValMax" DisplayName="Timing Validation Maximum"/>
+         <Property Name="Timing Validation Minimum" Creation="Custom" Visible="1" TargetCpt="This.Output.Timing" TargetRef="ValMin" DisplayName="Timing Validation Minimum"/>
+         <Property Name="Top Dead Centre Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Top Dead Centre" TargetRef="Target" DisplayName="Top Dead Centre Component"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Voltage.Update" TargetRef="SelectedTrigger" DisplayName="Voltage Event"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Timing" MatchPropType="Prop" MatchPropTarget="Locale.Default.Max"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Timing" MatchPropType="Prop" MatchPropTarget="Locale.Default.Min"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Firing Edge" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.ign" Name="Base.Output">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information regarding the calculation that generates the output waveform.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Output.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Firing Edge">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Output.Firing Edge.Value">
+        <Props Value="EDGE_FALL"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Top Dead Centre"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Angle"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Count"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameCreation="AutoConst" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceConstant" Name="Base.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetRestrike"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Enable"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Timing"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetTiming"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[<p class="device_help">The voltage at the output pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Output">
+         <Component Name="Diagnostic"/>
+         <Component Name="Firing Edge">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Enable"/>
+         <Component Name="Top Dead Centre"/>
+         <Component Name="Timing"/>
+         <Component Name="Restrike Angle"/>
+         <Component Name="Restrike Count"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="SetTiming"/>
+         <Component Name="SetRestrike"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Old"/>
+    <ModuleGroup Name="Old.Ignition"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Ignition.Single Spark Plug with knock">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements an individual ignition output with the following features:
+              <ul class="device_help">
+                <li class="device_help">Individual Cylinder Ignition Trim Table</li>
+                <li class="device_help">Knock control</li>
+              </ul>
+            </p>
+            <p class="device_help">Implementation notes:</p>
+            <p class="device_help"><em class="device_item">Output Resource</em>: Will be connected to an ignition output. If the respective pin is not yet known,
+              it can be set up as an IO Resource Parameter and later be defined in the package.</p>
+            <p class="device_help"><em class="device_table">Trim Main</em>: A table is recommended, using the Engine Speed as one axis value. An additional axis
+              value can be for example Engine Load.</p>
+            <p class="device_help">The Trim Knock inputs must be connected to externally defined objects. Most often, these will be tables
+              that are defined in dependency of Engine Speed. An additional axis value can be for example Engine Load.
+            </p>
+            <p class="device_help"><em class="device_ref">Knock Level</em> and <em class="device_ref">Knock Cycle</em> must be connected to the respective individual cylinder Knock
+              Level class which must be set up in the project. This class also contains the TDC information.</p>
+            <p class="device_help">Usually the project will have an Ignition State channel that defines the enable conditions for the
+              ignition (for example if the engine run switch is enabled), which can be connected to <em class="device_ref">Output Enable</em>.
+            </p>
+            <p class="device_help"><em class="device_item">Output Firing Edge</em> is determined by the Ignition Driver device in use.</p>
+            <p class="device_help"><em class="device_ref">Output Timing</em>, <em class="device_ref">Mode</em>, <em class="device_ref">Output Restrike Angle</em>, <em class="device_ref">Output Restrike Count</em> and the
+              Limit-inputs must also be defined externally. <em class="device_ref">Ignition Timing</em> is usually dependant upon various
+              factors like Engine Speed, Inlet Manifold Pressure, Engine Load, Coolant Temperature and others.</p>
+            <p class="device_help">The Event rate should allow for fast adjustments of the ignition timing in case of knock events. It
+              should match the event rate from the Knock Level class in the project.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Calculation" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Ignition Timing" Creation="Custom" Visible="1" TargetCpt="This.Ignition Timing" TargetRef="Target" DisplayName="Ignition Timing"/>
+         <Property Name="Knock Cycle" Creation="Custom" Visible="1" TargetCpt="This.Knock.Cycle" TargetRef="Target" DisplayName="Knock Cycle"/>
+         <Property Name="Limit Advance" Creation="Custom" Visible="1" TargetCpt="This.Limit.Advance" TargetRef="Target" DisplayName="Limit Advance"/>
+         <Property Name="Limit Retard" Creation="Custom" Visible="1" TargetCpt="This.Limit.Retard" TargetRef="Target" DisplayName="Limit Retard"/>
+         <Property Name="Mode Component" Creation="Custom" Visible="1" TargetCpt="This.Mode" TargetRef="Target" DisplayName="Mode Component"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Output Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Output.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Output Diagnostic Log Rate"/>
+         <Property Name="Output Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Output.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Output Diagnostic Logging"/>
+         <Property Name="Restrike Angle" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Angle" TargetRef="Target" DisplayName="Restrike Angle"/>
+         <Property Name="Restrike Count" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Count" TargetRef="Target" DisplayName="Restrike Count"/>
+         <Property Name="Timing Display Max" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="Locale.Default.Max" DisplayName="Timing Display Max"/>
+         <Property Name="Timing Display Min" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="Locale.Default.Min" DisplayName="Timing Display Min"/>
+         <Property Name="Timing Validation Max" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="ValMax" DisplayName="Timing Validation Max"/>
+         <Property Name="Timing Validation Min" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="ValMin" DisplayName="Timing Validation Min"/>
+         <Property Name="Top Dead Centre" Creation="Custom" Visible="1" TargetCpt="This.Output.Top Dead Centre" TargetRef="Target" DisplayName="Top Dead Centre"/>
+         <Property Name="Trim Knock Gain" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Gain" TargetRef="Target" DisplayName="Trim Knock Gain"/>
+         <Property Name="Trim Knock Limit" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Limit" TargetRef="Target" DisplayName="Trim Knock Limit"/>
+         <Property Name="Trim Knock Recovery Rate" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Recovery Rate" TargetRef="Target" DisplayName="Trim Knock Recovery Rate"/>
+         <Property Name="Trim Knock State" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.State" TargetRef="Target" DisplayName="Trim Knock State"/>
+         <Property Name="Trim Knock Threshold" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Threshold" TargetRef="Target" DisplayName="Trim Knock Threshold"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Voltage.Update" TargetRef="SelectedTrigger" DisplayName="Voltage Event"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Voltage" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Firing Edge" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Knock.Level" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<h2 class="device_help">General Help on Ignition with knock control</h2>
+                  <p class="device_help">Note that while all values that influence the Ignition Timing use the 'angle' unit, they can have
+                    different display units, as shown below.</p>
+                  <img src="data:image/png;base64,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" alt="No Image" class="device_help"/>
+                  <img src="data:image/png;base64,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" alt="No Image" class="device_help"/>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Timing">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.000000e+001" ValMax="9.000000e+001">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC" Min="-6.000000e+001" Max="2.000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Final timing for this cylinder.
+                    <ul class="device_help">
+                      <li class="device_help">Calculated from the sum of <em class="device_ref">Ignition Timing</em>, <em class="device_table">Trim Main</em> and <em class="device_group">Trim Knock</em>.
+                      </li>
+                      <li class="device_help">The final timing is constrained to <em class="device_ref">Limit Advance</em> and <em class="device_ref">Limit Retard</em>.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim">
+        <Props UseDefValue="true" DefValue="This.Trim"/>
+        <Comment>
+<![CDATA[<p class="device_help">The sum of <em class="device_table">Trim Main</em> and <em class="device_group">Trim Knock</em>, which is the effective Trim on <em class="device_ref">Ignition
+                    Timing</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Trim">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.000000e+001" ValMax="9.000000e+001">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Main">
+        <Props Qty="$(Parent.Parent.Timing:Qty)" Validation="$(Parent.Parent.Timing:Validation)" ValMin="$(Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Timing:ValMax)" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="$(Parent.Parent.Timing:Locale.Default.Unit)" DPS="$(Parent.Parent.Timing:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The individual cylinder Ignition Trim to compensate for imbalance between the cylinders.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Trim.Main.Value">
+        <Props NumAxes="2"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Trim.Main.Value.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Trim.Main.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Trim.Main.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim.Knock">
+        <Props UseDefValue="true" DefValue="This.Knock"/>
+        <Comment>
+<![CDATA[<p class="device_help">The offset applied to this cylinder for knock control.
+                    <ul class="device_help">
+                      <li class="device_help">This value is decayed at <em class="device_ref">Trim Knock Recovery Rate</em></li>
+                      <li class="device_help">This value is increased when <em class="device_ref">Knock Level</em> exceeds <em class="device_ref">Trim Knock Threshold</em></li>
+                    </ul>
+                  </p>
+                  <p class="device_help">The Knock Strategy and Trim Knock calculation is shown below:</p>
+                  <img src="data:image/png;base64,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" alt="No Image" class="device_help"/>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Knock.Knock">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dRTD" Min="0.00000000000000000e+000" Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.State">
+        <Props Type="::This.Knock State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Individual cylinder knock control is managed by a global knock status</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Gain">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="dRTD"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The Gain which is applied to (<em class="device_ref">Knock Level</em> - <em class="device_ref">Trim Knock Threshold</em>) to define <em class="device_group">Trim
+                    Knock</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Limit">
+        <Props Qty="rad" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <Locale>
+          <Default Unit="dRTD"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The maximum ignition timing retard that can be requested with <em class="device_group">Trim Knock</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Threshold">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_group">Trim Knock</em> will be effective if the knock level is above this threshold.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Recovery Rate">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="1.00000000000000000e-003" ValClampMax="false">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the decay of <em class="device_group">Trim Knock</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Trim.Knock.Calculation">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZXQgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKCmxvY2FsIHVwZGF0ZWQgPSBDaGFuZ2UuQnkoQmFzZS5Lbm9jay5DeWNsZSwgMSk7Cgp3aGVuIChTdGF0ZSkKewoJaXMgKEVuYWJsZWQpCgl7CgkJLyogZGVjYXkgcHJldmlvdXMgdmFsdWUgcHJpb3IgdG8gY29tcGFyaXNvbiB3aXRoIGN1cnJlbnQga25vY2sgbGV2ZWwgKi8KCQlsb2NhbCBkZWNheWVkVHJpbSA9IExpYnJhcnkuQ2FsY3VsYXRlLk1heChUaGlzLktub2NrIC0gKFJlY292ZXJ5IFJhdGUgKiBldCksIDAuMCk7CgkJbG9jYWwgY3VycmVudFRyaW0gPSAwLjA7CgkJaWYgKHVwZGF0ZWQpCgkJewoJCQljdXJyZW50VHJpbSA9IExpYnJhcnkuQ2FsY3VsYXRlLk1heCgoQmFzZS5Lbm9jay5MZXZlbCAtIFRocmVzaG9sZCkgKiBHYWluLCAwLjApOwoJCX0KCQlUaGlzLktub2NrID0gTGlicmFyeS5DYWxjdWxhdGUuTWluKGRlY2F5ZWRUcmltICsgY3VycmVudFRyaW0sIFRoaXMuTGltaXQpOwoJfQoJaXMgKFRyYW5zaWVudCkKCXsKCQkvKiBIb2xkIHByZXZpb3VzIHZhbHVlICovCgl9CglpcyAoRGlzYWJsZWQpCgl7CgkJVGhpcy5Lbm9jayA9IDAuMDsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Timing">
+        <Props Type="$(Parent.Timing:Type)" Qty="$(Parent.Timing:Qty)" Validation="$(Parent.Timing:Validation)" ValClampMin="$(Parent.Timing:ValClampMin)" ValMin="$(Parent.Timing:ValMin)" ValClampMax="$(Parent.Timing:ValClampMax)" ValMax="$(Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="$(Parent.Timing:Locale.Default.Unit)" DPS="$(Parent.Timing:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The desired ignition timing. This value is modified by the per-cylinder trims to compensate for
+                    imbalance between cylinders.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="::This.Ignition Output Mode Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Used to override ignition timing for checking with a timing light.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Knock">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Knock.Level">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Connect to Engine Cylinder N Knock Level</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Knock.Cycle">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Connect to Engine Cylinder N Knock Cycle</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Limit">
+        <Comment>
+<![CDATA[<p class="device_help">Ignition timing constraints</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Limit.Advance">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Ignition advance limit.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Limit.Retard">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Ignition retard limit.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.ign" Name="Base.Output">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information regarding the calculation that generates the output waveform.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Output.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Firing Edge">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Output.Firing Edge.Value">
+        <Props Value="EDGE_FALL"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Enable"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Top Dead Centre"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Timing">
+        <Props Target="Parent.Parent.Timing"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Angle"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Count"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameCreation="AutoConst" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceConstant" Name="Base.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetTiming">
+        <Props SelectedTrigger="$(Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetRestrike"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoTW9kZSkKewoJaXMgKE5vcm1hbCkKCXsKCQlUcmltID0gVHJpbS5NYWluICsgVHJpbS5Lbm9jazsKCQlUaW1pbmcgPSBsaWJyYXJ5LkxpbWl0LlJhbmdlKElnbml0aW9uIFRpbWluZyArIFRyaW0sIFRoaXMuTGltaXQuQWR2YW5jZSwgVGhpcy5MaW1pdC5SZXRhcmQpOwoJfQoJaXMgKENoZWNrIFRpbWluZykKCXsKCQlUcmltID0gMC4wOwoJCVRpbWluZyA9IElnbml0aW9uIFRpbWluZzsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[<p class="device_help">The voltage at the output pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Timing"/>
+        <Component Name="Trim">
+         <Component Name="Trim"/>
+         <Component Name="Main">
+          <Component Name="Value">
+           <Component Name="Value"/>
+           <Component Name="Init"/>
+           <Component Name="Update"/>
+          </Component>
+         </Component>
+         <Component Name="Knock">
+          <Component Name="Knock"/>
+          <Component Name="State"/>
+          <Component Name="Gain"/>
+          <Component Name="Limit"/>
+          <Component Name="Threshold"/>
+          <Component Name="Recovery Rate"/>
+          <Component Name="Calculation"/>
+         </Component>
+        </Component>
+        <Component Name="Ignition Timing"/>
+        <Component Name="Mode"/>
+        <Component Name="Knock">
+         <Component Name="Level"/>
+         <Component Name="Cycle"/>
+        </Component>
+        <Component Name="Limit">
+         <Component Name="Advance"/>
+         <Component Name="Retard"/>
+        </Component>
+        <Component Name="Output">
+         <Component Name="Diagnostic"/>
+         <Component Name="Firing Edge">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Enable"/>
+         <Component Name="Top Dead Centre"/>
+         <Component Name="Timing"/>
+         <Component Name="Restrike Angle"/>
+         <Component Name="Restrike Count"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="SetTiming"/>
+         <Component Name="SetRestrike"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Upcoming"/>
+    <ModuleGroup Name="Upcoming.Ignition"/>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Ignition">
+     <Module Name="Single Spark Plug with knock"/>
+     <Module Name="Single Spark Plug"/>
+    </ModuleGroup>
+    <ModuleGroup Name="Upcoming">
+     <ModuleGroup Name="Ignition"/>
+    </ModuleGroup>
+    <ModuleGroup Name="Old">
+     <ModuleGroup Name="Ignition"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

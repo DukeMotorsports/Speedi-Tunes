@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="Bosch OE Integration" VersionMajor="1" VersionMinor="0" BuildNumber="1">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0019"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">All Firmware slots from 16 to avoid clashes with other OE classes.</li></ul><h4 class="device_help">Version 01.00.0000</h4><ul class="device_help"><li class="device_help">Initial Release - System 1.4</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC Comms" VersionMajor="1" VersionMinor="10" VersionBuild="1"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Bosch OE CAN Switch State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Off" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Bosch OE Integration"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Bosch OE Integration.Bosch ABS M4">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements OE Integration for Bosch ABS M4 installations.</p><p class="device_help">Components include CAN receive messaging for ABS using original naming.</p><h2 class="device_help">Value Inputs</h2><h3 class="device_help">None required.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </h3><p class="device_help">This class is used for reporting values from the ABS unit only.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p><h2 class="device_help">Data Types</h2><h3 class="device_help">None required</h3><p class="device_help"><br></p><p class="device_help"><h2 class="device_help">Attributes</h2><h3 class="device_help">Event</h3><p class="device_help">Must be 100Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to Bosch ABS M4 systems.</p><p class="device_help">Some of these component values are received as CAN messages from the OE platform, and may be                    accessed by means of Firmware CAN Resources for selected channels:                     <ul class="device_help"><li class="device_help">Wheel Speed Front Left appears as Firmware 16.</li><li class="device_help">Wheel Speed Front Right appears as Firmware 17.</li><li class="device_help">Wheel Speed Rear Left appears as Firmware 18.</li><li class="device_help">Wheel Speed Rear Right appears as Firmware 19.</li><li class="device_help">Yaw&nbsp;appears as Firmware 20.</li><li class="device_help">Yaw Acceleration appears as Firmware 21.</li><li class="device_help">Lateral Acceleration appears as Firmware 22.</li><li class="device_help">Longitudinal&nbsp;Acceleration appears as Firmware 23.</li><li class="device_help">Brake Pressure&nbsp;appears as Firmware 24.</li><li class="device_help">Map Switch Position&nbsp;appears as Firmware 25.</li><li class="device_help">Active&nbsp;appears as Firmware 26.<br></li><li class="device_help">ABS Lamp&nbsp;appears as Firmware 27.<br></li><li class="device_help">Brake Switch appears as Firmware 28.</li><li class="device_help">EBD Lamp&nbsp;appears as Firmware 29.</li></ul><p class="device_help">Refer to individual channel help for information on how to configure each Firmware channel for correct operation.</p><p class="device_help">To correctly receive ABS-M4 wheel speeds in the range 0.25km/h to 500km/h the following settings are critical:</p><p class="device_help"><br></p><ul><li><div class="device_help">Set <strong>Wheel Speed Front/Rear Pitch Threshold</strong> to 100%.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front/Rear Timeout </strong>to 400ms.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front/Rear Final Drive Ratio</strong> to 1.00.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Resource</strong> to Firmware 16.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Resource</strong> to Firmware 17.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Resource</strong> to Firmware 18.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Resource</strong> to Firmware 19.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Scale</strong> to 125.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Sample Teeth </strong>to 0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Scale</strong> to 125.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Sample Teeth </strong>to 0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Scale</strong> to 125.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Sample Teeth </strong>to 0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Scale</strong> to 125.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Sample Teeth </strong>to 0.</div></li></ul><p class="device_help"><br></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Yaw">
+        <Props Qty="rad/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="-1.63000000000000000e+002" Max="1.63000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Yaw.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Yaw Acceleration">
+        <Props Qty="rad/s/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0" Min="-4.09600000000000000e+003" Max="4.09500000000000000e+003"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Yaw Acceleration.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Map Switch Position">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Map Switch.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in a Driver Rotary Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;25</strong> as <strong>Driver Rotary Switch n Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN Position x 100</strong> as the <strong>Driver Rotary Switch n Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Driver Rotary Switch n Diagnostic Delay</strong> to 100ms.</div></li></ul><p class="device_help"><br></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Pressure">
+        <Props Qty="Pa" Validation="MinMax" ValMin="-4.24000000000000000e+007" ValMax="4.25000000000000000e+007">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="bar" DPS="2" Min="0.00000000000000000e+000" Max="4.25000000000000000e+007"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Brake&nbsp;Pressure.</p><p>
+Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Brake Pressure Front:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;24</strong> as <strong>Brake Pressure Front Sensor Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN Gauge 2DP</strong> as the <strong>Brake Pressure Front Sensor Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Brake Pressure Front Sensor Diagnostic Delay</strong> to 100mS.</div></li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Switch">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Brake Switch.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Brake Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;28</strong> as <strong>Brake Switch Resource</strong>.</div></li><li>Set <strong>Brake Switch Pullup Control</strong> to Off.</li><li>Set <strong>Brake Switch Active Edge</strong> to Rising.</li><li>Set <strong>Brake Switch Threshold</strong> to 0.6V.</li><li>Set <strong>Brake Switch Hysteresis </strong>to 0.2V.</li><li>Set <strong>Brake Switch Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Active">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 ABS Active flag.</p><p class="device_help">Bosch ABS_M4&nbsp; systems use ABS CAN messages for calculations. If CAN messages fail or time out,
+this channel&nbsp;is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;a Driver Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;26</strong> as <strong>Driver Switch n Resource</strong>.</div></li><li>Set <strong>Driver Switch n</strong><strong> Pullup Control</strong> to Off.</li><li>Set <strong>Driver Switch n</strong><strong> Active Edge</strong> to Rising.</li><li>Set <strong>Driver Switch n</strong><strong> Threshold</strong> to 0.6V.</li><li>Set <strong>Driver Switch n</strong><strong> Hysteresis </strong>to 0.2V.</li><li>Set <strong>Driver Switch n</strong><strong> Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.ABS Lamp">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 ABS Alarm.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;a Driver Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;27</strong> as <strong>Driver Switch n Resource</strong>.</div></li><li>Set <strong>Driver Switch n</strong><strong> Pullup Control</strong> to Off.</li><li>Set <strong>Driver Switch n</strong><strong> Active Edge</strong> to Rising.</li><li>Set <strong>Driver Switch n</strong><strong> Threshold</strong> to 0.6V.</li><li>Set <strong>Driver Switch n</strong><strong> Hysteresis </strong>to 0.2V.</li><li>Set <strong>Driver Switch n</strong><strong> Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.EBD Lamp">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 ABS EBD Alarm.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;a Driver Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;29</strong> as <strong>Driver Switch n Resource</strong>.</div></li><li>Set <strong>Driver Switch n</strong><strong> Pullup Control</strong> to Off.</li><li>Set <strong>Driver Switch n</strong><strong> Active Edge</strong> to Rising.</li><li>Set <strong>Driver Switch n</strong><strong> Threshold</strong> to 0.6V.</li><li>Set <strong>Driver Switch n</strong><strong> Hysteresis </strong>to 0.2V.</li><li>Set <strong>Driver Switch n</strong><strong> Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Acceleration">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Longitudinal">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Longitudinal Acceleration.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Acceleration Longitudinal:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;23</strong> as <strong>Vehicle Acceleration Longitudinal Sensor Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN 2DP </strong>as the <strong>Vehicle Acceleration Longitudinal</strong>&nbsp;<strong>Sensor Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Vehicle Acceleration Longitudinal</strong>&nbsp;<strong>Sensor Diagnostic Delay</strong> to 100mS.</div></li></ul>
+              
+            <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Lateral">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Lateral Acceleration.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Acceleration Lateral:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;22</strong> as <strong>Vehicle Acceleration Lateral Sensor Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN 2DP </strong>as the <strong>Vehicle Acceleration Lateral</strong>&nbsp;<strong>Sensor Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Vehicle Acceleration Lateral</strong>&nbsp;<strong>Sensor Diagnostic Delay</strong> to 100mS.</div></li></ul><p></p>
+              
+            <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used for all Bosch ABS_M4 CAN messaging. Normally set to <b class="device_help">CAN Bus 2</b>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Front Circumference">
+        <Props Qty="m" Validation="MinMax" ValMin=".001" ValClampMax="false" ValMax="5">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The rolling circumference of the tyre.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Rear Circumference">
+        <Props Qty="m" Validation="MinMax" ValMin=".001" ValClampMax="false" ValMax="5">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The rolling circumference of the tyre.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Communications">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Receive 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHgyNEEgLSBBQlMgV2hlZWwgc3BlZWRzIC0gMTAwSHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0xLCAweDI0QSwgMHgwMDAsIGZhbHNlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpIG9yIHJ4OwovKgogKiBDYWxjdWxhdGUgaHViIHNwZWVkIGZyb20gQUJTIHdoZWVsIHNwZWVkOiBvcmlnaW5hbCBzeXN0ZW0gY2Fubm90IGZhY3RvciBkaWZmZXJlbnQgd2hlZWwgc2l6ZXMsCiAqIHRoaXMgT0UgY2lyY3VtZmVyZW5jZSB2YWx1ZSBpcyBjYWxjdWxhdGVkIGZyb20gYWN0dWFsIE9FIHJvYWQgZGF0YS4KICogVGhlb3JldGljYWwgY2lyY3VtZmVyZW5jZSBpcyAxLjk2NG0KICovCgppZiAocngpCnsKCS8vRmlybXdhcmUgMSB0byA0OiBmcm9udCBsZWZ0IGh1YiBzcGVlZCBpbiBIZXJ0egoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTYsIENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCA0OCwgMTYpIC8gUGFyZW50LkZyb250IENpcmN1bWZlcmVuY2UgLyAzNjAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxNywgQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDMyLCAxNikgLyBQYXJlbnQuRnJvbnQgQ2lyY3VtZmVyZW5jZSAvIDM2MC4wKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE4LCBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMTYsIDE2KSAvIFBhcmVudC5SZWFyIENpcmN1bWZlcmVuY2UgLyAzNjAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxOSwgQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsICAwLCAxNikgLyBQYXJlbnQuUmVhciBDaXJjdW1mZXJlbmNlIC8gMzYwLjApOwp9CgovKgogKiAweDA3MCAtIFlhdyBhbmQgTGF0ZXJhbCBBY2NlbGVyYXRpb24gLSAxMDBoeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLTEsIDB4MDcwLCAweDAwMCwgZmFsc2UpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7CmxvY2FsIHJ4MDcwdGltZW91dCA9IERlbGF5LlJpc2luZyhub3QgcngsIDAuMTApOwppZiAocngpCnsKCVBhcmVudC5ZYXcgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCw0OCwgMTYpICogMC4wMDUgLSAxNjMuODQ7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMCwgUGFyZW50Lllhdyk7CglQYXJlbnQuQWNjZWxlcmF0aW9uLkxhdGVyYWwgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwxNiwgMTYpICogMC4wMDEyNDk3IC0gNDAuOTYzOTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDIyLCBQYXJlbnQuQWNjZWxlcmF0aW9uLkxhdGVyYWwgLyA5OC4wKTsKfQplbHNlIGlmIChyeDA3MHRpbWVvdXQpCnsKCVBhcmVudC5ZYXcgPSBDYWxjdWxhdGUuTkFOKCk7CglQYXJlbnQuQWNjZWxlcmF0aW9uLkxhdGVyYWwgPSBDYWxjdWxhdGUuTkFOKCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMCxDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjIsQ2FsY3VsYXRlLk5BTigpKTsKfQoKLyoKICogMHgwODAgLSBZYXcgQWNjZWwgYW5kIExvbmdpdHVkaW5hbCBBY2NlbGVyYXRpb24gLSAxMDBoeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLTEsIDB4MDgwLCAweDAwMCwgZmFsc2UpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7CmxvY2FsIHJ4MDgwdGltZW91dCA9IERlbGF5LlJpc2luZyhub3QgcngsIDAuMTApOwppZiAocngpCnsKCVBhcmVudC5ZYXcgQWNjZWxlcmF0aW9uID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsNDgsIDE2KSAqIDAuMTI1IC0gNDA5Ni4wOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjEsIFBhcmVudC5ZYXcgQWNjZWxlcmF0aW9uKTsKCVBhcmVudC5BY2NlbGVyYXRpb24uTG9uZ2l0dWRpbmFsID0gKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLDE2LCAxNikgKiAwLjAwMTI0OTcpIC0gNDAuOTYzOTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDIzLCBQYXJlbnQuQWNjZWxlcmF0aW9uLkxvbmdpdHVkaW5hbCAvIDk4LjApOwp9CmVsc2UgaWYgKHJ4MDgwdGltZW91dCkKewoJUGFyZW50LllhdyBBY2NlbGVyYXRpb24gPSBDYWxjdWxhdGUuTkFOKCk7CglQYXJlbnQuQWNjZWxlcmF0aW9uLkxvbmdpdHVkaW5hbCA9IENhbGN1bGF0ZS5OQU4oKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDIxLENhbGN1bGF0ZS5OQU4oKSk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMyxDYWxjdWxhdGUuTkFOKCkpOwp9CgovKgogKiAweDVDMCAtIFN0YXR1cyAtIDEwMGh6IHJlY2VpdmUKICovCmggPSBDYW5Db21tcy5SeE9wZW5TdGFuZGFyZChQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtMSwgMHg1QzAsIDB4MDAwLCBmYWxzZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKSBvciByeDsKbG9jYWwgcng1QzB0aW1lb3V0ID0gRGVsYXkuUmlzaW5nKG5vdCByeCwgMC4xMCk7CmlmIChyeCkKewoJUGFyZW50Lk1hcCBTd2l0Y2ggUG9zaXRpb24gPSBDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDU2LCA4KTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI1LCBQYXJlbnQuTWFwIFN3aXRjaCBQb3NpdGlvbiAqIDAuMSk7CglQYXJlbnQuQnJha2UgUHJlc3N1cmUgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKGgsNDAsIDE2KSAqIDE1MzA7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNCwgUGFyZW50LkJyYWtlIFByZXNzdXJlIC8gMTAwMDAuMCk7CglQYXJlbnQuQnJha2UgU3dpdGNoCT0gQ2FuQ29tbXMuR2V0Qml0KGgsIDM5KSA/IFBhcmVudC5CcmFrZSBTd2l0Y2guT24gOiBQYXJlbnQuQnJha2UgU3dpdGNoLk9mZjsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI4LCBDYW5Db21tcy5HZXRCaXQoaCwgMzkpID8gMS4wIDogMC4wKTsKCVBhcmVudC5BY3RpdmUgPSBDYW5Db21tcy5HZXRCaXQoaCwgMzQpID8gUGFyZW50LkFjdGl2ZS5PbiA6IFBhcmVudC5BY3RpdmUuT2ZmOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjYsIENhbkNvbW1zLkdldEJpdChoLCAzNCkgPyAxLjAgOiAwLjApOwoJUGFyZW50LkVCRCBMYW1wID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDMzKSA/IFBhcmVudC5FQkQgTGFtcC5PbiA6IFBhcmVudC5FQkQgTGFtcC5PZmY7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyOSwgQ2FuQ29tbXMuR2V0Qml0KGgsIDMzKSA/IDEuMCA6IDAuMCk7CglQYXJlbnQuQUJTIExhbXAgPSBDYW5Db21tcy5HZXRCaXQoaCwgMzIpID8gUGFyZW50LkFCUyBMYW1wLk9uIDogUGFyZW50LkFCUyBMYW1wLk9mZjsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI3LCBDYW5Db21tcy5HZXRCaXQoaCwgMzIpID8gMS4wIDogMC4wKTsKfQplbHNlIGlmIChyeDVDMHRpbWVvdXQpCnsKCVBhcmVudC5NYXAgU3dpdGNoIFBvc2l0aW9uID0gQ2FsY3VsYXRlLk5BTigpOwoJUGFyZW50LkJyYWtlIFByZXNzdXJlID0gQ2FsY3VsYXRlLk5BTigpOwoJUGFyZW50LkJyYWtlIFN3aXRjaCA9IFBhcmVudC5CcmFrZSBTd2l0Y2guVW5rbm93bjsKCVBhcmVudC5BY3RpdmUgPSBQYXJlbnQuQWN0aXZlLlVua25vd247CglQYXJlbnQuQUJTIExhbXAgPSBQYXJlbnQuQUJTIExhbXAuVW5rbm93bjsKCVBhcmVudC5FQkQgTGFtcCA9IFBhcmVudC5FQkQgTGFtcC5Vbmtub3duOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjUsQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI0LENhbGN1bGF0ZS5OQU4oKSk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyOCxDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjYsQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI5LENhbGN1bGF0ZS5OQU4oKSk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNyxDYWxjdWxhdGUuTkFOKCkpOwp9Cgo=]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus"/>
+        <Component Name="Yaw"/>
+        <Component Name="Yaw Acceleration"/>
+        <Component Name="Map Switch Position"/>
+        <Component Name="Brake Pressure"/>
+        <Component Name="Brake Switch"/>
+        <Component Name="Active"/>
+        <Component Name="ABS Lamp"/>
+        <Component Name="EBD Lamp"/>
+        <Component Name="Acceleration">
+         <Component Name="Longitudinal"/>
+         <Component Name="Lateral"/>
+        </Component>
+        <Component Name="Front Circumference"/>
+        <Component Name="Rear Circumference"/>
+        <Component Name="Communications">
+         <Component Name="Receive 100Hz"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Bosch OE Integration">
+     <Module Name="Bosch ABS M4"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

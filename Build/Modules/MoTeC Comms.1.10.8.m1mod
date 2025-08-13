@@ -1,0 +1,562 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10105" Name="MoTeC Comms" VersionMajor="1" VersionMinor="10" BuildNumber="8">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0092"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version (1.10.0008)</h4><ul class="device_help"><li class="device_help">System updated to v1.04.0092</li><li class="device_help">800kbps baud rate added to CAN Bus class.</li></ul><h4 class="device_help">1.10.0007</h4><ul><li><div class="device_help">CAN Bus Data Type can be set externally.</div></li></ul><h4 class="device_help">1.10.0003</h4>
+<ul class="device_help">
+<li class="device_help">System updated to v1.04.0091</li><li class="device_help">Serial Port class removed.</li></ul><h4 class="device_help">1.10.0002</h4><ul class="device_help"><li class="device_help">Not in Use added to Serial Port class.</li></ul>
+<h4 class="device_help">1.10.0001</h4>
+<ul class="device_help">
+<li class="device_help">Tags refined.</li></ul>
+<h4 class="device_help">01.08.0000</h4>
+<ul class="device_help">
+<li class="device_help">Update to system 01.04.</li>
+<li class="device_help">Add tags.</li></ul>
+<h4 class="device_help">01.06.0007</h4>
+<ul class="device_help">
+<li class="device_help">Add 'Serial Comms' class which supports configuration and diagnostics for both RS232 and LIN ports. </li>
+<li class="device_help">Obsolete 'RS232 Port' class.</li></ul>
+<h4 class="device_help">01.06.0006</h4>
+<ul class="device_help">
+<li class="device_help">Set system to 01.03.16.0043.</li>
+<li class="device_help">Add 'CAN ID Base' value input to E8XX class.</li></ul>
+<h4 class="device_help">01.06.0005</h4>
+<ul class="device_help">
+<li class="device_help">Initial release.</li></ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="CAN Bus Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="OK" ContainerOrder="5">
+    <Help>
+<![CDATA[<p class="device_help">The CAN bus is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Bus Off" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">CAN bus transmission has been disabled due to excessive bus errors.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Receive Warning" ContainerOrder="6" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The receive error counter is greater than 95.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Receive Error Passive" ContainerOrder="3" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The receive error counter is greater than 127. Errors are now passively asserted.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Transmit Warning" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The transmit error counter is greater than 95.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Transmit Error Passive" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The transit error counter is greater than 127. Errors are now passively asserted.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid CAN Bus" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The selected CAN bus is invalid.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Wrong Speed" ContainerOrder="8" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The CAN bus speed has been overridden by PC communications. Messages from the ECU firmware will not be
+              transmitted.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The CAN bus is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Transmit Overrun" ContainerOrder="9" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The transmit queue was overrun. Some messages have been dropped.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Receive Overrun" ContainerOrder="10" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The receive queue was overrun. Some messages have been dropped.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Receive Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Timeout" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No CAN messages have been received for longer than 500mS.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">CAN message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help/>
+   </Enum>
+   <Enum Name="Invalid CAN Bus" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">An invalid CAN bus was selected for the current hardware platform.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Message Type Enumeration" Storage="enum" Default="Sequential">
+   <Enum Name="Sequential" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Sequential CAN messages.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Compound" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Compound CAN messages.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Serial Port Baud Rate Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="1200 Baud" ContainerOrder="1">
+    <Help/>
+   </Enum>
+   <Enum Name="1800 Baud" ContainerOrder="2">
+    <Help/>
+   </Enum>
+   <Enum Name="2400 Baud" ContainerOrder="3">
+    <Help/>
+   </Enum>
+   <Enum Name="4800 Baud" ContainerOrder="4">
+    <Help/>
+   </Enum>
+   <Enum Name="9600 Baud" ContainerOrder="5">
+    <Help/>
+   </Enum>
+   <Enum Name="19200 Baud" ContainerOrder="6">
+    <Help/>
+   </Enum>
+   <Enum Name="38400 Baud" ContainerOrder="7">
+    <Help/>
+   </Enum>
+   <Enum Name="57600 Baud" ContainerOrder="8">
+    <Help/>
+   </Enum>
+   <Enum Name="115200 Baud" ContainerOrder="9">
+    <Help/>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help/>
+   </Enum>
+  </Type>
+  <Type Name="Serial Port Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Configuration Error" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">Invalid baud rate.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="1">
+    <Help>
+<![CDATA[<P class="device_help">RS232 communication is disabled.</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The RS232 device is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Framing Error" ContainerOrder="3" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The RS232 device detected a framing error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Parity Error" ContainerOrder="4" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The RS232 device detected a parity error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Overrun" ContainerOrder="5" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">A buffer overrun occurred.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Noise" ContainerOrder="6" Tags="Warning">
+    <Help>
+<![CDATA[<P class="device_help">The RS232 device detected noise at the receiver input.</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Bit Error" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The LIN device detected a bit error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Bus Error" ContainerOrder="8" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">A LIN bus error has been detected.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Checksum Error" ContainerOrder="9" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">A LIN checksum error has been detected.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Timeout" ContainerOrder="10" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The attached LIN device has not responded in time.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Serial Port Enumeration" Storage="enum" Default="RS232">
+   <Enum Name="RS232" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Port is configured for RS232 communication.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="LIN" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Port is configured for LIN communication.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Bus Mode Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="125kbps" ContainerOrder="5">
+    <Help>
+<![CDATA[<p class="device_help">125 kilobits per second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help/>
+   </Enum>
+   <Enum Name="1Mbps" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">1 megabit per second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="800kbps" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">800 kilobits per second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="500kbps" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">500 kilobits per second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="250kbps" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">250 kilobits per second.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.CAN Bus">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class manages a CAN bus.</p>
+            <p class="device_help">An instance of this class is required to enable CAN communications.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Bus Input Object</h3>
+            <p class="device_help">Sets the CAN bus to manage.</p>
+            <h3 class="device_help">Mode Input Object</h3>
+            <p class="device_help">Controls the operation of the CAN bus and the CAN bus speed.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="Bus" Creation="Custom" Visible="1" TargetCpt="This.Bus" TargetRef="Value" DisplayName="Bus"/>
+         <Property Name="Bus Data Type" Creation="Custom" Visible="1" TargetCpt="This.Bus" TargetRef="Type" DisplayName="Bus Data Type"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Diagnostic Log Rate"/>
+         <Property Name="Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Diagnostic Logging"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to an ECU CAN bus.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.CAN Bus Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the CAN bus.</p>
+                  <p class="device_help">If this channel is reporting a warning or a fault there may be a CAN bus wiring fault or a device
+                    connected to the CAN bus with incorrect settings.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2"/>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="::This.CAN Bus Mode Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the operation of the CAN bus and the CAN bus speed.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKERpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuTm90IGluIFVzZSBhbmQKCURpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuSW52YWxpZCBDQU4gQnVzKQp7Cglsb2NhbCBzID0gQ2FuQ29tbXMuQnVzU3RhdHVzKEJ1cy5Bc0ludGVnZXIoKSAtIDEpOwoKLyoKICoJI2RlZmluZSBDQU5fU1RBVFVTX1JPVlIgICAgIAkweDgwMAlSeCBvdmVycnVuIGhhcyBvY2N1cnJlcyBzaW5jZSBsYXN0IHF1ZXJ5CiAqCSNkZWZpbmUgQ0FOX1NUQVRVU19UT1ZSICAgICAJMHg0MDAgCVR4IG92ZXJydW4gaGFzIG9jY3VycmVzIHNpbmNlIGxhc3QgcXVlcnkKICoJI2RlZmluZSBDQU5fU1RBVFVTX1dST05HX1NQRUVECTB4MjAwCWtiYXVkIGZvciBoYW5kbGUgIT0gYnVzIHNwZWVkCiAqCSNkZWZpbmUgQ0FOX1NUQVRVU19USU1FT1VUCQkweDEwMAl0aW1lb3V0CiAqCSNkZWZpbmUgQ0FOX1NUQVRVU19MT09QICAgICAJMHg4MCAgICBpbnRlcmZhY2UgaXMgbG9vcGJhY2sKICoJI2RlZmluZSBDQU5fU1RBVFVTX1JXUk4gICAgIAkweDQwICAgIHJ4IHdhcm46IHJ4X2Vycm9yID49IDk2CiAqCSNkZWZpbmUgQ0FOX1NUQVRVU19UV1JOICAgICAJMHgyMCAgICB0eCB3YXJuOiB0eF9lcnJvciA+PSA5NgogKgkjZGVmaW5lIENBTl9TVEFUVVNfUkVSUiAJICAgIDB4MTAgICAgcnggZXJyb3IgcGFzc2l2ZTogcnhfZXJyb3IgPj0gMTI3CiAqCSNkZWZpbmUgQ0FOX1NUQVRVU19URVJSICAgIAkgCTB4MDggICAgdHggZXJyb3IgcGFzc2l2ZTogdHhfZXJyb3IgPj0gMTI3CiAqCSNkZWZpbmUgQ0FOX1NUQVRVU19CT0ZGICAgIAkJMHgwNCAgICBidXMgb2ZmLCByeCBvciB0eCBlcnJvciA+PSAyNTUKICoJI2RlZmluZSBDQU5fU1RBVFVTX09WUiAgICAgIAkweDAyICAgIGEgUnggb3ZlcnJ1biBoYXMgb2NjdXJyZXMgc2luY2UgbGFzdCBxdWVyeQogKgkjZGVmaW5lIENBTl9TVEFUVVNfUlhGICAgICAgCTB4MDEgICAgYSBtZXNzYWdlIGhhcyBiZWVuIHJlY2VpdmVkIHNpbmNlIGxhc3QgcXVlcnkKICovCgoJaWYgKHMgZXEgMHgwKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJfQoJZWxzZSBpZiAoKHMgJiAweDA0KSBuZXEgMHgwKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkJ1cyBPZmY7Cgl9CgllbHNlIGlmICgocyAmIDB4MDgpIG5lcSAweDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuVHJhbnNtaXQgRXJyb3IgUGFzc2l2ZTsKCX0KCWVsc2UgaWYgKChzICYgMHgxMCkgbmVxIDB4MCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5SZWNlaXZlIEVycm9yIFBhc3NpdmU7Cgl9CgllbHNlIGlmICgocyAmIDB4MjApIG5lcSAweDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuVHJhbnNtaXQgV2FybmluZzsKCX0KCWVsc2UgaWYgKChzICYgMHg0MCkgbmVxIDB4MCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5SZWNlaXZlIFdhcm5pbmc7Cgl9CgllbHNlIGlmICgocyAmIDB4MjAwKSBuZXEgMHgwKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLldyb25nIFNwZWVkOwoJfQoJZWxzZSBpZiAoKHMgJiAweDQwMCkgbmVxIDB4MCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5UcmFuc21pdCBPdmVycnVuOwoJfQoJZWxzZSBpZiAoKHMgJiAweDgwMCkgbmVxIDB4MCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5SZWNlaXZlIE92ZXJydW47Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwga2JhdWQgPSAwOwoKd2hlbiAoTW9kZSkKewoJaXMgKE5vdCBpbiBVc2UpCgl7CgkJLyogZG8gbm90aGluZyAqLwoJfQoJaXMgKDFNYnBzKQoJewoJCWtiYXVkID0gMTAwMDsKCX0KCWlzICg4MDBrYnBzKQoJewoJCWtiYXVkID0gODAwOwoJfQoJaXMgKDUwMGticHMpCgl7CgkJa2JhdWQgPSA1MDA7Cgl9CglpcyAoMjUwa2JwcykKCXsKCQlrYmF1ZCA9IDI1MDsKCX0KCWlzICgxMjVrYnBzKQoJewoJCWtiYXVkID0gMTI1OwoJfQp9CgppZiAoa2JhdWQgbmVxIDApCnsKCWxvY2FsIG9rID0gQ2FuQ29tbXMuSW5pdChCdXMuQXNJbnRlZ2VyKCkgLSAxLCBrYmF1ZCk7CglpZiAobm90IG9rKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludmFsaWQgQ0FOIEJ1czsKCX0KCWVsc2UKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Diagnostic"/>
+        <Component Name="Bus"/>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Startup"/>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.CAN Block Receive">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class manages the CAN block receive subsystem.</p>
+            <p class="device_help">The CAN block receive subsystem is primarily designed for use with another MoTeC product such as an ADL3.
+              It is generally not suitable for OE CAN bus integration.</p>
+            <p class="device_help">An instance of this class is required before any CAN communication inputs, 
+            including CAN inputs on any resources, can be used.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">CAN Bus</h3>
+            <p class="device_help">Controls the CAN bus used to receive CAN block messages.</p>
+            <h3 class="device_help">CAN ID Base</h3>
+            <p class="device_help">Controls the CAN ID used to receive CAN block messages.</p>
+            <h3 class="device_help">Message Type</h3>
+            <p class="device_help">Controls the message decoding type.</p>
+            <h2 class="device_help">External Dependencies</h2>
+            <p class="device_help">A 'CAN Bus' class is required to initialise the CAN bus.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CAN Bus Data Type" Creation="Custom" Visible="1" TargetCpt="This.CAN Bus" TargetRef="Type" DisplayName="CAN Bus Data Type"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Diagnostic Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Diagnostic Diagnostic Log Rate"/>
+         <Property Name="Diagnostic Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Diagnostic Diagnostic Logging"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID Base" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Message Type" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">ECU CAN block receive configuration. This sets the base address which input resource selections
+                  are relative to.</p>
+		  <!-- REVISIT: PO 11/3/2015: This is now incorrect as we now use resources for CAN reception
+                  <p>Data for many sensors can be received in a single contiguous block of CAN messages. Depending on
+                    the sensor, each value can be 2 or 4 bytes in size in big endian (Motorola) format. A single CAN
+                    message can contain four two-byte values or two four-byte values. Further values are received in
+                    subsequent CAN messages, with the ID incrementing by one for each group of values.</p>
+                  <p>For each value to be accessed its message ID and position in the message must be defined by means
+                    of the CAN Slot value. For example:
+                    <ul>
+                      <li>Airbox Temperature is to be received on CAN from a MoTeC C125 Colour Dash. The C125 transmits
+                        this value at 0x500.
+                        <img src="images/C125 CAN Comms Setup 01.gif"></img>
+                      </li>
+                      <li>In the C125 Transmitted Channels tab, define Message Type as Single and add Airbox Temperature
+                        at Offset 0, with Length 2, Multiplier 1, Divisor 1, Adder 0. As the Base Resolution is 0.1,
+                        this will multiply the raw value by 10 to produce an integer for transmission.
+                        <img src="images/C125 CAN Comms Channel 01.gif"></img>
+                      </li>
+                      <li>Now in M1 Tune set Airbox Temperature CAN Slot to <b>Message 0 Offset 0</b>.
+                        <img src="images/Airbox Temp CAN Slot.gif"></img>
+                      </li>
+                      <li>Set Fault Delay to a value greater than the CAN receive period. For a 50Hz receive rate this
+                        value must be at least 20mS. A value of 5 periods is recommended.</li>
+                      <li>Set CAN Type to <b>Calibrated</b>: the received CAN data must be in the range -32768 to 32767
+                        and CAN Scale should be set to match the C125 Base Resolution. In this case a scaling of 0.1
+                        would be used.</li>
+                      <li>Finally, set <i>CAN ID Base</i> to 1280, which is the decimal equivalent of hexadecimal 0x500.
+                      </li>
+                    </ul>
+                  </p>
+		  -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKENBTiBCdXMgbmVxIENBTiBCdXMuTm90IGluIFVzZSkKewoJbG9jYWwgb2sgPSBDYW5CbG9jay5SeEluaXQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEsIENBTiBJRCBCYXNlLCBNZXNzYWdlIFR5cGUgZXEgTWVzc2FnZSBUeXBlLkNvbXBvdW5kKTsKCURpYWdub3N0aWMgPSAob2spID8gRGlhZ25vc3RpYy5DQU4gVGltZW91dCA6IERpYWdub3N0aWMuSW52YWxpZCBDQU4gQnVzOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used to receive CAN block messages.</p>
+                  <p class="device_help">The data contained in these messages is accessable in the resource input selection.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID Base">
+        <Props Type="u32" Validation="MinMax" ValMin="16" ValMax="2032" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Format="Hex"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN ID used to receive CAN block messages. This sets the base address which input resource selections
+                  are relative to.</p>
+                  <p class="device_help">16 messages are received beginning from this ID.</p>
+                  <p class="device_help">The data contained in these messages is accessable in the resource input selection.</p>
+                  <p class="device_help"><em class="device_help">This value must be a multiple of 16.</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN ID Base.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Message Type">
+        <Props Type="::This.CAN Message Type Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The type of CAN messages to decode.
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_enum">Sequential</em>: 16 messages are received beginning from <em class="device_param">CAN ID Base</em>. The message
+                        contains four 16-bit values.</li>
+                      <li class="device_help"><em class="device_enum">Compound</em>: A single message is received at <em class="device_param">CAN ID Base</em>. The first 16 bits of the
+                        message are treated as a message index. The message contains a further three 16-bit values.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">CAN block receive messages are always treated as big-endian.</p>
+                  <p class="device_help">All values are scaled by 0.001 allowing a range of -32.768 to 32.767. This value may be interpreted
+                    as a voltage (V) or frequency (Hz) depending on the resource selection.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Message Type.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.CAN Receive Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">Diagnostic information about the CAN block receive subsystem.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoRGlhZ25vc3RpYykKewoJaXMgKEludmFsaWQgQ0FOIEJ1cyBvciBOb3QgaW4gVXNlKQoJewoJCVJlY2VpdmUgVGltZSA9IENhbGN1bGF0ZS5OQU4oKTsKCX0KCWlzIChDQU4gVGltZW91dCBvciBPSykKCXsKCQlSZWNlaXZlIFRpbWUgPSBDYW5CbG9jay5SeFRpY2tzU2luY2UoKSAqIFN5c3RlbS5UaWNrUGVyaW9kKCk7CgoJCWlmIChSZWNlaXZlIFRpbWUgPiAwLjUpCgkJewoJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gVGltZW91dDsKCQl9CgkJZWxzZQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuT0s7CgkJfQoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Receive Time">
+        <Props Qty="s">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="ms" DPS="0" Min="0.00000000000000000e+000" Max="5.00000000000000000e-001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Time since last CAN block message reception.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN ID Base">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Message Type">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Diagnostic"/>
+        <Component Name="Receive Time"/>
+        <Component Name="Startup"/>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="CAN Bus"/>
+     <Module Name="CAN Block Receive"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

@@ -1,0 +1,2223 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC OE Toyota 86 2012" VersionMajor="1" VersionMinor="1" BuildNumber="18">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0019"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">System changed to 1.4 and associated changes</li>
+              <li class="device_help">Add Engine Speed Scaling</li>
+            </ul>
+          <h4 class="device_help">01.00.0019</h4>
+            <ul class="device_help">
+              <li class="device_help">Automatic transmission inclusions.</li>
+              <li class="device_help">Manual Air Conditioning controls added to Automatic Climate Control.</li>
+              <li class="device_help">OE CAN messaging updated.</li>
+            </ul>
+            <h4 class="device_help">1.00.0004</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC Output" VersionMajor="1" VersionMinor="9" VersionBuild="4"/>
+  <File Name="MoTeC Input" VersionMajor="1" VersionMinor="10" VersionBuild="6"/>
+  <File Name="MoTeC Cruise" VersionMajor="1" VersionMinor="3" VersionBuild="2"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Toyota 86 Switch State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">No valid CAN message has been received.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Off" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Toyota 86 Gear Enumeration" Storage="enum" Default="Neutral">
+   <Enum Name="Default" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The current gear can not be determined.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Reverse" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Neutral" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="First" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Second" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Third" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fourth" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fifth" ContainerOrder="7">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sixth" ContainerOrder="8">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Toyota 86 Throttle Aim State Enumeration" Storage="enum" Default="Idle">
+   <Enum Name="Idle" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Throttle Aim is equal to Idle Actuator Throttle Aim.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Toyota 86 Fan State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Low" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Medium" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="High" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Toyota 86 Start Type Enumeration" Storage="enum" Default="Key">
+   <Enum Name="Key" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Button" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Toyota 86 Transmission Type Enumeration" Storage="enum" Default="Manual">
+   <Enum Name="Manual" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The vehicle has a manual transmission.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Automatic" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The vehicle has an automatic transmission.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Toyota 86 Fuel Cut State Enumeration" Storage="enum" Default="None">
+   <Enum Name="None" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">No fuel cuts are active.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Toyota 86 Gear Selector Enumeration" Storage="enum" Default="Neutral">
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The vehicle either has a manual transmission or no valid CAN message has been received from the
+                    Transmission Control Module.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Park" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The vehicle has an automatic transmission which reports the Park selection.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Neutral" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The vehicle has an automatic transmission which reports the Neutral selection.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Drive" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The vehicle has an automatic transmission which reports the Drive selection.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Reverse" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The vehicle has an automatic transmission which reports the Reverse selection.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Toyota 86 2012 Integration"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Toyota 86 2012 Integration.Toyota 86 2012">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements OE Integration for Toyota 86 2012 vehicle platforms.</p>
+            <p class="device_help">Components include CAN messaging for OE dash, Power Steering, Automatic Transmission,
+              Cruise Control, and ABS using original naming.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Air Conditioner Clutch State, Ambient Pressure, Clutch State, 
+              Coolant Fan 1 Duty Cycle, Coolant Temperature,
+              Cruise Enable, Cruise Speed, Cruise State, Driver Cruise On Switch, Driver Cruise Off Switch,
+              Driver Cruise Cancel Switch, Driver Cruise Resume Switch, Driver Cruise Acceleration Switch,
+              Driver Cruise Set Switch, Driver Cruise Coast Switch, Engine Oil Temperature,
+              Engine Run Switch, Engine Speed, Engine State,
+              Fuel Cut State, Fuel Flow, Gear, Idle Aim, Inlet Manifold Pressure, Inlet Mass Flow,
+              Throttle Aim State, Throttle Pedal, Warning Light State
+            </h3>
+            <p class="device_help">Connect to the respectively named channels in the project.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p><h2 class="device_help">Data Types</h2>
+            <h3 class="device_help">Gear Data Type, Throttle Aim State Data Type</h3>
+            <p class="device_help">Connect to the respectively named data types in the project.</p>
+            <p class="device_help">
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Power SSHUT Relay Voltage Update Event</h3>
+            <p class="device_help">Typically 50Hz.</p>
+            <h3 class="device_help">Event</h3>
+            <p class="device_help">Typically 50Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Pedal">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Manifold Pressure">
+        <Props Qty="Pa">
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used for all Toyota 86 2012 OE CAN messaging. Normally set to CAN Bus 2.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Wheel Circumference">
+        <Props Qty="m">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The wheel circumference used for all Toyota 86 2012 OE CAN messaging. Normally set to match the OE
+                    circumference of 2.048m.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Gear">
+        <Props Type="::This.Toyota 86 Gear Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Warning Light State">
+        <Props Type="MoTeC Output.Switched Output State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Switch">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S" Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Toyota 86 systems use ABS CAN messages for brake switch calculations. If CAN messages fail
+                    or time out, Brake Switch is set to <em class="device_enum">Unknown</em> and associated systems will not operate.</p>
+                  <p class="device_help">Refer to the Brake main group for detailed help.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Clutch State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Clutch State" TargetRef="Type" DisplayName="Clutch State Data Type"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Power.Calculation" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Gear Data Type" Creation="Custom" Visible="1" TargetCpt="This.Gear" TargetRef="Type" DisplayName="Gear Data Type"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Throttle Aim State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Throttle Aim State" TargetRef="Type" DisplayName="Throttle Aim State Data Type"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Air Conditioner Clutch State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ambient Pressure" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Oil Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Gear" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Manifold Pressure" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Mass Flow" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Pedal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Warning Light State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Run Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Clutch State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Cruise Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Cruise Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Cruise State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Cruise On Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Cruise Off Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Cruise Cancel Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Cruise Resume Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Cruise Acceleration Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Cruise Set Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Cruise Coast Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Cut State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Idle Aim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Flow" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Power.SSHUT Relay.Voltage" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Fan 1 Duty Cycle" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Launch State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Launch Activation" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to Original Equipment components unique to the Toyota 86 2012
+                    vehicle platform.</p>
+                  <p class="device_help">Some of these component values are received as CAN messages from the OE platform, and may be
+                    accessed by means of Firmware CAN Resources for selected channels:
+                    <ul class="device_help">
+                      <li class="device_help">Wheel Speed Front Left appears as Firmware 1.</li>
+                      <li class="device_help">Wheel Speed Front Right appears as Firmware 2.</li>
+                      <li class="device_help">Wheel Speed Rear Left appears as Firmware 3.</li>
+                      <li class="device_help">Wheel Speed Rear Right appears as Firmware 4.</li>
+                      <li class="device_help"><em class="device_chan">Brake Switch</em> appears as Firmware 13.</li>
+                      <li class="device_help"><em class="device_chan">Brake Pedal Pressure</em> appears as Firmware 9.</li>
+                      <li class="device_help">Steering Angle appears as Firmware 7.</li>
+                      <li class="device_help"><em class="device_chan">VSC Disable Switch</em> appears as Firmware 5: This may be mapped as a Driver Switch to
+                        enable Traction.</li>
+                      <li class="device_help"><em class="device_chan">VSC Sport Mode Switch</em> appears as Firmware 6: This may be mapped as a Driver Switch to
+                        modify Traction.</li>
+                      <li class="device_help"><em class="device_chan">Air Conditioner Request</em> appears as Firmware 8.</li>
+                    </ul>
+                  <p></p>
+                  <p class="device_help">The following values are received as CAN messages from the OE platform and have direct links to
+                    the relevant features:
+                    <ul class="device_help">
+                    <li class="device_help"><em class="device_chan">VSC State</em></li>
+                    <li class="device_help"><em class="device_chan">VSC ABS State</em></li>
+                    <li class="device_help"><em class="device_chan">Heater Blower Switch</em></li>
+                    <li class="device_help"><em class="device_chan">Air Conditioner Request Climate</em>: compressor request from automatic climate control system</li>
+                    <li class="device_help"><em class="device_chan">Air Conditioner Request Manual</em>: compressor request from manual air conditioner system</li>
+                    <li class="device_help"><em class="device_chan">Start Request</em>: engine crank request from push button start system</li>
+                    <li class="device_help"><em class="device_chan">Start Immediate</em>: engine crank request from push button start system</li>
+                    <li class="device_help"><em class="device_chan">Transmission Selection</em>: if an automatic transmission is in gear, Transmission Idle Mass
+                      Flow Feed Forward may be set to maintain idle speed.</li>
+                    </ul>
+                  <p></p>
+                  <p class="device_help"><em class="device_param">Transmission Type</em> must be configured to match the vehicle.</p>
+                  <p class="device_help">For the cooling fans to behave identically to the OE system (with Low, Medium, and High speeds),
+                    Coolant Fan 1 Duty Cycle is used as a control method. This allows factors such as vehicle speed and
+                    Air Conditioner compressor operation to be considered when determining the fan speed.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Air Conditioner Clutch State">
+        <Props Type="MoTeC Output.Switched Output State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ambient Pressure">
+        <Props Qty="Pa">
+         <Locale>
+          <Default Unit="kPa a"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Oil Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Run Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fuel Flow">
+        <Props Qty="m3/s">
+         <Locale>
+          <Default Unit="ml/min"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Mass Flow">
+        <Props Qty="kg/s">
+         <Locale>
+          <Default Unit="g/s"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Aim State">
+        <Props Type="::This.Toyota 86 Throttle Aim State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Heater Blower Switch">
+        <Props Type="s32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current switch position from the Toyota 86 OE air conditioning system.</p>
+                  <p class="device_help">Toyota 86 systems use CAN messages to report requests. If CAN messages fail
+                    or time out, Heater Blower Switch is set to -1.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Air Conditioner Request">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Request from the Toyota 86 OE air conditioning system to operate the compressor.</p>
+                  <p class="device_help">Toyota 86 systems use CAN messages to report requests. If CAN messages fail
+                    or time out, Air Conditioner Request is set to <em class="device_enum">Unknown</em>.</p>
+                  <p class="device_help">See Air Conditioner for all other settings required for compressor operation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Air Conditioner Request.Value">
+        <Props DiagnosticLogRate="1S" Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Air Conditioner Request.Climate">
+        <Props DiagnosticLogRate="1S" Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Request from the Toyota 86 OE climate control system to operate the compressor.</p>
+                  <p class="device_help">Toyota 86 systems use CAN messages to report requests. If CAN messages fail
+                    or time out, Air Conditioner Request is set to <em class="device_enum">Unknown</em>.</p>
+                  <p class="device_help">See Air Conditioner for all other settings required for compressor operation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Air Conditioner Request.Manual">
+        <Props DiagnosticLogRate="1S" Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Request from the Toyota 86 OE manual air conditioning system to operate the compressor.</p>
+                  <p class="device_help">Toyota 86 systems use CAN messages to report requests. If CAN messages fail
+                    or time out, Air Conditioner Request is set to <em class="device_enum">Unknown</em>.</p>
+                  <p class="device_help">See Air Conditioner for all other settings required for compressor operation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Communications">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3BlbihmYWxzZSk7Cgpsb2NhbCBlcyA9IENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoRW5naW5lIFNwZWVkICogRW5naW5lIFNwZWVkIFNjYWxpbmcgLyA2LjApOwpsb2NhbCBwZWRhbCA9IENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoVGhyb3R0bGUgUGVkYWwgKiAyNTUpOwpsb2NhbCBtYWYgPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKElubGV0IE1hc3MgRmxvdyAqIDM3OTgwKSArIDB4MjVBMDsKCnN0YXRpYyBsb2NhbCA8VW5zaWduZWQgSW50ZWdlcj4gcm9sbCA9IDA7CnJvbGwgPSAocm9sbCArIDEpICYgMHhmOwoKaWYgKFBhcmVudC5DQU4gQnVzIG5lcSBQYXJlbnQuQ0FOIEJ1cy5Ob3QgaW4gVXNlKQp7Cglsb2NhbCBvayA9IHRydWU7Cglsb2NhbCBidXMgPSBDQU4gQnVzLkFzSW50ZWdlcigpIC0gMTsKCQoJLyoKCSAqIEVDVSAxNDAKCSAqLwoJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDU2LCAgOCwgcGVkYWwpOyAvL2dvb2QKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCA1MiwgIDQsIHJvbGwpOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDUxLCAgICAgVHJhbnNtaXNzaW9uLlR5cGUgZXEgVHJhbnNtaXNzaW9uLlR5cGUuTWFudWFsKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCA0OCwgICAgIENsdXRjaCBTdGF0ZSBlcSBDbHV0Y2ggU3RhdGUuRGlzZW5nYWdlZCk7CglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMzQsIDE0LCBlcyk7CglDYW5Db21tcy5TZXRCaXQgICAgICAgICAgICAoaCwgMzMsICAgICBUaHJvdHRsZSBBaW0gU3RhdGUgZXEgVGhyb3R0bGUgQWltIFN0YXRlLklkbGUpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDI0LCAgOCwgcGVkYWwpOyAvL2dvb2QKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgIDgsIHBlZGFsKTsgLy9nb29kCglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgIDgsICA4LCBwZWRhbCk7IC8vZ29vZAoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsICA3LCAgICAgVGhyb3R0bGUgUGVkYWwgPiAwLjApOwoJb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLCBidXMsIDB4MTQwKTsKCgkvKgoJICogRUNVIDE0MQoJICovCglDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgNDgsIDE2LCBtYWYpOyAvL2dvb2QKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYsIG1hZik7IC8vZ3Vlc3MKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAxOCwgMTQsIGVzKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCAxNiwgICAgIFRocm90dGxlIEFpbSBTdGF0ZSBlcSBUaHJvdHRsZSBBaW0gU3RhdGUuSWRsZSk7Cglsb2NhbCA8VW5zaWduZWQgSW50ZWdlcj4gZ2VhckludCA9IEdlYXIuQXNJbnRlZ2VyKCkgPiAwID8gR2Vhci5Bc0ludGVnZXIoKSA6IDcgOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDEzLCAgMywgZ2VhckludCk7Ly93aWxsIHR4ICQ3LCByZXF1aXJlZAoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDEyLCAgICAgRW5naW5lIFN0YXRlLkFzSW50ZWdlcigpIDwgMik7CglDYW5Db21tcy5TZXRCaXQgICAgICAgICAgICAoaCwgMTEsICAgICBFbmdpbmUgU3RhdGUuQXNJbnRlZ2VyKCkgPCAyKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCAxMCwgICAgIHRydWUpOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsICA5LCAgICAgVGhyb3R0bGUgQWltIFN0YXRlIGVxIFRocm90dGxlIEFpbSBTdGF0ZS5JZGxlKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCAgOCwgICAgIEVuZ2luZSBTcGVlZCA8IDQyNjAwLjApOyAvL2VuZ2luZSBzcGVlZCB1bmRlciA3MTAwIHJwbQoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsICA0LCAgICAgRnVlbCBDdXQgU3RhdGUuQXNJbnRlZ2VyKCkgPiAwKTsKCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDE0MSk7CgoJLyoKCSAqIEVDVSAxNDIKCSAqLwoJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQ4LCAxNiwgbWFmKTsgLy9nb29kCglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgNDAsICA4LCBwZWRhbCk7IC8vcmVhc29uYWJsZQoJb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLCBidXMsIDB4MTQyKTsKCgkvKgoJICogU2h1dCB1cCBidWlsZAoJICovCglvayA9IG9rOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 50Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCmxvY2FsIGlkbGVBaW1MaW1pdGVkID0gTGltaXQuUmFuZ2UoRW5naW5lIFNwZWVkLElkbGUgQWltLDM2MDAgKiA2LjApIC8gNi4wOyAvL2ludGVnZXIgcnBtIHJlc3VsdCBiZXR3ZWVuIGlkbGUgYWltIGFuZCAzNjAwCmxvY2FsIGlkbGVBaW0gPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKGlkbGVBaW1MaW1pdGVkIC8gNTIuMCkgKyA2NTsKCnN0YXRpYyBsb2NhbCBiaXQyOSA9IHRydWU7CmlmIChTdGFydC5UeXBlIGVxIFN0YXJ0LlR5cGUuS2V5KQp7CglpZiAoRW5naW5lIFN0YXRlLkFzSW50ZWdlcigpIG5lcSAyKQoJewoJCWJpdDI5ID0gZmFsc2U7Cgl9CgllbHNlCgl7CgkJYml0MjkgPSB0cnVlOwoJfQp9CmVsc2UgLy9zdGFydCB0eXBlIG11c3QgYmUgYnV0dG9uCnsKCWlmIChUcmFuc21pc3Npb24uVHlwZSBlcSBUcmFuc21pc3Npb24uVHlwZS5BdXRvbWF0aWMpCgl7CgkJaWYgKFBhcmVudC5TdGFydC5JbW1lZGlhdGUgZXEgUGFyZW50LlN0YXJ0LkltbWVkaWF0ZS5FbmFibGVkKQoJCXsKCQkJYml0MjkgPSBmYWxzZTsKCQl9Cgl9CgllbHNlIC8vdHJhbnMgdHlwZSBtdXN0IGJlIG1hbnVhbAoJewoJCWlmIChQYXJlbnQuU3RhcnQuSW1tZWRpYXRlIG5lcSBQYXJlbnQuU3RhcnQuSW1tZWRpYXRlLkVuYWJsZWQpCgkJewoJCQliaXQyOSA9IGZhbHNlOwoJCX0KCX0KfQoKc3RhdGljIGxvY2FsIGJpdDMwID0gZmFsc2U7CmlmIChTdGFydC5UeXBlIGVxIFN0YXJ0LlR5cGUuS2V5KQp7CgliaXQzMCA9IHRydWU7Cn0KZWxzZSAvL3N0YXJ0IHR5cGUgaXMgYnV0dG9uCnsKCWlmIChUcmFuc21pc3Npb24uVHlwZSBlcSBUcmFuc21pc3Npb24uVHlwZS5BdXRvbWF0aWMpCgl7CgkJaWYgKFBhcmVudC5TdGFydC5JbW1lZGlhdGUgZXEgUGFyZW50LlN0YXJ0LkltbWVkaWF0ZS5FbmFibGVkKQoJCXsKCQkJYml0MzAgPSBFbmdpbmUgU3RhdGUgZXEgRW5naW5lIFN0YXRlLlJ1bjsgLy9jbHIgdW50aWwgcnVubmluZwoJCX0KCX0KCWVsc2UgLy90cmFucyB0eXBlIG11c3QgYmUgbWFudWFsCgl7CgkJaWYgKFBhcmVudC5TdGFydC5JbW1lZGlhdGUgbmVxIFBhcmVudC5TdGFydC5JbW1lZGlhdGUuRW5hYmxlZCkKCQl7CgkJCWJpdDMwID0gRW5naW5lIFN0YXRlIGVxIEVuZ2luZSBTdGF0ZS5SdW47IC8vY2xyIHVudGlsIHJ1bm5pbmcKCQl9Cgl9Cn0KCnN0YXRpYyBsb2NhbCBiaXQzMSA9IGZhbHNlOwppZiAoU3RhcnQuVHlwZSBlcSBTdGFydC5UeXBlLktleSkKewoJYml0MzEgPSB0cnVlOwp9CmVsc2UgLy9zdGFydCB0eXBlIGlzIGJ1dHRvbgp7CglpZiAoVHJhbnNtaXNzaW9uLlR5cGUgZXEgVHJhbnNtaXNzaW9uLlR5cGUuQXV0b21hdGljKQoJewoJCWlmIChQYXJlbnQuU3RhcnQuSW1tZWRpYXRlIGVxIFBhcmVudC5TdGFydC5JbW1lZGlhdGUuRW5hYmxlZCkKCQl7CgkJCWJpdDMxID0gRW5naW5lIFN0YXRlIG5lcSBFbmdpbmUgU3RhdGUuUnVuOyAvL3NldCB1bnRpbCBydW5uaW5nCgkJfQoJCWVsc2UKCQl7CgkJCWJpdDMxID0gRW5naW5lIFN0YXRlIGVxIEVuZ2luZSBTdGF0ZS5SdW47IC8vY2xyIHVudGlsIHJ1bm5pbmcKCQl9CgkJCgl9CgllbHNlIC8vdHJhbnMgdHlwZSBtdXN0IGJlIG1hbnVhbAoJewoJCWlmIChQYXJlbnQuU3RhcnQuSW1tZWRpYXRlIG5lcSBQYXJlbnQuU3RhcnQuSW1tZWRpYXRlLkVuYWJsZWQpCgkJewoJCQliaXQzMSA9IEVuZ2luZSBTdGF0ZSBuZXEgRW5naW5lIFN0YXRlLlJ1bjsgLy9zZXQgdW50aWwgcnVubmluZwoJCX0KCX0KfQoKaWYgKFBhcmVudC5DQU4gQnVzIG5lcSBQYXJlbnQuQ0FOIEJ1cy5Ob3QgaW4gVXNlKQp7Cglsb2NhbCBvayA9IHRydWU7Cglsb2NhbCBidXMgPSBDQU4gQnVzLkFzSW50ZWdlcigpIC0gMTsKCgkvKgoJICogRUNVIDE0NAoJICovCglDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgIDAsIDE2LCAweEMwMDApOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsICAyLCAgICAgRHJpdmVyIENydWlzZSBDYW5jZWwgU3dpdGNoIGVxIERyaXZlciBDcnVpc2UgQ2FuY2VsIFN3aXRjaC5Pbik7CglDYW5Db21tcy5TZXRCaXQgICAgICAgICAgICAoaCwgIDMsICAgICBEcml2ZXIgQ3J1aXNlIFJlc3VtZSBTd2l0Y2ggZXEgRHJpdmVyIENydWlzZSBSZXN1bWUgU3dpdGNoLk9uIG9yIERyaXZlciBDcnVpc2UgQWNjZWxlcmF0aW9uIFN3aXRjaCBlcSBEcml2ZXIgQ3J1aXNlIEFjY2VsZXJhdGlvbiBTd2l0Y2guT24pOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsICA0LCAgICAgRHJpdmVyIENydWlzZSBTZXQgU3dpdGNoIGVxIERyaXZlciBDcnVpc2UgU2V0IFN3aXRjaC5PbiBvciBEcml2ZXIgQ3J1aXNlIENvYXN0IFN3aXRjaCBlcSBEcml2ZXIgQ3J1aXNlIENvYXN0IFN3aXRjaC5Pbik7CglDYW5Db21tcy5TZXRCaXQgICAgICAgICAgICAoaCwgIDUsICAgICBEcml2ZXIgQ3J1aXNlIE9uIFN3aXRjaCBlcSBEcml2ZXIgQ3J1aXNlIE9uIFN3aXRjaC5PbiBvciBEcml2ZXIgQ3J1aXNlIE9mZiBTd2l0Y2ggZXEgRHJpdmVyIENydWlzZSBPZmYgU3dpdGNoLk9uKTsKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgIDgsIGlkbGVBaW0pOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDI5LCAgICAgYml0MjkpOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDMwLCAgICAgYml0MzApOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDMxLCAgICAgYml0MzEpOwoKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYsIDB4MDBBNCk7CglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgNDgsIDE2LCAweDIwMDApOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDQ4LCAgICAgVHJhbnNtaXNzaW9uLlR5cGUgZXEgVHJhbnNtaXNzaW9uLlR5cGUuTWFudWFsKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCA1MiwgICAgIEJyYWtlIFN3aXRjaCBlcSBCcmFrZSBTd2l0Y2guT24pOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDU0LCAgICAgQ3J1aXNlIFN0YXRlIGVxIENydWlzZSBTdGF0ZS5Pbik7CglDYW5Db21tcy5TZXRCaXQgICAgICAgICAgICAoaCwgNTUsICAgICBDcnVpc2UgRW5hYmxlIGVxIENydWlzZSBFbmFibGUuRW5hYmxlZCk7CglvayA9IG9rIGFuZCBDYW5Db21tcy5UeFN0YW5kYXJkKGgsIGJ1cywgMHgxNDQpOwoKCS8qCgkgKiBTaHV0IHVwIGJ1aWxkCgkgKi8KCW9rID0gb2s7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 20Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.50MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3BlbihmYWxzZSk7CgpzdGF0aWMgbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IHJvbGwgPSAwOwpyb2xsID0gKHJvbGwgKyAxKSAmIDB4ZjsKCmlmIChQYXJlbnQuQ0FOIEJ1cyBuZXEgUGFyZW50LkNBTiBCdXMuTm90IGluIFVzZSkKewoJbG9jYWwgb2sgPSB0cnVlOwoJbG9jYWwgYnVzID0gQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDE7CgoJLyoKCSAqIEVDVSAzNjAKCSAqLwoJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJLy8xNiBKYW4gMjAxNSAtIHJldmlzZWQgc2NhbGluZyB1cCB0byA1MDAuCglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgNDgsIDE2LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKEZ1ZWwgRmxvdyAqIEZ1ZWwgRmxvdyBTY2FsZSAqIDEwMDAwMDAuMCkpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQwLCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihFbmdpbmUgT2lsIFRlbXBlcmF0dXJlICsgNDAuMCkpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDMyLCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihDb29sYW50IFRlbXBlcmF0dXJlICsgNDAuMCkpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDI0LCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoSW5sZXQgTWFuaWZvbGQgUHJlc3N1cmUgLSAxMjIyMCkgLyA0MTEpKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCAxOSwgICAgIENydWlzZSBFbmFibGUgZXEgQ3J1aXNlIEVuYWJsZS5FbmFibGVkKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCAxOCwgICAgIENydWlzZSBTdGF0ZSBlcSBDcnVpc2UgU3RhdGUuT24pOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDE1LCAgICAgVHJhbnNtaXNzaW9uLlR5cGUgZXEgVHJhbnNtaXNzaW9uLlR5cGUuTWFudWFsKTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCAgOCwgICAgIEFpciBDb25kaXRpb25lciBDbHV0Y2ggU3RhdGUgbmVxIEFpciBDb25kaXRpb25lciBDbHV0Y2ggU3RhdGUuT2ZmKTsKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAgMCwgIDgsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoQ2FsY3VsYXRlLklzTkFOKENydWlzZSBTcGVlZCk/IDAgOiBDcnVpc2UgU3BlZWQgKiAzLjYpKTsKCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDM2MCk7CgoJLyoKCSAqIEVDVSAzNjEKCSAqLwoKCS8qCgkgKiBjaGVjayBsaWdodCBpcyBhbHdheXMgb24gd2hlbiBlbmdpbmUgc3RvcHBlZCAoYml0IDYgY2xlYXIpCgkgKiB0dXJucyBvZmYgaW1tZWRpYXRlbHkgdXBvbiBjcmFua2luZyAoYml0IDYgc2V0KQoJICogY2FuIGJlIHR1cm5lZCBvbiBpZiBXYXJuaW5nLkxpZ2h0LlN0YXRlID0gMQoJICovCglsb2NhbCBjaGVja2xpZ2h0ID0KCQlFbmdpbmUgU3RhdGUuQXNJbnRlZ2VyKCkgPCAyIG9yCgkJV2FybmluZyBMaWdodCBTdGF0ZSBlcSBXYXJuaW5nIExpZ2h0IFN0YXRlLk9uOwoJCQoJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDUyLCAgNCwgMHg5KTsKCUNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCA1MCwgICAgIG5vdCBjaGVja2xpZ2h0KTsKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgIDgsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoKEFtYmllbnQgUHJlc3N1cmUgLSAxMjIyMCkgLyA0MTEpKTsKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAyOCwgIDQsIHJvbGwpOwoJQ2FuQ29tbXMuU2V0Qml0ICAgICAgICAgICAgKGgsIDI2LCAgICAgRW5naW5lIFN0YXRlLkFzSW50ZWdlcigpIDwgMik7CglvayA9IG9rIGFuZCBDYW5Db21tcy5UeFN0YW5kYXJkKGgsIGJ1cywgMHgzNjEpOwoKCS8qCgkgKiBTaHV0IHVwIGJ1aWxkCgkgKi8KCW9rID0gb2s7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 1Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCmlmIChQYXJlbnQuQ0FOIEJ1cyBuZXEgUGFyZW50LkNBTiBCdXMuTm90IGluIFVzZSkKewoJbG9jYWwgb2sgPSB0cnVlOwoJbG9jYWwgYnVzID0gQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDE7CgoJLyoKCSAqIEVDVSA0QzEKCSAqLwoJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsICAwLCAxNiwgMHgwMTAwKTsKCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgMTYsIDB4MDAwMCk7CglDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMzIsIDE2LCAweDAwMDApOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQ4LCAxNiwgMHgwMDAwKTsKCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDRDMSk7CgoJLyoKCSAqIFNodXQgdXAgYnVpbGQKCSAqLwoJb2sgPSBvazsKfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Receive 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHgwRDQgLSBBQlMgV2hlZWwgc3BlZWRzIC0gNTBIeiByZWNlaXZlCiAqLwoKaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgMHgwRDQsIDB4MDAwLCBmYWxzZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwoKbG9jYWwgcnh0aW1lb3V0MEQ0ID0gbm90IERlbGF5LkZhbGxpbmcocngsIDAuNSk7CgovKgogKiBDYWxjdWxhdGUgaHViIHNwZWVkIGZyb20gQUJTIHdoZWVsIHNwZWVkOiBvcmlnaW5hbCBzeXN0ZW0gY2Fubm90IGZhY3RvciBkaWZmZXJlbnQgd2hlZWwgc2l6ZXMsCiAqIHRoaXMgT0UgY2lyY3VtZmVyZW5jZSB2YWx1ZSBpcyBjYWxjdWxhdGVkIGZyb20gYWN0dWFsIE9FIHJvYWQgZGF0YS4KICogVGhlb3JldGljYWwgY2lyY3VtZmVyZW5jZSBpcyAxLjk2NG0KICovCgppZiAobm90IHJ4dGltZW91dDBENCkKewoJLy93YXMgU2xvdCBPRTEgKDkzKSwgbm93IEZpcm13YXJlIDE6IGZyb250IGxlZnQgaHViIHNwZWVkIGluIEhlcnR6CgkvL3dhcyBTbG90IE9FMiAoOTQpLCBub3cgRmlybXdhcmUgMjogZnJvbnQgcmlnaHQgaHViIHNwZWVkIGluIEhlcnR6CgkvL3dhcyBTbG90IE9FMyAoOTUpLCBub3cgRmlybXdhcmUgMzogcmVhciBsZWZ0IGh1YiBzcGVlZCBpbiBIZXJ0egoJLy93YXMgU2xvdCBPRTQgKDk2KSwgbm93IEZpcm13YXJlIDQ6IHJlYXIgcmlnaHQgaHViIHNwZWVkIGluIEhlcnR6CgoJbG9jYWwgZmwgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCw0OCwgMTYpOwoJbG9jYWwgZnIgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwzMiwgMTYpOwoJbG9jYWwgcmwgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwxNiwgMTYpOwoJbG9jYWwgcnIgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMCwgMTYpOwoJCgkvKiBDaGVjayBpZiA+IDYwMGtwaCwgd2lsbCBiZSAweEZGRkYgZHVyaW5nIGR5bm8gb3BlcmF0aW9uIG9yIG90aGVyIGZhdWx0cyAqLwoJaWYgKGZsID4gMHgyNTgwKQoJewoJCWZsID0gMDsKCX0KCWlmIChmciA+IDB4MjU4MCkKCXsKCQlmciA9IDA7Cgl9CglpZiAocmwgPiAweDI1ODApCgl7CgkJcmwgPSAwOwoJfQoJaWYgKHJyID4gMHgyNTgwKQoJewoJCXJyID0gMDsKCX0KCglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxLCBmbCAvIFBhcmVudC5XaGVlbCBDaXJjdW1mZXJlbmNlIC8gNjAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyLCBmciAvIFBhcmVudC5XaGVlbCBDaXJjdW1mZXJlbmNlIC8gNjAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgzLCBybCAvIFBhcmVudC5XaGVlbCBDaXJjdW1mZXJlbmNlIC8gNjAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSg0LCByciAvIFBhcmVudC5XaGVlbCBDaXJjdW1mZXJlbmNlIC8gNjAuMCk7Cn0KZWxzZQp7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxLCAwLjApOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMiwgMC4wKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDMsIDAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSg0LCAwLjApOwp9CgovKgogKiAweDAxOCAtIFN0ZWVyaW5nIFdoZWVsIEFuZ2xlIC0gMTAwaHogcmVjZWl2ZQogKi8KCmggPSBDYW5Db21tcy5SeE9wZW5TdGFuZGFyZChQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEsIDB4MDE4LCAweDAwMCwgdHJ1ZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKSBvciByeDsKCmxvY2FsIHJ4dGltZW91dDAxOCA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjUpOwoKaWYgKG5vdCByeHRpbWVvdXQwMTgpCnsKCS8vd2FzIFNsb3QgT0U3ICg5OSksIG5vdyBGaXJtd2FyZSA3OiBzdGVlcmluZyBhbmdsZQoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoNywgQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCAwLCAxNikgKiAwLjEpOwp9CmVsc2UKewoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoNywgQ2FsY3VsYXRlLk5BTigpKTsKfQoKLyoKICogMHgwZDEgLSBBQlMgQnJha2UgUGVkYWwgUHJlc3N1cmUgLSA1MEh6IHJlY2VpdmUKICovCgpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxLCAweDBEMSwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKCmxvY2FsIHJ4MGQxdGltZW91dCA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjEwKTsKaWYgKG5vdCByeDBkMXRpbWVvdXQpCnsKCVBhcmVudC5CcmFrZSBQZWRhbCBQcmVzc3VyZSA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgOCkgKiAxMjk4MDAuMDsKLy93YXMgU2xvdCBPRTkgKDEwMSksIG5vdyBGaXJtd2FyZSA5OiBicmFrZSBwZWRhbCBwcmVzc3VyZQoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoOSwgUGFyZW50LkJyYWtlIFBlZGFsIFByZXNzdXJlICogMS4wZS0zKTsKfQplbHNlCnsKCVBhcmVudC5CcmFrZSBQZWRhbCBQcmVzc3VyZSA9IENhbGN1bGF0ZS5OQU4oKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDksIENhbGN1bGF0ZS5OQU4oKSk7Cn0KCi8qCiAqIDB4MGQyIC0gQUJTIHJlcXVlc3RzIC0gNTBIeiByZWNlaXZlCiAqLwoKaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgMHgwRDIsIDB4MDAwLCB0cnVlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7Cgpsb2NhbCByeDBkMnRpbWVvdXQgPSBub3QgRGVsYXkuRmFsbGluZyhyeCwgMC4xMCk7CmlmIChub3QgcngwZDJ0aW1lb3V0KQp7CglQYXJlbnQuVlNDLlN0YXRlID0gKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAyNCwgOCkgZXEgMHhGRikgPyBQYXJlbnQuVlNDLlN0YXRlLk9mZiA6IFBhcmVudC5WU0MuU3RhdGUuT247Cn0KZWxzZQp7CglQYXJlbnQuVlNDLlN0YXRlID0gUGFyZW50LlZTQy5TdGF0ZS5Vbmtub3duOwp9CgovKgogKiAweDBkMyAtIEFCUyBCcmFrZSBTd2l0Y2ggLSA1MEh6IHJlY2VpdmUKICovCgpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxLCAweDBEMywgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKCmxvY2FsIHJ4MGQzdGltZW91dCA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjEwKTsKaWYgKG5vdCByeDBkM3RpbWVvdXQpCnsKCVBhcmVudC5WU0MuRGlzYWJsZSBTd2l0Y2gJID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDIpID8gUGFyZW50LlZTQy5EaXNhYmxlIFN3aXRjaC5PZmYgOiBQYXJlbnQuVlNDLkRpc2FibGUgU3dpdGNoLk9uOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoNSwgQ2FuQ29tbXMuR2V0Qml0KGgsIDIpID8gMC4wIDogMS4wKTsKCVBhcmVudC5WU0MuU3BvcnQgTW9kZSBTd2l0Y2ggPSBDYW5Db21tcy5HZXRCaXQoaCwgNCkgPyBQYXJlbnQuVlNDLlNwb3J0IE1vZGUgU3dpdGNoLk9mZiA6IFBhcmVudC5WU0MuU3BvcnQgTW9kZSBTd2l0Y2guT247CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSg2LCBDYW5Db21tcy5HZXRCaXQoaCwgNCkgPyAwLjAgOiAxLjApOwoJUGFyZW50LkJyYWtlIFN3aXRjaAkJCSA9IENhbkNvbW1zLkdldEJpdChoLCAxOCkgPyBQYXJlbnQuQnJha2UgU3dpdGNoLk9uIDogUGFyZW50LkJyYWtlIFN3aXRjaC5PZmY7Ci8vd2FzIFNsb3QgT0UxMyAoMTA1KSwgbm93IEZpcm13YXJlIDEzOiBicmFrZSBzd2l0Y2gKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDEzLCBDYW5Db21tcy5HZXRCaXQoaCwgMTgpPyAxLjAgOiAwLjApOwoKCVBhcmVudC5WU0MuQUJTIFN0YXRlCQk9IENhbkNvbW1zLkdldEJpdChoLCAyMykgPyBQYXJlbnQuVlNDLkFCUyBTdGF0ZS5PbiA6IFBhcmVudC5WU0MuQUJTIFN0YXRlLk9mZjsKfQplbHNlCnsKCVBhcmVudC5WU0MuRGlzYWJsZSBTd2l0Y2ggPSBUb3lvdGEgODYgU3dpdGNoIFN0YXRlIEVudW1lcmF0aW9uLlVua25vd247CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSggNSwgQ2FsY3VsYXRlLk5BTigpKTsKCVBhcmVudC5WU0MuU3BvcnQgTW9kZSBTd2l0Y2ggPSBUb3lvdGEgODYgU3dpdGNoIFN0YXRlIEVudW1lcmF0aW9uLlVua25vd247CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSggNiwgQ2FsY3VsYXRlLk5BTigpKTsKCVBhcmVudC5CcmFrZSBTd2l0Y2ggPSBUb3lvdGEgODYgU3dpdGNoIFN0YXRlIEVudW1lcmF0aW9uLlVua25vd247CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxMywgQ2FsY3VsYXRlLk5BTigpKTsKCVBhcmVudC5WU0MuQUJTIFN0YXRlID0gVG95b3RhIDg2IFN3aXRjaCBTdGF0ZSBFbnVtZXJhdGlvbi5Vbmtub3duOyAKfQoKLyoKICogMHgyODAgLSBBaXIgQ29uZGl0aW9uZXIgKENsaW1hdGUgQ29udHJvbCB2ZXJzaW9uKSByZXF1ZXN0cyAtIDUwSHogcmVjZWl2ZSAKICovCgpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxLCAweDI4MCwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKCmxvY2FsIHJ4MjgwdGltZW91dCA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjEwKTsKaWYgKG5vdCByeDI4MHRpbWVvdXQpCnsKCVBhcmVudC5IZWF0ZXIgQmxvd2VyIFN3aXRjaAkJPSBDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDAsIDcpOwoJUGFyZW50LkFpciBDb25kaXRpb25lciBSZXF1ZXN0LkNsaW1hdGUJPSBDYW5Db21tcy5HZXRCaXQgICAgKGgsIDcpID8gUGFyZW50LkFpciBDb25kaXRpb25lciBSZXF1ZXN0LkNsaW1hdGUuT24gOiBQYXJlbnQuQWlyIENvbmRpdGlvbmVyIFJlcXVlc3QuQ2xpbWF0ZS5PZmY7Cn0KZWxzZQp7CglQYXJlbnQuQWlyIENvbmRpdGlvbmVyIFJlcXVlc3QuQ2xpbWF0ZSA9IFBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdC5DbGltYXRlLk9mZjsKCVBhcmVudC5IZWF0ZXIgQmxvd2VyIFN3aXRjaCA9IC0xOwp9CgovKgogKiAweDE1MiAtIEFpciBDb25kaXRpb25lciAobWFudWFsIGFpcmNvbiB2ZXJzaW9uIC0gZnJvbSBib2R5IGNvbXB1dGVyKSByZXF1ZXN0cyAtIDUwSHogcmVjZWl2ZSAKICovCgpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxLCAweDE1MiwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKCmxvY2FsIHJ4MTUydGltZW91dCA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjUwKTsKaWYgKG5vdCByeDE1MnRpbWVvdXQpCnsKCVBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdC5NYW51YWwJPSBDYW5Db21tcy5HZXRCaXQgICAgKGgsNjMpID8gUGFyZW50LkFpciBDb25kaXRpb25lciBSZXF1ZXN0Lk1hbnVhbC5PbiA6IFBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdC5NYW51YWwuT2ZmOwp9CmVsc2UKewoJUGFyZW50LkFpciBDb25kaXRpb25lciBSZXF1ZXN0Lk1hbnVhbCA9IFBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdC5NYW51YWwuT2ZmOwp9CgppZiAoUGFyZW50LkFpciBDb25kaXRpb25lciBSZXF1ZXN0Lk1hbnVhbCBlcSBQYXJlbnQuQWlyIENvbmRpdGlvbmVyIFJlcXVlc3QuTWFudWFsLk9uIG9yIAoJUGFyZW50LkFpciBDb25kaXRpb25lciBSZXF1ZXN0LkNsaW1hdGUgZXEgUGFyZW50LkFpciBDb25kaXRpb25lciBSZXF1ZXN0LkNsaW1hdGUuT24pCnsKCVBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdCA9IFBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdC5PbjsKfQplbHNlCnsKCVBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdCA9IFBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdC5PZmY7Cn0KClN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDgsIFBhcmVudC5BaXIgQ29uZGl0aW9uZXIgUmVxdWVzdCBlcSBQYXJlbnQuQWlyIENvbmRpdGlvbmVyIFJlcXVlc3QuT24gPyAgMC4wIDogNS4wKTsKCi8qCiAqIDB4Mjg0IC0gU3RhcnQgUmVxdWVzdHMgLSAxMEh6IHJlY2VpdmUKICovCnN0YXRpYyBsb2NhbCBidXR0b25TYW1wbGVkID0gZmFsc2U7CgpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxLCAweDI4NCwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKCmxvY2FsIHJ4Mjg0dGltZW91dCA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjUwKTsKaWYgKG5vdCByeDI4NHRpbWVvdXQpCnsKCVBhcmVudC5TdGFydC5SZXF1ZXN0ID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDMxKSA/IFBhcmVudC5TdGFydC5SZXF1ZXN0Lk9uIDogUGFyZW50LlN0YXJ0LlJlcXVlc3QuT2ZmOwoJaWYgKG5vdCBidXR0b25TYW1wbGVkKQoJewoJCVBhcmVudC5TdGFydC5JbW1lZGlhdGUgPSBDYW5Db21tcy5HZXRCaXQoaCwgMzEpID8gUGFyZW50LlN0YXJ0LkltbWVkaWF0ZS5FbmFibGVkIDogUGFyZW50LlN0YXJ0LkltbWVkaWF0ZS5EaXNhYmxlZDsKCQlidXR0b25TYW1wbGVkID0gdHJ1ZTsKCX0KfQplbHNlCnsKCVBhcmVudC5TdGFydC5SZXF1ZXN0ID0gUGFyZW50LlN0YXJ0LlJlcXVlc3QuVW5rbm93bjsKfQoKLyoKICogb3B0aW9uYWwgcmVjZWl2ZSBmb3IgYXV0b21hdGljIHRyYW5zbWlzc2lvbiBzaWduYWxzIG9uIDB4MTQ4CiAqLwoKaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgMHgxNDgsIDB4MDAwLCB0cnVlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7Cgpsb2NhbCByeDE0OHRpbWVvdXQgPSBub3QgRGVsYXkuRmFsbGluZyhyeCwgMC41MCk7CmxvY2FsIGdlYXJTZWwgPSAweDA7CmlmIChub3QgcngxNDh0aW1lb3V0KQp7CglnZWFyU2VsID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQsIDQpOwoJaWYgKGdlYXJTZWwgZXEgMTEpCgl7CgkJUGFyZW50LlRyYW5zbWlzc2lvbi5TZWxlY3Rpb24gPSBQYXJlbnQuVHJhbnNtaXNzaW9uLlNlbGVjdGlvbi5Ecml2ZTsKCX0KCWVsc2UgaWYgKGdlYXJTZWwgZXEgMTIpCgl7CgkJUGFyZW50LlRyYW5zbWlzc2lvbi5TZWxlY3Rpb24gPSBUb3lvdGEgODYgR2VhciBTZWxlY3RvciBFbnVtZXJhdGlvbi5OZXV0cmFsOwoJfQoJZWxzZSBpZiAoZ2VhclNlbCBlcSAxMykKCXsKCQlQYXJlbnQuVHJhbnNtaXNzaW9uLlNlbGVjdGlvbiA9IFRveW90YSA4NiBHZWFyIFNlbGVjdG9yIEVudW1lcmF0aW9uLlJldmVyc2U7Cgl9CgllbHNlIGlmIChnZWFyU2VsIGVxIDE0KQoJewoJCVBhcmVudC5UcmFuc21pc3Npb24uU2VsZWN0aW9uID0gVG95b3RhIDg2IEdlYXIgU2VsZWN0b3IgRW51bWVyYXRpb24uUGFyazsKCX0KCWVsc2UKCXsKCQlQYXJlbnQuVHJhbnNtaXNzaW9uLlNlbGVjdGlvbiA9IFRveW90YSA4NiBHZWFyIFNlbGVjdG9yIEVudW1lcmF0aW9uLlVua25vd247Cgl9Cn0KZWxzZQp7CglQYXJlbnQuVHJhbnNtaXNzaW9uLlNlbGVjdGlvbiA9IFRveW90YSA4NiBHZWFyIFNlbGVjdG9yIEVudW1lcmF0aW9uLlVua25vd247Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fan">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the Toyota 86 OE cooling fan system.</p>
+                <p class="device_help">For the OE cooling fans to behave identically to the OE system (with Low, Medium, and High speeds),
+                  Coolant Fan 1 Duty Cycle is used as a control method. This allows factors such as vehicle speed and
+                  air conditioner compressor operation to be considered when determining the fan speed:
+                  <ul class="device_help">
+                    <li class="device_help">If Coolant Fan 1 Duty Cycle is less then 33%, <em class="device_chan">Fan State</em> is <em class="device_enum">Off</em></li>
+                    <li class="device_help">If Coolant Fan 1 Duty Cycle is from 33% to 65%, <em class="device_chan">Fan State</em> is <em class="device_enum">Low</em></li>
+                    <li class="device_help">If Coolant Fan 1 Duty Cycle is from 66% to 98%, <em class="device_chan">Fan State</em> is <em class="device_enum">Medium</em></li>
+                    <li class="device_help">If Coolant Fan 1 Duty Cycle is 99%, <em class="device_chan">Fan State</em> is <em class="device_enum">High</em></li>
+                  </ul>
+                </p>
+                <p class="device_help"/>
+                <p class="device_help">The following settings are required (settings which are not mentioned are not critical):
+                  <ul class="device_help">
+                    <li class="device_help">Coolant Fan 1 Mode: Enabled</li>
+                    <li class="device_help">Coolant Fan 1 Frequency: 100Hz</li>
+                    <li class="device_help">Coolant Fan 1 Polarity: Normal</li>
+                    <li class="device_help">Coolant Fan 1 Enable Coolant Temperature Threshold: lower than the minimum temperature at which
+                      fans must operate. Suggested value is 75°C</li>
+                    <li class="device_help">Coolant Fan 1 Enable Coolant Temperature Hysteresis: suggest 5°C</li>
+                    <li class="device_help">Coolant Fan 1 Enable Air Conditioner Mode: Enabled</li>
+                    <li class="device_help">Coolant Fan 1 Enable Vehicle Speed Threshold: suggest 50.0 km/h</li>
+                    <li class="device_help">Coolant Fan 1 Enable Vehicle Speed Hysteresis: suggest 5.0 km/h</li>
+                    <li class="device_help">Coolant Fan 1 Duty Cycle Coolant Temperature: use these exact settings
+                  <figure class="device_help">
+                    <table class="device_help">
+                      <tr class="device_help">
+                        <td class="device_help">Coolant Temperature</td>
+                        <td class="device_help">-20</td>
+                        <td class="device_help">88</td>
+                        <td class="device_help">94</td>
+                        <td class="device_help">100</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Duty Cycle</td>
+                        <td class="device_help">0</td>
+                        <td class="device_help">33</td>
+                        <td class="device_help">66</td>
+                        <td class="device_help">99</td>
+                      </tr>
+                    </table>
+                  </figure>
+                    
+                    </li>
+                    <li class="device_help">Coolant Fan 1 Duty Cycle Air Conditioner: configure exactly as the Coolant Fan 1 Duty Cycle
+                      Coolant Temperature table, but choose lower temperatures if the fans should operate earlier
+                      when air conditioning is requested. Suggested settings:
+                  <figure class="device_help">
+                    <table class="device_help">
+                      <tr class="device_help">
+                        <td class="device_help">Coolant Temperature</td>
+                        <td class="device_help">-20</td>
+                        <td class="device_help">80</td>
+                        <td class="device_help">86</td>
+                        <td class="device_help">92</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Duty Cycle</td>
+                        <td class="device_help">0</td>
+                        <td class="device_help">33</td>
+                        <td class="device_help">66</td>
+                        <td class="device_help">99</td>
+                      </tr>
+                    </table>
+                  </figure>
+                    </li>
+                    <li class="device_help">Coolant Fan 1 Output Resource: Not in Use</li>
+                    <li class="device_help">Toyota 86 Fan Hysteresis: suggest 5%</li>
+                    <li class="device_help">Toyota 86 Power FAN1 Relay Output Resource: Low Side Injector 3 (assuming the use of MoTeC
+                      adaptor loom)</li>
+                    <li class="device_help">Toyota 86 Power FAN2 Relay Output Resource: Low Side Injector 4 (assuming the use of MoTeC
+                      adaptor loom)</li>
+                  </ul>
+                </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fan.Hysteresis">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Cooling Fan threshold hysteresis. Suggest 5%. See Fan for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fan.State">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S" Type="::This.Toyota 86 Fan State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current operating speed of the cooling fans.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Fan.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoU3RhdGUpCnsKCWlzIChPZmYpCgl7CgkJaWYgKENvb2xhbnQgRmFuIDEgRHV0eSBDeWNsZSA+PSAwLjMzKQoJCXsKCQkJU3RhdGUgPSBTdGF0ZS5Mb3c7CgkJfQoJfQoJaXMgKExvdykKCXsKCQlpZiAoQ29vbGFudCBGYW4gMSBEdXR5IEN5Y2xlIDwgKDAuMzMgLSBIeXN0ZXJlc2lzKSkKCQl7CgkJCVN0YXRlID0gU3RhdGUuT2ZmOwoJCX0KCQllbHNlIGlmIChDb29sYW50IEZhbiAxIER1dHkgQ3ljbGUgPj0gMC42NikKCQl7CgkJCVN0YXRlID0gU3RhdGUuTWVkaXVtOwoJCX0KCX0KCWlzIChNZWRpdW0pCgl7CgkJaWYgKENvb2xhbnQgRmFuIDEgRHV0eSBDeWNsZSA8ICgwLjY2IC0gSHlzdGVyZXNpcykpCgkJewoJCQlTdGF0ZSA9IFN0YXRlLkxvdzsKCQl9CgkJZWxzZSBpZiAoQ29vbGFudCBGYW4gMSBEdXR5IEN5Y2xlID49IDAuOTkpCgkJewoJCQlTdGF0ZSA9IFN0YXRlLkhpZ2g7CgkJfQoJfQoJaXMgKEhpZ2gpCgl7CgkJaWYgKENvb2xhbnQgRmFuIDEgRHV0eSBDeWNsZSA8ICgwLjk5IC0gSHlzdGVyZXNpcykpCgkJewoJCQlTdGF0ZSA9IFN0YXRlLk1lZGl1bTsKCQl9Cgl9Cn0KCndoZW4gKFN0YXRlKQp7CglpcyAoSGlnaCkKCXsKCQlQYXJlbnQuUG93ZXIuRkFOMiBSZWxheS5TZXRTdGF0ZSh0cnVlKTsKCX0KCWlzIChNZWRpdW0pCgl7CgkJUGFyZW50LlBvd2VyLkZBTjEgUmVsYXkuU2V0U3RhdGUodHJ1ZSk7CgkJUGFyZW50LlBvd2VyLkZBTjIgUmVsYXkuU2V0U3RhdGUoZmFsc2UpOwoJfQoJaXMgKExvdykKCXsKCQlQYXJlbnQuUG93ZXIuRkFOMSBSZWxheS5TZXRTdGF0ZShmYWxzZSk7CgkJUGFyZW50LlBvd2VyLkZBTjIgUmVsYXkuU2V0U3RhdGUodHJ1ZSk7Cgl9CglpcyAoT2ZmKQoJewoJCVBhcmVudC5Qb3dlci5GQU4xIFJlbGF5LlNldFN0YXRlKGZhbHNlKTsKCQlQYXJlbnQuUG93ZXIuRkFOMiBSZWxheS5TZXRTdGF0ZShmYWxzZSk7Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Power">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding all Toyota 86 OE system relays.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Power.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[LyogdHVybiBvbiB0aGVzZSByZWxheXMgd2l0aCBpZ25pdGlvbiBzd2l0Y2ggKi8KaWYgKEVuZ2luZSBSdW4gU3dpdGNoIGVxIEVuZ2luZSBSdW4gU3dpdGNoLk9uKQp7CglTU0hVVCBSZWxheS5TZXRTdGF0ZSh0cnVlKTsKCU1DUiBSZWxheS5TZXRTdGF0ZSh0cnVlKTsKfQplbHNlCnsKCVNTSFVUIFJlbGF5LlNldFN0YXRlKGZhbHNlKTsKCU1DUiBSZWxheS5TZXRTdGF0ZShmYWxzZSk7Cn0KCi8qIHR1cm4gb24gdGhlc2UgcmVsYXlzIHdoZW4gbm90IHN0YWxsZWQgKi8KLy9pZiAoKEVuZ2luZSBSdW4gU3dpdGNoIGVxIEVuZ2luZSBSdW4gU3dpdGNoLk9uKSBhbmQgKEVuZ2luZSBTcGVlZCBSZWZlcmVuY2UgU3RhdGUuQXNJbnRlZ2VyKCkgPiAyKSkKaWYgKChFbmdpbmUgUnVuIFN3aXRjaCBlcSBFbmdpbmUgUnVuIFN3aXRjaC5PbikgYW5kIChFbmdpbmUgU3RhdGUuQXNJbnRlZ2VyKCkgPiAxKSkKewoJSVJFTCBSZWxheS5TZXRTdGF0ZSh0cnVlKTsKfQplbHNlCnsKCUlSRUwgUmVsYXkuU2V0U3RhdGUoZmFsc2UpOwp9CgovKgogKiBTVEEgc3RhcnRlciByZWxheSB3b3JrcyBpbiB0d28gd2F5czoKICogaWYga2V5c3dpdGNoIHN0YXJ0LCB0dXJuIG9uIHVudGlsIGVuZyBzcGQgPiBzdGFydCB0aHJlc2hvbGQuCiAqIGlmIGJ1dHRvbiBzdGFydCwgdHVybiBvbiBpZiBDQU4gU3RhcnQgcmVxdWVzdCBpcyBzZXQsIHR1cm4gb2ZmIGlmIEVORyBTUEQgPiBzdGFydCB0aHJlc2hvbGQgKGxhdGNoaW5nIHN0YXJ0IHJlcXVlc3QpLAogKiBPUiBpZiBlbmdpbmUgc3RhbGxzIChpZSBjbHV0Y2ggcGVkYWwgcmVsZWFzZWQsIG9yIGZhaWwgdG8gc3RhcnQpCiAqLwpsb2NhbCBjcmFua2hvbGQgPSBEZWxheS5GYWxsaW5nKChQYXJlbnQuU3RhcnQuUmVxdWVzdCBlcSBQYXJlbnQuU3RhcnQuUmVxdWVzdC5Pbikgb3IgKEVuZ2luZSBTdGF0ZSBlcSBFbmdpbmUgU3RhdGUuQ3JhbmspLCAxLjApOwp3aGVuIChQYXJlbnQuU3RhcnQuVHlwZSkKewoJaXMgKEtleSkKCXsKLy8JCWlmICgoRW5naW5lIFNwZWVkIDw9IEVuZ2luZSBSdW4gVGhyZXNob2xkKSBhbmQgKEVuZ2luZSBSdW4gU3dpdGNoIGVxIEVuZ2luZSBSdW4gU3dpdGNoLk9uKSkKCQlpZiAoKEVuZ2luZSBTdGF0ZSBuZXEgRW5naW5lIFN0YXRlLlJ1bikgYW5kIChFbmdpbmUgUnVuIFN3aXRjaCBlcSBFbmdpbmUgUnVuIFN3aXRjaC5PbikpCgkJewoJCQlTVEEgUmVsYXkuU2V0U3RhdGUodHJ1ZSk7CgkJfQoJCWVsc2UKCQl7CgkJCVNUQSBSZWxheS5TZXRTdGF0ZShmYWxzZSk7CgkJfQoJfQoJaXMgKEJ1dHRvbikKCXsKCQl3aGVuIChFbmdpbmUgU3RhdGUpCgkJewoJCQlpcyAoU3RhcnR1cCBvciBTdG9wIG9yIENyYW5rKQoJCQl7CgkJCQlpZiAoCgkJCQkJKGNyYW5raG9sZCBhbmQgVHJhbnNtaXNzaW9uLlR5cGUgZXEgVHJhbnNtaXNzaW9uLlR5cGUuQXV0b21hdGljIGFuZCAgQnJha2UgU3dpdGNoIGVxIEJyYWtlIFN3aXRjaC5Pbikgb3IKCQkJCQkoY3Jhbmtob2xkIGFuZCBUcmFuc21pc3Npb24uVHlwZSBlcSBUcmFuc21pc3Npb24uVHlwZS5NYW51YWwpCgkJCQkpCgkJCQl7CgkJCQkJU1RBIFJlbGF5LlNldFN0YXRlKHRydWUpOwoJCQkJfQoJCQkJZWxzZQoJCQkJewoJCQkJCVNUQSBSZWxheS5TZXRTdGF0ZShmYWxzZSk7CgkJCQl9CgkJCX0KCQkJaXMgKFJ1bikKCQkJewoJCQkJU1RBIFJlbGF5LlNldFN0YXRlKGZhbHNlKTsKCQkJfQoJCX0JCgl9Cn0KCi8qIEhlYXRlciBCbG93ZXIgcmVsYXkgYmFzZWQgb24gSGVhdGVyIEJsb3dlciBTd2l0Y2ggPiAwICovCmlmICgoRW5naW5lIFJ1biBTd2l0Y2ggZXEgRW5naW5lIFJ1biBTd2l0Y2guT24pIGFuZCAoUGFyZW50LkhlYXRlciBCbG93ZXIgU3dpdGNoID4gMCkpCnsKCUhCIFJlbGF5LlNldFN0YXRlKHRydWUpOwp9CmVsc2UKewoJSEIgUmVsYXkuU2V0U3RhdGUoZmFsc2UpOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Start">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the Toyota 86 OE starting system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Start.Request">
+        <Props Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current Start Button position from the Toyota 86 OE body system.</p>
+                  <p class="device_help">Toyota 86 systems use CAN messages to report requests. If CAN messages fail or time out, <em class="device_chan">
+                    Start Request</em> is set to <em class="device_enum">Unknown</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Start.Type">
+        <Props Type="::This.Toyota 86 Start Type Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When set to <em class="device_enum">Key</em> the starter solenoid relay (STA) will be turned on until <em class="device_ref">Engine State</em> is
+                    <em class="device_enum">Run</em>.</p>
+                  <p class="device_help">When set to <em class="device_enum">Button</em> the STA relay will not turn on until the Brake Switch is on and the Starter
+                    Button is pressed, and will remain on until <em class="device_ref">Engine State</em> is <em class="device_enum">Run</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.VSC">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the Toyota 86 Vehicle Stability Control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.VSC.State">
+        <Props Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Toyota 86 OE Vehicle Stability Control state.</p>
+                  <p class="device_help">Toyota 86 systems use ABS CAN messages to report status information. If CAN messages fail or time out,
+                    <em class="device_chan">VSC State</em> is set to <em class="device_enum">Unknown</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.VSC.Sport Mode Switch">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S" Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Toyota 86 OE Vehicle Stability Control Sport Mode switch.</p>
+                  <p class="device_help">Toyota 86 systems use ABS CAN messages to report status information. If CAN messages fail or time out,
+                    <em class="device_chan">VSC Sport Mode Switch</em> is set to <em class="device_enum">Unknown</em>.</p>
+                  <p class="device_help">This switch may be connected to a Driver Switch, Driver Rotary Switch or as a CAN Resource as follows:
+                    <ul class="device_help">
+                      <li class="device_help">If applicable set Diagnostic Delay to 100ms</li>
+                      <li class="device_help">If applicable set Diagnostic Low to 0.000V</li>
+                      <li class="device_help">Set the Resource to Firmware 6</li>
+                      <li class="device_help">The 'Off' value is 0V</li>
+                      <li class="device_help">The 'On' value is 1V</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.VSC.Disable Switch">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S" Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Toyota 86 OE Vehicle Stability Control Disable switch.</p>
+                  <p class="device_help">Toyota 86 systems use ABS CAN messages to report status information. If CAN messages fail or time out,
+                    <em class="device_chan">VSC Disable Switch</em> is set to <em class="device_enum">Unknown</em>.</p>
+                  <p class="device_help">This switch may be connected to a Driver Switch, Driver Rotary Switch or as a CAN Resource as follows:
+                    <ul class="device_help">
+                      <li class="device_help">If applicable set Diagnostic Delay to 100ms</li>
+                      <li class="device_help">If applicable set Diagnostic Low to 0.000V</li>
+                      <li class="device_help">Set the Resource to Firmware 5</li>
+                      <li class="device_help">The 'Off' value is 0V</li>
+                      <li class="device_help">The 'On' value is 1V</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.VSC.ABS State">
+        <Props DiagnosticLog="true" DiagnosticLogRate="100MS" Type="::This.Toyota 86 Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Toyota 86 OE Vehicle Stability Control ABS state.</p>
+                  <p class="device_help">Toyota 86 systems use ABS CAN messages to report status information. If CAN messages fail or time out,
+                    <em class="device_chan">VSC ABS State</em> is set to <em class="device_enum">Unknown</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Frequency">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fuel Pump.FPC">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to duty cycle control of the the Toyota 86 OE fuel pump.</p>
+                  <p class="device_help">Recommended Output Frequency: 80 Hz.</p>
+                  <p class="device_help">
+                  <figure class="device_help">
+                    <table class="device_help">
+                      <tr class="device_help">
+                        <td class="device_help">Engine Speed</td>
+                        <td class="device_help">0</td>
+                        <td class="device_help">100</td>
+                        <td class="device_help">105</td>
+                        <td class="device_help">1000</td>
+                        <td class="device_help">3000</td>
+                        <td class="device_help">8000</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Duty Cycle</td>
+                        <td class="device_help">100</td>
+                        <td class="device_help">100</td>
+                        <td class="device_help">50</td>
+                        <td class="device_help">50</td>
+                        <td class="device_help">40</td>
+                        <td class="device_help">30</td>
+                      </tr>
+                    </table>
+                    <figcaption class="device_help">Recommended FPC Duty Cycle table values</figcaption>
+                  </figure>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Power.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Fuel Pump.FPC.Output">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Release"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fuel Pump">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the Toyota 86 OE low pressure fuel pump.</p>
+                <p class="device_help">This pump is controlled by two outputs, Fuel Pump, which is an enable signal, and Toyota 86 Fuel Pump FPC,
+                  which is a variable duty cycle signal for PWM control of pump speed.</p>
+                <p class="device_help">Fuel Pump Polarity should be Inverting for operation of the OE system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fuel Pump.FPC.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Filter">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Absolute">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Absolute Filtered">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Fuel Pump.FPC.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Power.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Reserve"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Fuel Pump.FPC.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Duty Cycle.Value.Init"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Duty Cycle.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Parent.Parent.Power.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Duty Cycle.Value.Value">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Fuel Pump.FPC.Output.Duty Cycle.Value">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Parent.Parent.Parent.Engine Speed" MaxSites="11"/>
+         </Axis>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Output.Duty Cycle">
+        <Props ValMin="0.00000000000000000e+000" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fuel Pump.FPC.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Pedal Pressure">
+        <Props Qty="Pa">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="MPa" DPS="2" Min="0.00000000000000000e+000" Max="2.00000000000000000e+007"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Toyota 86 systems use ABS CAN messages for brake switch calculations. If CAN messages fail
+                    or time out, Brake Pedal Pressure is set to Not a Number and associated systems will not operate.</p>
+                  <p class="device_help">Refer to the Brake main group for detailed help.</p>
+                  <p class="device_help">This channel may be accessed by means of Firmware CAN Resource in the main Brake Pressure group:
+                    <ul class="device_help">
+                      <li class="device_help">Set Brake Pressure Front Sensor Diagnostic Delay to 100ms.</li>
+                      <li class="device_help">Set Brake Pressure Front Calibration to 'Firmware Specific'.</li>
+                      <li class="device_help">Set Brake Pressure Front Sensor Resource to Firmware 9.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Cruise Enable">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Cruise Speed">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Cruise State">
+        <Props Type="MoTeC Cruise.Cruise Control State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Clutch State">
+        <Props Type="MoTeC Cruise.Cruise Clutch State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Driver Cruise On Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Driver Cruise Off Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Driver Cruise Cancel Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Driver Cruise Coast Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Driver Cruise Resume Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Driver Cruise Acceleration Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Driver Cruise Set Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fuel Cut State">
+        <Props Type="::This.Toyota 86 Fuel Cut State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Idle Aim">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Transmission">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the Toyota 86 transmission.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Transmission.Type">
+        <Props Type="::This.Toyota 86 Transmission Type Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Required setting for correct CAN messaging in OE installations.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Transmission.Selection">
+        <Props Type="::This.Toyota 86 Gear Selector Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the automatic transmission gear selector (if fitted).</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Transmission.Idle Mass Flow Feed Forward.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Transmission.Idle Mass Flow Feed Forward.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Transmission.Idle Mass Flow Feed Forward.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Communications.Receive 100Hz:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Transmission.Idle Mass Flow Feed Forward">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Axis>
+          <X Source="Parent.Parent.Coolant Temperature" MaxSites="11"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Optional feed forward component of the Idle Mass Flow control system.</p>
+                  <p class="device_help">Use this table to correct for engine load variations caused by the automatic transmission.
+                    The value will be added to Idle Mass Flow Feed Forward main when <em class="device_chan">Transmission Selection</em>
+                    is <em class="device_enum">Drive</em> or <em class="device_enum">Reverse</em>.</p>
+                  <p class="device_help">See Idle for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Start.Immediate">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Enabled if the push button start system has requested an immediate start upon power-up.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Fan 1 Duty Cycle">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.SSHUT Relay.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.SSHUT Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.SSHUT Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Output.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.SSHUT Relay.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.SSHUT Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Update"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Voltage.Input Resolution"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.SSHUT Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.SSHUT Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.SSHUT Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.SSHUT Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.SSHUT Relay.SetState"/>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.STA Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Toyota 86 OE system relay.</p>
+                  <p class="device_help"><em class="device_help">As the STA relay may provide a parasitic power feed to the ECU it is recommended that a Low Side
+                    Injector resource is used.</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Power.STA Relay.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.STA Relay.Resource.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.STA Relay.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.STA Relay.Drive">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.STA Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.STA Relay.Test"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.STA Relay.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.STA Relay.Open Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.STA Relay.Open Current.Value"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.STA Relay.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.STA Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.STA Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.STA Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.STA Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.STA Relay.Output.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.STA Relay.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.STA Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.SSHUT Relay.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.STA Relay.Voltage.Input Resolution"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.STA Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.STA Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.STA Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.STA Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.STA Relay.SetState"/>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.IREL Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Toyota 86 OE system relay.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Power.IREL Relay.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.IREL Relay.Resource.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.IREL Relay.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.IREL Relay.Drive">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.IREL Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.IREL Relay.Test"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.IREL Relay.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.IREL Relay.Open Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.IREL Relay.Open Current.Value"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.IREL Relay.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.IREL Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.IREL Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.IREL Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.IREL Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.IREL Relay.Output.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.IREL Relay.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.IREL Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.SSHUT Relay.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.IREL Relay.Voltage.Input Resolution"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.IREL Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.IREL Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.IREL Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.IREL Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.IREL Relay.SetState"/>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.MCR Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Toyota 86 OE system relay.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Power.MCR Relay.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.MCR Relay.Resource.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.MCR Relay.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.MCR Relay.Drive">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.MCR Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.MCR Relay.Test"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.MCR Relay.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.MCR Relay.Open Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.MCR Relay.Open Current.Value"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.MCR Relay.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.MCR Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.MCR Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.MCR Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.MCR Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.MCR Relay.Output.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.MCR Relay.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.MCR Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.SSHUT Relay.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.MCR Relay.Voltage.Input Resolution"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.MCR Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.MCR Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.MCR Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.MCR Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.MCR Relay.SetState"/>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.HB Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Toyota 86 OE system relay.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Power.HB Relay.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.HB Relay.Resource.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.HB Relay.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.HB Relay.Drive">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.HB Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.HB Relay.Test"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.HB Relay.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.HB Relay.Open Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.HB Relay.Open Current.Value"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.HB Relay.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.HB Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.HB Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.HB Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.HB Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.HB Relay.Output.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.HB Relay.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.HB Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.SSHUT Relay.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.HB Relay.Voltage.Input Resolution"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.HB Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.HB Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.HB Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.HB Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.HB Relay.SetState"/>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.FAN1 Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Toyota 86 OE system relay.</p>
+                  <p class="device_help">Toyota 86 OE fans are controlled via Coolant Fan 1 Duty Cycle settings.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Power.FAN1 Relay.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.FAN1 Relay.Resource.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.FAN1 Relay.State"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Speed Scaling">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Multiplicative factor on Engine Speed for transmitted engine speed value.</p>
+                  <p class="device_help">Normally set to 1.000.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN1 Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN1 Relay.Test"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.FAN1 Relay.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN1 Relay.Open Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.FAN1 Relay.Open Current.Value"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.FAN1 Relay.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN1 Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.FAN1 Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Output.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.FAN1 Relay.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN1 Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.SSHUT Relay.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Voltage.Input Resolution"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.FAN1 Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN1 Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN1 Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN1 Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.FAN1 Relay.SetState"/>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.FAN2 Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Toyota 86 OE system relay.</p>
+                  <p class="device_help">Toyota 86 OE fans are controlled via Coolant Fan 1 Duty Cycle settings.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Power.FAN2 Relay.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.FAN2 Relay.Resource.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.FAN2 Relay.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN2 Relay.Drive">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN2 Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN2 Relay.Test"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.FAN2 Relay.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN2 Relay.Open Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.FAN2 Relay.Open Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN1 Relay.Drive">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN2 Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.FAN2 Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Output.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.FAN2 Relay.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN2 Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.SSHUT Relay.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Voltage.Input Resolution"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.FAN2 Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN2 Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN2 Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.FAN2 Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.FAN2 Relay.SetState"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Fuel Pump.FPC.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.SSHUT Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Toyota 86 OE system relay.</p>
+                  <p class="device_help"><em class="device_help">As the SSHUT relay may provide a parasitic power feed to the ECU it is recommended that a Low Side
+                    Injector resource is used.</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Power.SSHUT Relay.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.SSHUT Relay.Resource.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.SSHUT Relay.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.SSHUT Relay.Drive">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.SSHUT Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.SSHUT Relay.Test"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.SSHUT Relay.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.SSHUT Relay.Open Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.SSHUT Relay.Open Current.Value"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.FAN2 Relay.Output"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[UGFyZW50LkNBTiBCdXM7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fuel Flow Scale">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Scaling for the transmitted fuel flow.</p>
+                <p class="device_help">Set to 500.0 to match the OE setting.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.MCR Relay.Polarity">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.IREL Relay.Polarity">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.STA Relay.Polarity.Value">
+        <Props Value="Normal"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.STA Relay.Polarity">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.SSHUT Relay.Polarity.Value">
+        <Props Value="Normal"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.SSHUT Relay.Polarity">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN2 Relay.Polarity.Value">
+        <Props Value="Normal"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.HB Relay.Polarity.Value">
+        <Props Value="Normal"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.FAN1 Relay.Polarity.Value">
+        <Props Value="Normal"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN1 Relay.Polarity">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.IREL Relay.Polarity.Value">
+        <Props Value="Normal"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.HB Relay.Polarity">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.MCR Relay.Polarity.Value">
+        <Props Value="Normal"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.FAN2 Relay.Polarity">
+        <Props TargetCreation="AutoConst"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Air Conditioner Clutch State"/>
+        <Component Name="Ambient Pressure"/>
+        <Component Name="Clutch State"/>
+        <Component Name="Coolant Fan 1 Duty Cycle"/>
+        <Component Name="Coolant Temperature"/>
+        <Component Name="Cruise Enable"/>
+        <Component Name="Cruise Speed"/>
+        <Component Name="Cruise State"/>
+        <Component Name="Driver Cruise On Switch"/>
+        <Component Name="Driver Cruise Off Switch"/>
+        <Component Name="Driver Cruise Cancel Switch"/>
+        <Component Name="Driver Cruise Resume Switch"/>
+        <Component Name="Driver Cruise Acceleration Switch"/>
+        <Component Name="Driver Cruise Set Switch"/>
+        <Component Name="Driver Cruise Coast Switch"/>
+        <Component Name="Engine Oil Temperature"/>
+        <Component Name="Engine Run Switch"/>
+        <Component Name="Engine Speed"/>
+        <Component Name="Engine State"/>
+        <Component Name="Fuel Cut State"/>
+        <Component Name="Fuel Flow"/>
+        <Component Name="Gear"/>
+        <Component Name="Idle Aim"/>
+        <Component Name="Inlet Manifold Pressure"/>
+        <Component Name="Inlet Mass Flow"/>
+        <Component Name="Throttle Aim State"/>
+        <Component Name="Throttle Pedal"/>
+        <Component Name="Warning Light State"/>
+        <Component Name="Brake Pedal Pressure"/>
+        <Component Name="Brake Switch"/>
+        <Component Name="Heater Blower Switch"/>
+        <Component Name="CAN Bus"/>
+        <Component Name="Wheel Circumference"/>
+        <Component Name="Engine Speed Scaling"/>
+        <Component Name="Fuel Flow Scale"/>
+        <Component Name="Air Conditioner Request">
+         <Component Name="Value"/>
+         <Component Name="Climate"/>
+         <Component Name="Manual"/>
+        </Component>
+        <Component Name="Communications">
+         <Component Name="Transmit 100Hz"/>
+         <Component Name="Transmit 50Hz"/>
+         <Component Name="Transmit 20Hz"/>
+         <Component Name="Transmit 1Hz"/>
+         <Component Name="Receive 100Hz"/>
+         <Component Name="Startup"/>
+        </Component>
+        <Component Name="Fan">
+         <Component Name="Hysteresis"/>
+         <Component Name="State"/>
+         <Component Name="Calculation"/>
+        </Component>
+        <Component Name="Fuel Pump">
+         <Component Name="FPC">
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value">
+             <Component Name="Value"/>
+             <Component Name="Init"/>
+             <Component Name="Update"/>
+            </Component>
+           </Component>
+           <Component Name="Resource">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+         </Component>
+        </Component>
+        <Component Name="Power">
+         <Component Name="SSHUT Relay">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Test">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Polarity">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Open Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current"/>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="STA Relay">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Test">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Polarity">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Open Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current"/>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="IREL Relay">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Test">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Polarity">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Open Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current"/>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="MCR Relay">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Test">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Polarity">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Open Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current"/>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="HB Relay">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Test">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Polarity">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Open Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current"/>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="FAN1 Relay">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Test">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Polarity">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Open Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current"/>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="FAN2 Relay">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Test">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Polarity">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Open Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current"/>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="Calculation"/>
+        </Component>
+        <Component Name="Start">
+         <Component Name="Immediate"/>
+         <Component Name="Request"/>
+         <Component Name="Type"/>
+        </Component>
+        <Component Name="Transmission">
+         <Component Name="Type"/>
+         <Component Name="Selection"/>
+         <Component Name="Idle Mass Flow Feed Forward">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="VSC">
+         <Component Name="State"/>
+         <Component Name="Sport Mode Switch"/>
+         <Component Name="Disable Switch"/>
+         <Component Name="ABS State"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Toyota 86 2012 Integration">
+     <Module Name="Toyota 86 2012"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

@@ -1,0 +1,1614 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10107" Name="MoTeC Simulink Hardware Interface" VersionMajor="1" VersionMinor="0" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0074"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version (1.00.0000)</h4>
+            <ul class="device_help">
+<li class="device_help">Initial release.</li></ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC Input" VersionMajor="1" VersionMinor="10" VersionBuild="39"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Simulink Sensor Status Enumeration" Storage="enum" Default="Not In Use">
+   <Enum Name="Fault" ContainerOrder="0">
+    <Help/>
+   </Enum>
+   <Enum Name="Not In Use" ContainerOrder="1">
+    <Help/>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="2">
+    <Help/>
+   </Enum>
+   <Enum Name="Warning" ContainerOrder="3">
+    <Help/>
+   </Enum>
+  </Type>
+  <Type Name="CAN Datatype" Storage="enum" Default="Unsigned">
+   <Enum Name="Unsigned" ContainerOrder="0">
+    <Help/>
+   </Enum>
+   <Enum Name="Signed" ContainerOrder="1">
+    <Help/>
+   </Enum>
+   <Enum Name="Float" ContainerOrder="2">
+    <Help/>
+   </Enum>
+  </Type>
+  <Type Name="CAN Endian" Storage="enum" Default="Intel">
+   <Enum Name="Intel" ContainerOrder="0">
+    <Help/>
+   </Enum>
+   <Enum Name="Motorola" ContainerOrder="1">
+    <Help/>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Simulink Input Sensor"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Simulink Input Sensor.Analogue Voltage">
+     <BuildHelp>
+<![CDATA[]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Sensor Event" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Event" DisplayName="Sensor Event"/>
+         <Property Name="Sensor Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Voltage Event" DisplayName="Sensor Voltage Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Value Display Unit" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.Unit" DisplayName="Value Display Unit"/>
+         <Property Name="Value Quantity" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Qty" DisplayName="Value Quantity"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Value" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Status">
+        <Props Type="::This.Simulink Sensor Status Enumeration">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="MoTeC Input.Sensor" Name="Base.Sensor">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Value">
+        <Props Qty="$(Parent.Parent.Value:Qty)" ValMin="-2.00000000000000000e+01" ValMax="1.00000000000000000e+03">
+         <Locale>
+          <Default Unit="$(Parent.Parent.Value:Locale.Default.Unit)" DPS="2"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Sensor.Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor.Resource.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Diagnostic"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Time"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Diagnostic.Low"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.Low.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Diagnostic.High"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.High.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Diagnostic.Delay"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.Delay.Value"/>
+       <Component Classname="_IOMethod.ratio" Name="Base.Sensor.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Normalised Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Voltage.Reference"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Voltage.Reference.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Update"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Resolution"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Sensor.Translation"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Translation.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Sensor.Translation.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Sensor.Translation.Update"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Sensor.Calculation"/>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Update">
+        <Props SelectedTrigger="$(Parent.Sensor.Calculation:SelectedTrigger)">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKFNlbnNvci5EaWFnbm9zdGljLkFzSW50ZWdlcigpIDwgMSkKewoJLy8gRmF1bHR5IG9yIG5vdCBjb25uZWN0ZWQgc2Vuc29yCglpZiAoU2Vuc29yLkRpYWdub3N0aWMuQXNJbnRlZ2VyKCkgPCAwKQoJewoJCVN0YXR1cyA9IFN0YXR1cy5GYXVsdDsKCX0KCWVsc2UKCXsKCQlTdGF0dXMgPSBTdGF0dXMuTm90IEluIFVzZTsKCX0KCVZhbHVlID0gQ2FsY3VsYXRlLk5BTigpOwp9CmVsc2UgaWYgKFNlbnNvci5EaWFnbm9zdGljLkFzSW50ZWdlcigpID4gMSkKewoJLy8gTXVzdCBiZSBPSwoJU3RhdHVzID0gU3RhdHVzLldhcm5pbmc7CglWYWx1ZSA9IFNlbnNvcjsJCQp9CmVsc2UKewoJLy8gV2FybmluZyByZWdpc3RlcmVkIGJ5IHNlbnNvcgoJU3RhdHVzID0gU3RhdHVzLk9LOwoJVmFsdWUgPSBTZW5zb3I7CQp9]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Sensor.Startup"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="Status"/>
+        <Component Name="Sensor">
+         <Component Name="Value"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Diagnostic">
+          <Component Name="Value"/>
+          <Component Name="Time"/>
+          <Component Name="Low">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="High">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Delay">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Resource"/>
+          <Component Name="Normalised Filtered"/>
+          <Component Name="Absolute"/>
+          <Component Name="Filter">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reference">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+          <Component Name="Input Impedance"/>
+          <Component Name="Input Source"/>
+          <Component Name="Input Bandwidth"/>
+          <Component Name="Input Minimum"/>
+          <Component Name="Input Maximum"/>
+          <Component Name="Input Resolution"/>
+         </Component>
+         <Component Name="Translation">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Calculation"/>
+         <Component Name="Startup"/>
+        </Component>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Simulink Input Sensor.Dual Potentiometer Pedal">
+     <BuildHelp>
+<![CDATA[]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Sensor Event" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Event" DisplayName="Sensor Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Value Display Unit" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.Unit" DisplayName="Value Display Unit"/>
+         <Property Name="Value Quantity" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Qty" DisplayName="Value Quantity"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Value" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Status">
+        <Props Type="::This.Simulink Sensor Status Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="MoTeC Input.Normalised Tracking" Name="Base.Sensor">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Value">
+        <Props>
+         <List.UserTags/>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Sensor.Main Resource">
+        <Props>
+         <List.UserTags/>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor.Main Resource.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Sensor.Tracking Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor.Tracking Resource.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Diagnostic"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Time"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Diagnostic.Delay">
+        <Props TargetCreation="AutoParam"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.Delay.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Diagnostic.Margin"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Diagnostic.Margin.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Low"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Low.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.High"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.High.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Main"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Main.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Main.Diagnostic"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Main.Diagnostic.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Main.Diagnostic.Time"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Diagnostic.Low"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Diagnostic.High"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Main.Diagnostic.Delay"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Main.Diagnostic.Margin"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Main.Diagnostic.Margin.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Main.Offset"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Offset.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.Sensor.Main.Offset.Value.Set"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Main.Offset.Correction"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Main.Offset.Correction.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Scale"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.Sensor.Main.Scale.Set"/>
+       <Component Classname="_IOMethod.ratio" Name="Base.Sensor.Main.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Normalised Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Reference"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Voltage.Reference.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Update"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Voltage.Input Resolution"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Main.Digital"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Sensor.Main.Digital.Decode Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor.Main.Digital.Decode Resource.Value"/>
+       <Component Classname="_IOMethod.decode" Name="Base.Sensor.Main.Digital.Decode"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Decode.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Decode.Type"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Digital.Decode.Type.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Decode.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Decode.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Decode.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Decode.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Decode.Update"/>
+       <Component Classname="_IOMethod.UDIG_IO" Name="Base.Sensor.Main.Digital.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Pullup Control"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Digital.Pin.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Active Edge"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Digital.Pin.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Threshold"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Digital.Pin.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Hysteresis"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Digital.Pin.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Debounce"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Main.Digital.Pin.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Pin.Update"/>
+       <Component Classname="_IOMethod.udig_adc" Name="Base.Sensor.Main.Digital.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Minimum"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Maximum"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.GetStatistics"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Main.Digital.Voltage.Input Resolution"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Sensor.Main.Update"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Sensor.Main.Startup"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Tracking"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Tracking.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Tracking.Nonlinear"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Tracking.Diagnostic"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Tracking.Diagnostic.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Tracking.Diagnostic.Time"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Diagnostic.Low"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Diagnostic.High"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Tracking.Diagnostic.Delay"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Tracking.Diagnostic.Margin"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Tracking.Diagnostic.Margin.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Tracking.Offset"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Offset.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Tracking.Offset.Correction"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Tracking.Offset.Correction.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Scale"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.Sensor.Tracking.Scale.Set"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Sensor.Tracking.Linearisation"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Linearisation.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Sensor.Tracking.Linearisation.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Sensor.Tracking.Linearisation.Update"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Tracking.Limit"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Tracking.Limit.Value"/>
+       <Component Classname="_IOMethod.ratio" Name="Base.Sensor.Tracking.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Normalised Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Reference"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Voltage.Reference.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Update"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Voltage.Input Resolution"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Tracking.Digital"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Sensor.Tracking.Digital.Decode Resource"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor.Tracking.Digital.Decode Resource.Value"/>
+       <Component Classname="_IOMethod.decode" Name="Base.Sensor.Tracking.Digital.Decode"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Decode.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Decode.Type"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Digital.Decode.Type.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Decode.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Decode.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Decode.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Decode.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Decode.Update"/>
+       <Component Classname="_IOMethod.UDIG_IO" Name="Base.Sensor.Tracking.Digital.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Pullup Control"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Digital.Pin.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Active Edge"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Digital.Pin.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Threshold"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Digital.Pin.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Hysteresis"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Digital.Pin.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Debounce"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Tracking.Digital.Pin.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Pin.Update"/>
+       <Component Classname="_IOMethod.udig_adc" Name="Base.Sensor.Tracking.Digital.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Minimum"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Maximum"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.GetStatistics"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Tracking.Digital.Voltage.Input Resolution"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Sensor.Tracking.Update"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Sensor.Tracking.Startup"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Sensor.Calculation"/>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Update">
+        <Props SelectedTrigger="$(Parent.Sensor.Calculation:SelectedTrigger)"/>
+        <Code Encoding="base64">
+<![CDATA[aWYgKFNlbnNvci5EaWFnbm9zdGljLkFzSW50ZWdlcigpIDwgMSkKewoJLy8gRmF1bHR5IG9yIG5vdCBjb25uZWN0ZWQgc2Vuc29yCglpZiAoU2Vuc29yLkRpYWdub3N0aWMuQXNJbnRlZ2VyKCkgPCAwKQoJewoJCVN0YXR1cyA9IFN0YXR1cy5GYXVsdDsKCX0KCWVsc2UKCXsKCQlTdGF0dXMgPSBTdGF0dXMuTm90IEluIFVzZTsKCX0KCVZhbHVlID0gQ2FsY3VsYXRlLk5BTigpOwp9CmVsc2UgaWYgKFNlbnNvci5EaWFnbm9zdGljLkFzSW50ZWdlcigpID4gMSkKewoJLy8gTXVzdCBiZSBPSwoJU3RhdHVzID0gU3RhdHVzLldhcm5pbmc7CglWYWx1ZSA9IFNlbnNvcjsJCQp9CmVsc2UKewoJLy8gV2FybmluZyByZWdpc3RlcmVkIGJ5IHNlbnNvcgoJU3RhdHVzID0gU3RhdHVzLk9LOwoJVmFsdWUgPSBTZW5zb3I7CQp9]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Diagnostic.Report Single Sensor"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="Status"/>
+        <Component Name="Sensor">
+         <Component Name="Value"/>
+         <Component Name="Main Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Tracking Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Diagnostic">
+          <Component Name="Value"/>
+          <Component Name="Time"/>
+          <Component Name="Delay">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Margin">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Report Single Sensor"/>
+         </Component>
+         <Component Name="Low">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="High">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Main">
+          <Component Name="Value"/>
+          <Component Name="Diagnostic">
+           <Component Name="Value"/>
+           <Component Name="Time"/>
+           <Component Name="Low"/>
+           <Component Name="High"/>
+           <Component Name="Delay"/>
+           <Component Name="Margin">
+            <Component Name="Value"/>
+           </Component>
+          </Component>
+          <Component Name="Offset">
+           <Component Name="Value">
+            <Component Name="Set"/>
+           </Component>
+           <Component Name="Correction">
+            <Component Name="Value"/>
+           </Component>
+          </Component>
+          <Component Name="Scale">
+           <Component Name="Set"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Resource"/>
+           <Component Name="Normalised Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Reference">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Digital">
+           <Component Name="Decode Resource">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Decode">
+            <Component Name="Resource"/>
+            <Component Name="Diagnostic"/>
+            <Component Name="Type">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Pin">
+            <Component Name="Resource"/>
+            <Component Name="Diagnostic"/>
+            <Component Name="Pullup Control">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Active Edge">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Threshold">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Hysteresis">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Debounce">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Voltage">
+            <Component Name="Resource"/>
+            <Component Name="Absolute"/>
+            <Component Name="Minimum"/>
+            <Component Name="Maximum"/>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Update"/>
+            <Component Name="GetStatistics"/>
+            <Component Name="Input Impedance"/>
+            <Component Name="Input Source"/>
+            <Component Name="Input Bandwidth"/>
+            <Component Name="Input Minimum"/>
+            <Component Name="Input Maximum"/>
+            <Component Name="Input Resolution"/>
+           </Component>
+          </Component>
+          <Component Name="Update"/>
+          <Component Name="Startup"/>
+         </Component>
+         <Component Name="Tracking">
+          <Component Name="Value"/>
+          <Component Name="Nonlinear"/>
+          <Component Name="Diagnostic">
+           <Component Name="Value"/>
+           <Component Name="Time"/>
+           <Component Name="Low"/>
+           <Component Name="High"/>
+           <Component Name="Delay"/>
+           <Component Name="Margin">
+            <Component Name="Value"/>
+           </Component>
+          </Component>
+          <Component Name="Offset">
+           <Component Name="Value"/>
+           <Component Name="Correction">
+            <Component Name="Value"/>
+           </Component>
+          </Component>
+          <Component Name="Scale">
+           <Component Name="Set"/>
+          </Component>
+          <Component Name="Linearisation">
+           <Component Name="Value"/>
+           <Component Name="Init"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Limit">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Resource"/>
+           <Component Name="Normalised Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter"/>
+           <Component Name="Reference">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+          <Component Name="Digital">
+           <Component Name="Decode Resource">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Decode">
+            <Component Name="Resource"/>
+            <Component Name="Diagnostic"/>
+            <Component Name="Type">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Pin">
+            <Component Name="Resource"/>
+            <Component Name="Diagnostic"/>
+            <Component Name="Pullup Control">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Active Edge">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Threshold">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Hysteresis">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Debounce">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Voltage">
+            <Component Name="Resource"/>
+            <Component Name="Absolute"/>
+            <Component Name="Minimum"/>
+            <Component Name="Maximum"/>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Update"/>
+            <Component Name="GetStatistics"/>
+            <Component Name="Input Impedance"/>
+            <Component Name="Input Source"/>
+            <Component Name="Input Bandwidth"/>
+            <Component Name="Input Minimum"/>
+            <Component Name="Input Maximum"/>
+            <Component Name="Input Resolution"/>
+           </Component>
+          </Component>
+          <Component Name="Update"/>
+          <Component Name="Startup"/>
+         </Component>
+         <Component Name="Calculation"/>
+        </Component>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Simulink Output Actuator"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Simulink Output Actuator.Hardware Configuration">
+     <BuildHelp>
+<![CDATA[]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel.Output" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition.Ignition" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel.Output.Resource" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition.Low Side Ignition Group.Resource" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition.Ignition.Resource" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Low Side Peak Hold.Output" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Low Side Peak Hold.Output" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Low Side Current Source.Output" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+        </PropRules>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Low Side Peak Hold">
+        <Comment/>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IOGROUP" Name="Base.Low Side Peak Hold.Output">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Diagnostic">
+        <Props DiagnosticLog="true" DiagnosticLogRate="100MS">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Cut Average">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Cut Count">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Cut">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Peak Hold.Output.Cut.Value">
+        <Props Value="0.00000000000000000e+00"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Engine Speed Limit">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Peak Hold.Output.Engine Speed Limit.Value">
+        <Props Value="6.00000000000000000e+04"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Speed Limit Range">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Peak Hold.Output.Speed Limit Range.Value">
+        <Props Value="6.00000000000000000e+02"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Cut Average Length">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Peak Hold.Output.Cut Average Length.Value">
+        <Props Value="4"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Peak Time">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Peak Hold.Output.Peak Time.Value">
+        <Props Value="5.00000000000000010e-03"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Low Side Peak Hold.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Peak Hold.Output.GetDiagnostic"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Low Side Current Source">
+        <Comment/>
+       </Component>
+       <Component Classname="_IOMethod.IGN_LS_IOGROUP" Name="Base.Low Side Current Source.Output">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Diagnostic"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Cut Average"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Cut Count"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Charge Time">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Charge Time.Value">
+        <Props Value="2.00000000000000004e-03"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Charge Minimum">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Charge Minimum.Value">
+        <Props Value="1.00000000000000002e-03"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Charge Maximum">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Charge Maximum.Value">
+        <Props Value="3.00000000000000006e-03"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Spark Duration">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Spark Duration.Value">
+        <Props Value="1.00000000000000002e-03"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Ignition Delay">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Ignition Delay.Value">
+        <Props Value="1.00000000000000008e-05"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Restrike Charge Time">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Restrike Charge Time.Value">
+        <Props Value="1.00000000000000002e-03"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Drive Current">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Drive Current.Value">
+        <Props Value="4.00000000000000008e-02"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Cut">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Cut.Value">
+        <Props Value="0.00000000000000000e+00"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Engine Speed Limit">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Engine Speed Limit.Value">
+        <Props Value="1.20000000000000000e+05"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Speed Limit Range">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Speed Limit Range.Value">
+        <Props Value="6.00000000000000000e+02"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Cut Average Length">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Cut Average Length.Value">
+        <Props Value="24"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Cut Pattern">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Low Side Current Source.Output.Cut Pattern.Value">
+        <Props Value="CUT_PATTERN_DEFAULT"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Low Side Current Source.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.SetCharge"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Low Side Current Source.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Low Side Peak Hold.Output.Update:SelectedTrigger)"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Low Side Peak Hold">
+         <Component Name="Output">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Diagnostic"/>
+          <Component Name="Cut Average"/>
+          <Component Name="Cut Count"/>
+          <Component Name="Cut">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Engine Speed Limit">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Speed Limit Range">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Cut Average Length">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Peak Time">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+          <Component Name="GetDiagnostic"/>
+         </Component>
+        </Component>
+        <Component Name="Low Side Current Source">
+         <Component Name="Output">
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Diagnostic"/>
+          <Component Name="Cut Average"/>
+          <Component Name="Cut Count"/>
+          <Component Name="Charge Time">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Charge Minimum">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Charge Maximum">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Spark Duration">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Ignition Delay">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Restrike Charge Time">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Drive Current">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Cut">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Engine Speed Limit">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Speed Limit Range">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Cut Average Length">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Cut Pattern">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="SetCharge"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Simulink Output Actuator.Frequency Output">
+     <BuildHelp>
+<![CDATA[]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Pin" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Open Current" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Duty Cycle">
+        <Props Qty="ratio" Validation="MinMax" ValMin="-1.00000000000000000e+00" ValMax="1.00000000000000000e+00">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="2" Min="-1.00000000000000000e+00" Max="1.00000000000000000e+00"/>
+         </Locale>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Frequency">
+        <Props Qty="Hz" Validation="MinMax" ValMin="0.00000000000000000e+00" ValMax="2.00000000000000000e+04">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.IO Resource Parameter">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Output">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Frequency">
+        <Props Target="Parent.Parent.Frequency"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Duty Cycle">
+        <Props Target="Parent.Parent.Duty Cycle"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameTarget="Parent.Parent.IO Resource Parameter"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Update"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.IO Resource Parameter"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Output.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Pin">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Pin.Diagnostic">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Drive">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Pin.Drive.Value">
+        <Props Value="SAT"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Peak Current">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Hold Current">
+        <Props Target="Parent.Parent.Open Current">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Pin.Resource">
+        <Props NameTarget="Parent.Parent.IO Resource Parameter">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Output.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Open Current">
+        <Props Qty="A" Validation="MinMax" ValMin="0.00000000000000000e+00" ValMax="2.99999999999999989e-01" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Pin.Peak Current.Value">
+        <Props Value="3.00000000000000000e+00"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Open Current.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Duty Cycle"/>
+        <Component Name="Frequency"/>
+        <Component Name="IO Resource Parameter"/>
+        <Component Name="Open Current">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Output">
+         <Component Name="Resource"/>
+         <Component Name="Frequency"/>
+         <Component Name="Duty Cycle"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Resource"/>
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+         <Component Name="Input Impedance"/>
+         <Component Name="Input Source"/>
+         <Component Name="Input Bandwidth"/>
+         <Component Name="Input Minimum"/>
+         <Component Name="Input Maximum"/>
+         <Component Name="Input Resolution"/>
+        </Component>
+        <Component Name="Pin">
+         <Component Name="Resource"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Drive">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Peak Current">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Hold Current"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Simulink Output Actuator.Bridge Output">
+     <BuildHelp>
+<![CDATA[]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+        </PropRules>
+        <Comment/>
+       </Component>
+       <Component Classname="_IOMethod.bridge" Name="Base.Output">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Frequency">
+        <Props TargetCreation="AutoChannel" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Duty Cycle">
+        <Props TargetCreation="AutoChannel" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Update"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Output.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Output">
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Frequency">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Duty Cycle">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Resource"/>
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+         <Component Name="Input Impedance"/>
+         <Component Name="Input Source"/>
+         <Component Name="Input Bandwidth"/>
+         <Component Name="Input Minimum"/>
+         <Component Name="Input Maximum"/>
+         <Component Name="Input Resolution"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Simulink Input Sensor.Frequency Input">
+     <BuildHelp>
+<![CDATA[]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Logic State"/>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Update Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Update Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Sensor.Pin" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Sensor.Input" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Invert" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Duty Cycle" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Frequency" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Value.Value" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Value.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Duty Cycle.Value" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Duty Cycle.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Frequency.Value" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Override.Frequency.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Logic State">
+        <Props Type="::Hardware.periodic.periodic_state"/>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Duty Cycle">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Frequency">
+        <Props Qty="Hz"/>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Status">
+        <Props Type="::This.Simulink Sensor Status Enumeration">
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Invert">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor.Resource">
+        <Comment/>
+       </Component>
+       <Component Classname="_IOMethod.periodic" Name="Base.Sensor.Input">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Input.State"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Input.Frequency"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Input.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Input.Pulse Width"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Input.Edge Ticks"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Input.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Input.Sample Teeth">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Input.Sample Teeth.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Input.Slave Output">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Sensor.Input.Slave Output.Value">
+        <Props Value="NONE"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Input.Resource">
+        <Props NameTarget="Parent.Parent.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Input.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Input.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Input.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Input.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.UDIG_IO" Name="Base.Sensor.Pin">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Pin.Pullup Control">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Pin.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Pin.Active Edge">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Pin.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Pin.Threshold">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Pin.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Pin.Hysteresis">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Pin.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Pin.Debounce">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Pin.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Input.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Pin.Update"/>
+       <Component Classname="_IOMethod.udig_adc" Name="Base.Sensor.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Minimum"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Maximum"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Voltage.Resource">
+        <Props NameCreation="$(Parent.Parent.Input.Resource:NameCreation)" NameTarget="Parent.Parent.Input.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Input.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.GetStatistics">
+        <Props SelectedTrigger="$(Parent.Parent.Pin.Update:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Update">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKFNlbnNvci5QaW4uRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCS8vIEZhdWx0eSBvciBub3QgY29ubmVjdGVkIHNlbnNvcgoJaWYgKFNlbnNvci5QaW4uRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDApCgl7CgkJU3RhdHVzID0gU3RhdHVzLkZhdWx0OwoJfQoJZWxzZQoJewoJCVN0YXR1cyA9IFN0YXR1cy5Ob3QgSW4gVXNlOwoJfQoJTG9naWMgU3RhdGUgPSBMb2dpYyBTdGF0ZS5PZmY7CQoJRHV0eSBDeWNsZSA9IENhbGN1bGF0ZS5OQU4oKTsKCUZyZXF1ZW5jeSA9IENhbGN1bGF0ZS5OQU4oKTsKfQplbHNlIGlmIChTZW5zb3IuUGluLkRpYWdub3N0aWMuQXNJbnRlZ2VyKCkgPiAxKQp7CgkvLyBNdXN0IGJlIE9LCglTdGF0dXMgPSBTdGF0dXMuV2FybmluZzsKCUxvZ2ljIFN0YXRlID0gU2Vuc29yLklucHV0OwkKCUR1dHkgQ3ljbGUgPSBTZW5zb3IuSW5wdXQuRHV0eSBDeWNsZTsKCUZyZXF1ZW5jeSA9IFNlbnNvci5JbnB1dC5GcmVxdWVuY3k7CQp9CmVsc2UKewoJLy8gV2FybmluZyByZWdpc3RlcmVkIGJ5IHNlbnNvcgoJU3RhdHVzID0gU3RhdHVzLk9LOwoJTG9naWMgU3RhdGUgPSBTZW5zb3IuSW5wdXQ7CQoJRHV0eSBDeWNsZSA9IFNlbnNvci5JbnB1dC5EdXR5IEN5Y2xlOwoJRnJlcXVlbmN5ID0gU2Vuc29yLklucHV0LkZyZXF1ZW5jeTsKfQ==]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Logic State"/>
+        <Component Name="Duty Cycle"/>
+        <Component Name="Frequency"/>
+        <Component Name="Status"/>
+        <Component Name="Invert"/>
+        <Component Name="Sensor">
+         <Component Name="Resource"/>
+         <Component Name="Input">
+          <Component Name="Resource"/>
+          <Component Name="State"/>
+          <Component Name="Frequency"/>
+          <Component Name="Duty Cycle"/>
+          <Component Name="Pulse Width"/>
+          <Component Name="Edge Ticks"/>
+          <Component Name="Diagnostic"/>
+          <Component Name="Sample Teeth">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Slave Output">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Pin">
+          <Component Name="Resource"/>
+          <Component Name="Diagnostic"/>
+          <Component Name="Pullup Control">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Active Edge">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Threshold">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Hysteresis">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Debounce">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Resource"/>
+          <Component Name="Absolute"/>
+          <Component Name="Minimum"/>
+          <Component Name="Maximum"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+          <Component Name="GetStatistics"/>
+          <Component Name="Input Impedance"/>
+          <Component Name="Input Source"/>
+          <Component Name="Input Bandwidth"/>
+          <Component Name="Input Minimum"/>
+          <Component Name="Input Maximum"/>
+          <Component Name="Input Resolution"/>
+         </Component>
+        </Component>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Simulink Input Sensor">
+     <Module Name="Analogue Voltage"/>
+     <Module Name="Dual Potentiometer Pedal"/>
+     <Module Name="Frequency Input"/>
+    </ModuleGroup>
+    <ModuleGroup Name="Simulink Output Actuator">
+     <Module Name="Hardware Configuration"/>
+     <Module Name="Frequency Output"/>
+     <Module Name="Bridge Output"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

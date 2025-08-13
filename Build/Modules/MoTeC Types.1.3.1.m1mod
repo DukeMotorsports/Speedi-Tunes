@@ -1,0 +1,337 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Types" VersionMajor="1" VersionMinor="3" BuildNumber="1">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0018"/>
+ <BuildHelp>
+<![CDATA[<H3>01.03 Current Version</H3>
+<UL>
+<LI>New version to support M1 Build 01.03.03</LI></UL>]]>
+ </BuildHelp>
+ <DataTypes>
+  <Type Name="System Mode" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0"/>
+   <Enum Name="Enabled" ContainerOrder="1"/>
+  </Type>
+  <Type Name="System Status" Storage="enum" Default="Startup">
+   <Help>
+<![CDATA[<BODY></BODY>]]>
+   </Help>
+   <Enum Name="OK" ContainerOrder="2">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Disabled" ContainerOrder="3">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fault" ContainerOrder="0">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Startup" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Logging Request" Storage="enum" Default="Stop">
+   <Help>
+<![CDATA[<BODY></BODY>]]>
+   </Help>
+   <Enum Name="Stop" ContainerOrder="0" Tags="Information">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Run" ContainerOrder="1">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Bus Enumeration" Storage="enum" Default="CAN Bus 1">
+   <Enum Name="CAN Bus 1" ContainerOrder="0"/>
+   <Enum Name="CAN Bus 2" ContainerOrder="1"/>
+   <Enum Name="CAN Bus 3" ContainerOrder="2"/>
+  </Type>
+  <Type Name="Output Driver" Storage="enum" Default="Low Side">
+   <Enum Name="Low Side" ContainerOrder="0">
+    <Help>
+<![CDATA[<P>Switch to Ground</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="High Side" ContainerOrder="1">
+    <Help>
+<![CDATA[Switch to Supply]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CanBlock Get32 Slot" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<P>A CAN Slot is not allocated for this measurement.</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Message 0 Offset 0" ContainerOrder="1"/>
+   <Enum Name="Message 0 Offset 4" ContainerOrder="2"/>
+   <Enum Name="Message 1 Offset 0" ContainerOrder="3"/>
+   <Enum Name="Message 1 Offset 4" ContainerOrder="4"/>
+   <Enum Name="Message 2 Offset 0" ContainerOrder="5"/>
+   <Enum Name="Message 2 Offset 4" ContainerOrder="6"/>
+   <Enum Name="Message 3 Offset 0" ContainerOrder="7"/>
+   <Enum Name="Message 3 Offset 4" ContainerOrder="8"/>
+   <Enum Name="Message 4 Offset 0" ContainerOrder="9"/>
+   <Enum Name="Message 4 Offset 4" ContainerOrder="10"/>
+   <Enum Name="Message 5 Offset 0" ContainerOrder="11"/>
+   <Enum Name="Message 5 Offset 4" ContainerOrder="12"/>
+   <Enum Name="Message 6 Offset 0" ContainerOrder="13"/>
+   <Enum Name="Message 6 Offset 4" ContainerOrder="14"/>
+   <Enum Name="Message 7 Offset 0" ContainerOrder="15"/>
+   <Enum Name="Message 7 Offset 4" ContainerOrder="16"/>
+   <Enum Name="Message 8 Offset 0" ContainerOrder="17"/>
+   <Enum Name="Message 8 Offset 4" ContainerOrder="18"/>
+   <Enum Name="Message 9 Offset 0" ContainerOrder="19"/>
+   <Enum Name="Message 9 Offset 4" ContainerOrder="20"/>
+   <Enum Name="Message 10 Offset 0" ContainerOrder="21"/>
+   <Enum Name="Message 10 Offset 4" ContainerOrder="22"/>
+   <Enum Name="Message 11 Offset 0" ContainerOrder="23"/>
+   <Enum Name="Message 11 Offset 4" ContainerOrder="24"/>
+   <Enum Name="Message 12 Offset 0" ContainerOrder="25"/>
+   <Enum Name="Message 12 Offset 4" ContainerOrder="26"/>
+   <Enum Name="Message 13 Offset 0" ContainerOrder="27"/>
+   <Enum Name="Message 13 Offset 4" ContainerOrder="28"/>
+   <Enum Name="Message 14 Offset 0" ContainerOrder="29"/>
+   <Enum Name="Message 14 Offset 4" ContainerOrder="30"/>
+   <Enum Name="Message 15 Offset 0" ContainerOrder="31"/>
+   <Enum Name="Message 15 Offset 4" ContainerOrder="32"/>
+  </Type>
+  <Type Name="CAN Value Type Enumeration" Storage="enum" Default="Calibrated">
+   <Enum Name="Calibrated" ContainerOrder="0">
+    <Help>
+<![CDATA[<P>The received value&nbsp;is in&nbsp;calibrated units.</P>
+<P>See <EM>Scale</EM> to set the input scaling.</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Raw" ContainerOrder="1">
+    <Help>
+<![CDATA[<P>The received value is a raw voltage.</P>
+<P>Raw voltages must always be scaled into 1mV per bit resolution.</P>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CanBlock Get16 Slot" Storage="enum" Default="Not in Use">
+   <Enum Name="E8xx Switch 6" ContainerOrder="90"/>
+   <Enum Name="E8xx Switch 5" ContainerOrder="89"/>
+   <Enum Name="Message 10 Offset 4" ContainerOrder="43"/>
+   <Enum Name="Message 10 Offset 2" ContainerOrder="42"/>
+   <Enum Name="Message 10 Offset 0" ContainerOrder="41"/>
+   <Enum Name="Message 9 Offset 6" ContainerOrder="40"/>
+   <Enum Name="Message 9 Offset 4" ContainerOrder="39"/>
+   <Enum Name="Message 9 Offset 2" ContainerOrder="38"/>
+   <Enum Name="Message 9 Offset 0" ContainerOrder="37"/>
+   <Enum Name="E8xx Switch 2" ContainerOrder="86"/>
+   <Enum Name="Message 8 Offset 6" ContainerOrder="36"/>
+   <Enum Name="Message 8 Offset 4" ContainerOrder="35"/>
+   <Enum Name="Message 8 Offset 2" ContainerOrder="34"/>
+   <Enum Name="Message 8 Offset 0" ContainerOrder="33"/>
+   <Enum Name="Message 7 Offset 6" ContainerOrder="32"/>
+   <Enum Name="E8xx Switch 1" ContainerOrder="85"/>
+   <Enum Name="Message 7 Offset 4" ContainerOrder="31"/>
+   <Enum Name="Message 7 Offset 2" ContainerOrder="30"/>
+   <Enum Name="Message 7 Offset 0" ContainerOrder="29"/>
+   <Enum Name="Message 6 Offset 6" ContainerOrder="28"/>
+   <Enum Name="E8xx Frequency 4" ContainerOrder="84"/>
+   <Enum Name="Message 6 Offset 4" ContainerOrder="27"/>
+   <Enum Name="Message 6 Offset 2" ContainerOrder="26"/>
+   <Enum Name="Message 6 Offset 0" ContainerOrder="25"/>
+   <Enum Name="Message 5 Offset 6" ContainerOrder="24"/>
+   <Enum Name="Message 5 Offset 4" ContainerOrder="23"/>
+   <Enum Name="Message 5 Offset 2" ContainerOrder="22"/>
+   <Enum Name="E8xx Frequency 3" ContainerOrder="83"/>
+   <Enum Name="Message 5 Offset 0" ContainerOrder="21"/>
+   <Enum Name="Message 4 Offset 6" ContainerOrder="20"/>
+   <Enum Name="Message 4 Offset 4" ContainerOrder="19"/>
+   <Enum Name="Message 4 Offset 2" ContainerOrder="18"/>
+   <Enum Name="Message 4 Offset 0" ContainerOrder="17"/>
+   <Enum Name="Message 3 Offset 6" ContainerOrder="16"/>
+   <Enum Name="Message 3 Offset 4" ContainerOrder="15"/>
+   <Enum Name="Message 3 Offset 2" ContainerOrder="14"/>
+   <Enum Name="Message 3 Offset 0" ContainerOrder="13"/>
+   <Enum Name="Message 2 Offset 6" ContainerOrder="12"/>
+   <Enum Name="Message 2 Offset 4" ContainerOrder="11"/>
+   <Enum Name="Message 2 Offset 2" ContainerOrder="10"/>
+   <Enum Name="Message 2 Offset 0" ContainerOrder="9"/>
+   <Enum Name="Message 1 Offset 6" ContainerOrder="8"/>
+   <Enum Name="Message 1 Offset 4" ContainerOrder="7"/>
+   <Enum Name="Message 1 Offset 2" ContainerOrder="6"/>
+   <Enum Name="Message 1 Offset 0" ContainerOrder="5"/>
+   <Enum Name="Message 0 Offset 6" ContainerOrder="4"/>
+   <Enum Name="Message 0 Offset 4" ContainerOrder="3"/>
+   <Enum Name="Message 0 Offset 2" ContainerOrder="2"/>
+   <Enum Name="Message 0 Offset 0" ContainerOrder="1"/>
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<P>A CAN Slot is not allocated for this measurement.</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="E8xx Switch 3" ContainerOrder="87"/>
+   <Enum Name="Message 14 Offset 0" ContainerOrder="57"/>
+   <Enum Name="E8xx AV5" ContainerOrder="73"/>
+   <Enum Name="Message 13 Offset 4" ContainerOrder="55"/>
+   <Enum Name="E8xx AV15 TC7" ContainerOrder="78"/>
+   <Enum Name="E8xx AV8" ContainerOrder="81"/>
+   <Enum Name="E8xx AV12 TC4" ContainerOrder="72"/>
+   <Enum Name="E8xx AV3" ContainerOrder="69"/>
+   <Enum Name="Message 15 Offset 6" ContainerOrder="64"/>
+   <Enum Name="E8xx AV14 TC6" ContainerOrder="76"/>
+   <Enum Name="E8xx AV2" ContainerOrder="66"/>
+   <Enum Name="Message 15 Offset 4" ContainerOrder="63"/>
+   <Enum Name="Message 13 Offset 6" ContainerOrder="56"/>
+   <Enum Name="E8xx AV4" ContainerOrder="70"/>
+   <Enum Name="E8xx AV11 TC3" ContainerOrder="71"/>
+   <Enum Name="E8xx Frequency 1" ContainerOrder="79"/>
+   <Enum Name="E8xx AV1" ContainerOrder="65"/>
+   <Enum Name="E8xx AV16 TC8" ContainerOrder="82"/>
+   <Enum Name="Message 10 Offset 6" ContainerOrder="44"/>
+   <Enum Name="E8xx AV13 TC5" ContainerOrder="75"/>
+   <Enum Name="E8xx AV7" ContainerOrder="77"/>
+   <Enum Name="E8xx Frequency 2" ContainerOrder="80"/>
+   <Enum Name="E8xx AV6" ContainerOrder="74"/>
+   <Enum Name="E8xx AV9 TC1" ContainerOrder="67"/>
+   <Enum Name="Message 13 Offset 2" ContainerOrder="54"/>
+   <Enum Name="Message 13 Offset 0" ContainerOrder="53"/>
+   <Enum Name="Message 15 Offset 2" ContainerOrder="62"/>
+   <Enum Name="Message 12 Offset 2" ContainerOrder="50"/>
+   <Enum Name="E8xx Switch 4" ContainerOrder="88"/>
+   <Enum Name="Message 12 Offset 4" ContainerOrder="51"/>
+   <Enum Name="Message 12 Offset 6" ContainerOrder="52"/>
+   <Enum Name="Message 11 Offset 0" ContainerOrder="45"/>
+   <Enum Name="Message 11 Offset 2" ContainerOrder="46"/>
+   <Enum Name="Message 14 Offset 2" ContainerOrder="58"/>
+   <Enum Name="Message 14 Offset 4" ContainerOrder="59"/>
+   <Enum Name="Message 14 Offset 6" ContainerOrder="60"/>
+   <Enum Name="Message 15 Offset 0" ContainerOrder="61"/>
+   <Enum Name="Message 11 Offset 4" ContainerOrder="47"/>
+   <Enum Name="Message 11 Offset 6" ContainerOrder="48"/>
+   <Enum Name="Message 12 Offset 0" ContainerOrder="49"/>
+   <Enum Name="E8xx AV10 TC2" ContainerOrder="68"/>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <TemplateStream>
+   <List>
+    <TemplateGroup Name="Input"/>
+    <Template Base="BuiltIn.GroupCompound" Name="Input.Zeroed Channel">
+     <BuildHelp>
+<![CDATA[<P>This module applies an offset to a channel.</P>
+<P>Offset has a calibration script to automate setting its value</P>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Default Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="DefaultLogRate" DisplayName="Default Log Rate"/>
+         <Property Name="Display DPS" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.DPS" DisplayName="Display DPS"/>
+         <Property Name="Display Max" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.Max" DisplayName="Display Max"/>
+         <Property Name="Display Min" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.Min" DisplayName="Display Min"/>
+         <Property Name="Display Unit" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.Unit" DisplayName="Display Unit"/>
+         <Property Name="Input Component" Creation="Custom" Visible="1" TargetCpt="This.Input" TargetRef="Target" DisplayName="Input Component"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Quantity" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Qty" DisplayName="Quantity"/>
+         <Property Name="Selected Trigger" Creation="Custom" Visible="1" TargetCpt="This.Calculation" TargetRef="SelectedTrigger" DisplayName="Selected Trigger"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Validation Max" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="ValClampMax" DisplayName="Validation Max"/>
+         <Property Name="Validation Max Value" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="ValMax" DisplayName="Validation Max Value"/>
+         <Property Name="Validation Min" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="ValClampMin" DisplayName="Validation Min"/>
+         <Property Name="Validation Min Value" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="ValMin" DisplayName="Validation Min Value"/>
+         <Property Name="Validation Type" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Validation" DisplayName="Validation Type"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Input">
+        <Props Type="$(Parent.Value:Type)" Qty="$(Parent.Value:Qty)" Validation="$(Parent.Value:Validation)" ValClampMin="$(Parent.Value:ValClampMin)" ValMin="$(Parent.Value:ValMin)" ValClampMax="$(Parent.Value:ValClampMax)" ValMax="$(Parent.Value:ValMax)">
+         <Locale>
+          <Default Unit="$(Parent.Value:Locale.Default.Unit)" DPS="$(Parent.Value:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[The channel to zero]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Target">
+        <Props Type="$(Parent.Value:Type)" Qty="$(Parent.Value:Qty)" Validation="$(Parent.Value:Validation)" ValClampMin="$(Parent.Value:ValClampMin)" ValMin="$(Parent.Value:ValMin)" ValClampMax="$(Parent.Value:ValClampMax)" ValMax="$(Parent.Value:ValMax)">
+         <Locale>
+          <Default Unit="$(Parent.Value:Locale.Default.Unit)" DPS="$(Parent.Value:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P style="MARGIN: 0cm 0cm 0pt" class=MsoNormal>Set this parameter to the value the channel should read after it is Zeroed. This should normally be 0.0 but can be set to other values.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Offset">
+        <Props Type="$(Parent.Value:Type)" Qty="$(Parent.Value:Qty)" Validation="$(Parent.Value:Validation)" ValClampMin="$(Parent.Value:ValClampMin)" ValMin="$(Parent.Value:ValMin)" ValClampMax="$(Parent.Value:ValClampMax)" ValMax="$(Parent.Value:ValMax)">
+         <Locale>
+          <Default Unit="$(Parent.Value:Locale.Default.Unit)" DPS="$(Parent.Value:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P style="MARGIN: 0cm 0cm 0pt" class=MsoNormal>Press the Q key with the sensor in the Zero position or enter the value here that adjusts the channel to the desired value.</P>
+<P style="MARGIN: 0cm 0cm 0pt" class=MsoNormal>This is the amount the channel has been adjusted so that its value now reads Zero Target</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.Offset.Offset Output">
+        <Code Encoding="base64">
+<![CDATA[VGhpcyA9IEJhc2UuVGFyZ2V0IC0gSW5wdXQ7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[VmFsdWUgPSBJbnB1dCArIE9mZnNldDsK]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="Input"/>
+        <Component Name="Target"/>
+        <Component Name="Offset">
+         <Component Name="Offset Output"/>
+        </Component>
+        <Component Name="Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Template>
+   </List>
+   <Organisation>
+    <TemplateGroup Name="Input">
+     <Template Name="Zeroed Channel"/>
+    </TemplateGroup>
+   </Organisation>
+  </TemplateStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

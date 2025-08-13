@@ -1,0 +1,1688 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="Bosch OE Integration" VersionMajor="1" VersionMinor="0" BuildNumber="10">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0019"/>
+ <BuildHelp>
+<![CDATA[<H4 class="device_help">Current Version (01.00.0010)</H4>
+<UL>
+<LI>ABS Position Switch added to Bosch ABS class added. This position switch is transmitted vie CAN to the Bosch ABS (M5 Only)&nbsp;module.</LI></UL>
+<H4 class="device_help">01.00.0008</H4>
+<UL>
+<LI>Bosch ABS class added. This supersedes Bosch ABS M4 class.</LI>
+<LI>Type parameter added to Bosch ABS class. This type parameter allows users to select between Bosch M4 and M5 ABS units.</LI>
+<LI>Extra CAN messaging for Bosch M5 ABS unit added to Bosch ABS class.</LI></UL>
+<H4 class="device_help">01.00.0007</H4>
+<UL>
+<LI>Various updates<BR></LI></UL>
+<H4 class="device_help">01.00.0003</H4>
+<UL>
+<LI>Prevent attempt to open CAN Bus -1.<BR></LI></UL>
+<H4 class="device_help">01.00.0002</H4>
+<UL>
+<LI>Update help for Sensor Scale<BR></LI></UL>
+<H4 class="device_help">01.00.0001</H4>
+<UL>
+<LI>All Firmware slots from 16 to avoid clashes with other OE classes.<BR></LI></UL>
+<H4 class="device_help">01.00.0000</H4>
+<UL>
+<LI>Initial Release - System 1.4</LI></UL>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC Comms" VersionMajor="1" VersionMinor="10" VersionBuild="1"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Bosch OE CAN Switch State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Off" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Bosch OE ABS Type Enumeration" Storage="enum" Default="Bosch M4">
+   <Enum Name="Bosch M4" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Bosch M5" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Bosch OE Corner Diagnostic Enumeration" Storage="enum" Default="Signal Ok">
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Signal Ok" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Line Error" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Signal Error" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Bosch OE Wheel Quality Enumeration" Storage="enum" Default="Not Initialized">
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not Initialized" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Normal" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Faulty" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Reduced Monitored" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not Calculated" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid Under Voltage" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Bosch OE Nine Position Switch State Enumeration" Storage="enum" Default="Zero">
+   <Enum Name="Default" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="One" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Two" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Three" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Four" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Five" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Six" ContainerOrder="7">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Seven" ContainerOrder="8">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Eight" ContainerOrder="9">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Nine" ContainerOrder="10">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Zero" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Bosch OE Driver Switch Index Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Driver Switch 4" ContainerOrder="4">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 5" ContainerOrder="5">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 6" ContainerOrder="6">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 7" ContainerOrder="7">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 8" ContainerOrder="8">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 1" ContainerOrder="9">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 2" ContainerOrder="10">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 3" ContainerOrder="11">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 4" ContainerOrder="12">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 5" ContainerOrder="13">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 6" ContainerOrder="14">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 7" ContainerOrder="15">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 8" ContainerOrder="16">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 3" ContainerOrder="3">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 2" ContainerOrder="2">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 1" ContainerOrder="1">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 1" ContainerOrder="17">
+    <Help>
+<![CDATA[<P>BF1 Steering Wheel switch status as recieved via CAN Bus.</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 2" ContainerOrder="18">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 3" ContainerOrder="19">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 4" ContainerOrder="20">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 5" ContainerOrder="21">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 6" ContainerOrder="22">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 7" ContainerOrder="23">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 8" ContainerOrder="24">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 9" ContainerOrder="25">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 10" ContainerOrder="26">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 11" ContainerOrder="27">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 12" ContainerOrder="28">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 13" ContainerOrder="29">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 14" ContainerOrder="30">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 15" ContainerOrder="31">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 16" ContainerOrder="32">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 17" ContainerOrder="33">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Digital Switch Input 18" ContainerOrder="34">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 1" ContainerOrder="35">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 2" ContainerOrder="36">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 3" ContainerOrder="37">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 4" ContainerOrder="38">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 5" ContainerOrder="39">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 6" ContainerOrder="40">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 7" ContainerOrder="41">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 8" ContainerOrder="42">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 9" ContainerOrder="43">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 10" ContainerOrder="44">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 11" ContainerOrder="45">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 12" ContainerOrder="46">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 13" ContainerOrder="47">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="BF1 Analogue Input 14" ContainerOrder="48">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Bosch OE Integration"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Old.Bosch ABS M4">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements OE Integration for Bosch ABS M4 installations.</p><p class="device_help">Components include CAN receive messaging for ABS using original naming.</p><h2 class="device_help">Value Inputs</h2><h3 class="device_help">None required.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </h3><p class="device_help">This class is used for reporting values from the ABS unit only.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p><h2 class="device_help">Data Types</h2><h3 class="device_help">None required</h3><p class="device_help"><br></p><p class="device_help"><h2 class="device_help">Attributes</h2><h3 class="device_help">Event</h3><p class="device_help">Must be 100Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to Bosch ABS M4 systems.</p><p class="device_help">Some of these component values are received as CAN messages from the OE platform, and may be                    accessed by means of Firmware CAN Resources for selected channels:                     <ul class="device_help"><li class="device_help">Wheel Speed Front Left appears as Firmware 16.</li><li class="device_help">Wheel Speed Front Right appears as Firmware 17.</li><li class="device_help">Wheel Speed Rear Left appears as Firmware 18.</li><li class="device_help">Wheel Speed Rear Right appears as Firmware 19.</li><li class="device_help">Yaw&nbsp;appears as Firmware 20.</li><li class="device_help">Yaw Acceleration appears as Firmware 21.</li><li class="device_help">Lateral Acceleration appears as Firmware 22.</li><li class="device_help">Longitudinal&nbsp;Acceleration appears as Firmware 23.</li><li class="device_help">Brake Pressure&nbsp;appears as Firmware 24.</li><li class="device_help">Map Switch Position&nbsp;appears as Firmware 25.</li><li class="device_help">Active&nbsp;appears as Firmware 26.<br></li><li class="device_help">ABS Lamp&nbsp;appears as Firmware 27.<br></li><li class="device_help">Brake Switch appears as Firmware 28.</li><li class="device_help">EBD Lamp&nbsp;appears as Firmware 29.</li></ul><p class="device_help">Refer to individual channel help for information on how to configure each Firmware channel for correct operation.</p><p class="device_help">To correctly receive ABS-M4 wheel speeds in the range 0.25km/h to 500km/h the following settings are critical:</p><p class="device_help"><br></p><ul><li><div class="device_help">Set <strong>Wheel Speed Front/Rear Pitch Threshold</strong> to 100%.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front/Rear Timeout </strong>to 400ms.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front/Rear Final Drive Ratio</strong> to 1.00.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Resource</strong> to Firmware 16.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Resource</strong> to Firmware 17.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Resource</strong> to Firmware 18.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Resource</strong> to Firmware 19.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Scale</strong> to 450.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Left Sensor Sample Teeth </strong>to 0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Scale</strong> to 450.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Front Right Sensor Sample Teeth </strong>to 0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Scale</strong> to 450.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Left Sensor Sample Teeth </strong>to 0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Scale</strong> to 450.0.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Teeth </strong>to 80.</div></li><li><div class="device_help">Set <strong>Wheel Speed Rear Right Sensor Sample Teeth </strong>to 0.</div></li></ul><p class="device_help"><br></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Yaw">
+        <Props Qty="rad/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="-1.63000000000000000e+002" Max="1.63000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Yaw.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Yaw Acceleration">
+        <Props Qty="rad/s/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0" Min="-4.09600000000000000e+003" Max="4.09500000000000000e+003"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Yaw Acceleration.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Map Switch Position">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Map Switch.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in a Driver Rotary Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;25</strong> as <strong>Driver Rotary Switch n Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN Position x 100</strong> as the <strong>Driver Rotary Switch n Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Driver Rotary Switch n Diagnostic Delay</strong> to 100ms.</div></li></ul><p class="device_help"><br></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Pressure">
+        <Props Qty="Pa" Validation="MinMax" ValMin="-4.24000000000000000e+007" ValMax="4.25000000000000000e+007">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="bar" DPS="2" Min="0.00000000000000000e+000" Max="4.25000000000000000e+007"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Brake&nbsp;Pressure.</p><p>
+Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Brake Pressure Front:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;24</strong> as <strong>Brake Pressure Front Sensor Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN Gauge 2DP</strong> as the <strong>Brake Pressure Front Sensor Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Brake Pressure Front Sensor Diagnostic Delay</strong> to 100mS.</div></li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Switch">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Brake Switch.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Brake Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;28</strong> as <strong>Brake Switch Resource</strong>.</div></li><li>Set <strong>Brake Switch Pullup Control</strong> to Off.</li><li>Set <strong>Brake Switch Active Edge</strong> to Rising.</li><li>Set <strong>Brake Switch Threshold</strong> to 0.6V.</li><li>Set <strong>Brake Switch Hysteresis </strong>to 0.2V.</li><li>Set <strong>Brake Switch Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Active">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 ABS Active flag.</p><p class="device_help">Bosch ABS_M4&nbsp; systems use ABS CAN messages for calculations. If CAN messages fail or time out,
+this channel&nbsp;is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;a Driver Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;26</strong> as <strong>Driver Switch n Resource</strong>.</div></li><li>Set <strong>Driver Switch n</strong><strong> Pullup Control</strong> to Off.</li><li>Set <strong>Driver Switch n</strong><strong> Active Edge</strong> to Rising.</li><li>Set <strong>Driver Switch n</strong><strong> Threshold</strong> to 0.6V.</li><li>Set <strong>Driver Switch n</strong><strong> Hysteresis </strong>to 0.2V.</li><li>Set <strong>Driver Switch n</strong><strong> Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.ABS Lamp">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 ABS Alarm.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;a Driver Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;27</strong> as <strong>Driver Switch n Resource</strong>.</div></li><li>Set <strong>Driver Switch n</strong><strong> Pullup Control</strong> to Off.</li><li>Set <strong>Driver Switch n</strong><strong> Active Edge</strong> to Rising.</li><li>Set <strong>Driver Switch n</strong><strong> Threshold</strong> to 0.6V.</li><li>Set <strong>Driver Switch n</strong><strong> Hysteresis </strong>to 0.2V.</li><li>Set <strong>Driver Switch n</strong><strong> Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.EBD Lamp">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 ABS EBD Alarm.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to <strong>Unknown</strong> and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;a Driver Switch:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;29</strong> as <strong>Driver Switch n Resource</strong>.</div></li><li>Set <strong>Driver Switch n</strong><strong> Pullup Control</strong> to Off.</li><li>Set <strong>Driver Switch n</strong><strong> Active Edge</strong> to Rising.</li><li>Set <strong>Driver Switch n</strong><strong> Threshold</strong> to 0.6V.</li><li>Set <strong>Driver Switch n</strong><strong> Hysteresis </strong>to 0.2V.</li><li>Set <strong>Driver Switch n</strong><strong> Debounce</strong> to 1mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Acceleration">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Longitudinal">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Longitudinal Acceleration.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Acceleration Longitudinal:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;23</strong> as <strong>Vehicle Acceleration Longitudinal Sensor Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN 2DP </strong>as the <strong>Vehicle Acceleration Longitudinal</strong>&nbsp;<strong>Sensor Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Vehicle Acceleration Longitudinal</strong>&nbsp;<strong>Sensor Diagnostic Delay</strong> to 100mS.</div></li></ul>
+              
+            <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Lateral">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch ABS_M4 Lateral Acceleration.</p><p class="device_help">Bosch ABS_M4  systems use ABS CAN messages for calculations. If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Acceleration Lateral:</u></p><ul><li><div class="device_help">Select <strong>Firmware&nbsp;22</strong> as <strong>Vehicle Acceleration Lateral Sensor Resource</strong>.</div></li><li><div class="device_help">Select <strong>CAN 2DP </strong>as the <strong>Vehicle Acceleration Lateral</strong>&nbsp;<strong>Sensor Calibration</strong>.</div></li><li><div class="device_help">Set <strong>Vehicle Acceleration Lateral</strong>&nbsp;<strong>Sensor Diagnostic Delay</strong> to 100mS.</div></li></ul><p></p>
+              
+            <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used for all Bosch ABS_M4 CAN messaging. Normally set to <b class="device_help">CAN Bus 2</b>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Front Circumference">
+        <Props Qty="m" Validation="MinMax" ValMin=".001" ValClampMax="false" ValMax="5">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The rolling circumference of the tyre.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Rear Circumference">
+        <Props Qty="m" Validation="MinMax" ValMin=".001" ValClampMax="false" ValMax="5">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The rolling circumference of the tyre.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Communications">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Receive 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHgyNEEgLSBBQlMgV2hlZWwgc3BlZWRzIC0gMTAwSHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpID4gMD8gUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxIDogMCAsIDB4MjRBLCAweDAwMCwgZmFsc2UpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7Ci8qCiAqIENhbGN1bGF0ZSBodWIgc3BlZWQgZnJvbSBBQlMgd2hlZWwgc3BlZWQ6IG9yaWdpbmFsIHN5c3RlbSBjYW5ub3QgZmFjdG9yIGRpZmZlcmVudCB3aGVlbCBzaXplcywKICogdGhpcyBPRSBjaXJjdW1mZXJlbmNlIHZhbHVlIGlzIGNhbGN1bGF0ZWQgZnJvbSBhY3R1YWwgT0Ugcm9hZCBkYXRhLgogKiBUaGVvcmV0aWNhbCBjaXJjdW1mZXJlbmNlIGlzIDEuOTY0bQogKi8KCmlmIChyeCkKewoJLy9GaXJtd2FyZSAxIHRvIDQ6IGZyb250IGxlZnQgaHViIHNwZWVkIGluIEhlcnR6CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxNiwgQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQ4LCAxNikgLyBQYXJlbnQuRnJvbnQgQ2lyY3VtZmVyZW5jZSAvIDM2MC4wKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE3LCBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMzIsIDE2KSAvIFBhcmVudC5Gcm9udCBDaXJjdW1mZXJlbmNlIC8gMzYwLjApOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTgsIENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgMTYpIC8gUGFyZW50LlJlYXIgQ2lyY3VtZmVyZW5jZSAvIDM2MC4wKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE5LCBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgIDAsIDE2KSAvIFBhcmVudC5SZWFyIENpcmN1bWZlcmVuY2UgLyAzNjAuMCk7Cn0KCi8qCiAqIDB4MDcwIC0gWWF3IGFuZCBMYXRlcmFsIEFjY2VsZXJhdGlvbiAtIDEwMGh6IHJlY2VpdmUKICovCmggPSBDYW5Db21tcy5SeE9wZW5TdGFuZGFyZChQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSA+IDA/IFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSA6IDAsIDB4MDcwLCAweDAwMCwgZmFsc2UpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7CmxvY2FsIHJ4MDcwdGltZW91dCA9IERlbGF5LlJpc2luZyhub3QgcngsIDAuMTApOwppZiAocngpCnsKCVBhcmVudC5ZYXcgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCw0OCwgMTYpICogMC4wMDUgLSAxNjMuODQ7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMCwgUGFyZW50Lllhdyk7CglQYXJlbnQuQWNjZWxlcmF0aW9uLkxhdGVyYWwgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwxNiwgMTYpICogMC4wMDEyNDk3IC0gNDAuOTYzOTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDIyLCBQYXJlbnQuQWNjZWxlcmF0aW9uLkxhdGVyYWwgLyA5OC4wKTsKfQplbHNlIGlmIChyeDA3MHRpbWVvdXQpCnsKCVBhcmVudC5ZYXcgPSBDYWxjdWxhdGUuTkFOKCk7CglQYXJlbnQuQWNjZWxlcmF0aW9uLkxhdGVyYWwgPSBDYWxjdWxhdGUuTkFOKCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMCxDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjIsQ2FsY3VsYXRlLk5BTigpKTsKfQoKLyoKICogMHgwODAgLSBZYXcgQWNjZWwgYW5kIExvbmdpdHVkaW5hbCBBY2NlbGVyYXRpb24gLSAxMDBoeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwPyBQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEgOiAwLCAweDA4MCwgMHgwMDAsIGZhbHNlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpIG9yIHJ4Owpsb2NhbCByeDA4MHRpbWVvdXQgPSBEZWxheS5SaXNpbmcobm90IHJ4LCAwLjEwKTsKaWYgKHJ4KQp7CglQYXJlbnQuWWF3IEFjY2VsZXJhdGlvbiA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLDQ4LCAxNikgKiAwLjEyNSAtIDQwOTYuMDsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDIxLCBQYXJlbnQuWWF3IEFjY2VsZXJhdGlvbik7CglQYXJlbnQuQWNjZWxlcmF0aW9uLkxvbmdpdHVkaW5hbCA9IChDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwxNiwgMTYpICogMC4wMDEyNDk3KSAtIDQwLjk2Mzk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMywgUGFyZW50LkFjY2VsZXJhdGlvbi5Mb25naXR1ZGluYWwgLyA5OC4wKTsKfQplbHNlIGlmIChyeDA4MHRpbWVvdXQpCnsKCVBhcmVudC5ZYXcgQWNjZWxlcmF0aW9uID0gQ2FsY3VsYXRlLk5BTigpOwoJUGFyZW50LkFjY2VsZXJhdGlvbi5Mb25naXR1ZGluYWwgPSBDYWxjdWxhdGUuTkFOKCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMSxDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjMsQ2FsY3VsYXRlLk5BTigpKTsKfQoKLyoKICogMHg1QzAgLSBTdGF0dXMgLSAxMDBoeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwPyBQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEgOiAwLCAweDVDMCwgMHgwMDAsIGZhbHNlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpIG9yIHJ4Owpsb2NhbCByeDVDMHRpbWVvdXQgPSBEZWxheS5SaXNpbmcobm90IHJ4LCAwLjEwKTsKaWYgKHJ4KQp7CglQYXJlbnQuTWFwIFN3aXRjaCBQb3NpdGlvbiA9IENhbkNvbW1zLkdldEludGVnZXIoaCwgNTYsIDgpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjUsIFBhcmVudC5NYXAgU3dpdGNoIFBvc2l0aW9uICogMC4xKTsKCVBhcmVudC5CcmFrZSBQcmVzc3VyZSA9IENhbkNvbW1zLkdldEludGVnZXIoaCw0MCwgMTYpICogMTUzMDsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI0LCBQYXJlbnQuQnJha2UgUHJlc3N1cmUgLyAxMDAwMC4wKTsKCVBhcmVudC5CcmFrZSBTd2l0Y2gJPSBDYW5Db21tcy5HZXRCaXQoaCwgMzkpID8gUGFyZW50LkJyYWtlIFN3aXRjaC5PbiA6IFBhcmVudC5CcmFrZSBTd2l0Y2guT2ZmOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjgsIENhbkNvbW1zLkdldEJpdChoLCAzOSkgPyAxLjAgOiAwLjApOwoJUGFyZW50LkFjdGl2ZSA9IENhbkNvbW1zLkdldEJpdChoLCAzNCkgPyBQYXJlbnQuQWN0aXZlLk9uIDogUGFyZW50LkFjdGl2ZS5PZmY7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNiwgQ2FuQ29tbXMuR2V0Qml0KGgsIDM0KSA/IDEuMCA6IDAuMCk7CglQYXJlbnQuRUJEIExhbXAgPSBDYW5Db21tcy5HZXRCaXQoaCwgMzMpID8gUGFyZW50LkVCRCBMYW1wLk9uIDogUGFyZW50LkVCRCBMYW1wLk9mZjsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI5LCBDYW5Db21tcy5HZXRCaXQoaCwgMzMpID8gMS4wIDogMC4wKTsKCVBhcmVudC5BQlMgTGFtcCA9IENhbkNvbW1zLkdldEJpdChoLCAzMikgPyBQYXJlbnQuQUJTIExhbXAuT24gOiBQYXJlbnQuQUJTIExhbXAuT2ZmOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjcsIENhbkNvbW1zLkdldEJpdChoLCAzMikgPyAxLjAgOiAwLjApOwp9CmVsc2UgaWYgKHJ4NUMwdGltZW91dCkKewoJUGFyZW50Lk1hcCBTd2l0Y2ggUG9zaXRpb24gPSBDYWxjdWxhdGUuTkFOKCk7CglQYXJlbnQuQnJha2UgUHJlc3N1cmUgPSBDYWxjdWxhdGUuTkFOKCk7CglQYXJlbnQuQnJha2UgU3dpdGNoID0gUGFyZW50LkJyYWtlIFN3aXRjaC5Vbmtub3duOwoJUGFyZW50LkFjdGl2ZSA9IFBhcmVudC5BY3RpdmUuVW5rbm93bjsKCVBhcmVudC5BQlMgTGFtcCA9IFBhcmVudC5BQlMgTGFtcC5Vbmtub3duOwoJUGFyZW50LkVCRCBMYW1wID0gUGFyZW50LkVCRCBMYW1wLlVua25vd247CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNSxDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjQsQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI4LENhbGN1bGF0ZS5OQU4oKSk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNixDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjksQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI3LENhbGN1bGF0ZS5OQU4oKSk7Cn0KCg==]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus"/>
+        <Component Name="Yaw"/>
+        <Component Name="Yaw Acceleration"/>
+        <Component Name="Map Switch Position"/>
+        <Component Name="Brake Pressure"/>
+        <Component Name="Brake Switch"/>
+        <Component Name="Active"/>
+        <Component Name="ABS Lamp"/>
+        <Component Name="EBD Lamp"/>
+        <Component Name="Acceleration">
+         <Component Name="Longitudinal"/>
+         <Component Name="Lateral"/>
+        </Component>
+        <Component Name="Front Circumference"/>
+        <Component Name="Rear Circumference"/>
+        <Component Name="Communications">
+         <Component Name="Receive 100Hz"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Bosch OE Integration.Bosch Inertial Sensor MM510">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements OE Integration for Bosch&nbsp;MM5.10 Sensor.</p><p class="device_help">Components include CAN receive messaging for sensed values.</p><h2 class="device_help">Value Inputs</h2><h3 class="device_help">CAN ID Message 1, 2 and 3.</h3><p class="device_help">Sets the address used by the sensor listed in the&nbsp;sensor data sheet&nbsp;as Message 1, 2, and 3 respectively. Note that the sensor can be ordered from Bosch with different CAN IDs for the 3 messages.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p><h2 class="device_help">Data Types</h2><h3 class="device_help">None required</h3><p class="device_help"><br></p><p class="device_help"><h2 class="device_help">Attributes</h2><h3 class="device_help">Event</h3><p class="device_help">Must be the same or higher than the sensor update rate. The sensor can be ordered from Bosch with 100Hz or 200Hz update rate, and so the Event needs to be set to 200Hz, unless it is known that a 100Hz sensor is going to be used.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Update Event" Creation="Custom" Visible="1" TargetCpt="This.Receive" TargetRef="SelectedTrigger" DisplayName="Update Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID Message 1" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID Message 2" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID Message 3" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to Bosch&nbsp;MM5.10 inertial sensor.</p><p class="device_help">The&nbsp;values are received as CAN messages from the sensor, and may be                    accessed by means of Firmware CAN Resources for selected channels:                     <ul class="device_help"><li class="device_help">Acceleration Lateral&nbsp;appears as Firmware 12.</li><li class="device_help">Acceleration Longitudinal&nbsp;appears as Firmware 14.</li><li class="device_help">Acceleration&nbsp;Vertical&nbsp;appears as Firmware 15.</li><li class="device_help">Yaw Rate&nbsp;appears as Firmware 11.</li><li class="device_help">Roll Rate appears as Firmware 13.</li></ul><p class="device_help">Refer to individual channel help for information on how to configure each Firmware channel for correct operation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used for all Bosch&nbsp;MM5.10 inertial sensor&nbsp;CAN messaging.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID Message 1">
+        <Props Type="u32" Validation="MinMax" ValMin="0" ValMax="2047" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[The CAN ID for CAN Message ID 1. Usually 0x174]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.CAN ID Message 1.Value">
+        <Props Value="372"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID Message 2">
+        <Props Type="u32" Validation="MinMax" ValMin="0" ValMax="2047" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[The CAN ID for CAN Message ID 2. Usually 0x178]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.CAN ID Message 2.Value">
+        <Props Value="376"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID Message 3">
+        <Props Type="u32" Validation="MinMax" ValMin="0" ValMax="2047" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[The CAN ID for CAN Message ID 3. Usually 0x17C]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.CAN ID Message 3.Value">
+        <Props Value="380"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Acceleration">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Longitudinal">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch&nbsp;MM5.10 Longitudinal Acceleration.</p><p class="device_help">If CAN messages fail or time out (0.1s), this channel is set to NAN (not a number).</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Acceleration Longitudinal:</u></p><ul><li><div class="device_help">Select <em class="device_enum">Firmware 14 </em>as <em class="device_item">Vehicle Acceleration Longitudinal Sensor Resource</em>.</div></li><li><div class="device_help">Select&nbsp;<em class="device_enum">Manual</em><strong> </strong>as the <em class="device_item">Vehicle Acceleration Longitudinal Sensor Calibration</em>.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Acceleration Longitudinal Sensor&nbsp;Offset </em>&nbsp;to 0v.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Acceleration Longitudinal Sensor Scale </em>&nbsp;to 1m/s.</div></li><li>Set <em class="device_item">Vehicle Acceleration Longitudinal Sensor Diagnostic Delay </em>&nbsp;to 100mS.</li></ul>
+              
+            <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Lateral">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch&nbsp;MM5.10 Lateral Acceleration.</p><p class="device_help">If CAN messages fail or time out (0.1s), this channel is set to NAN (not a number).</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Acceleration Lateral:</u></p><ul><li><div class="device_help">Select <em class="device_enum">Firmware 12 </em>as <em class="device_item">Vehicle Acceleration Lateral Sensor Resource</em>.</div></li><li><div class="device_help">Select&nbsp;<em class="device_enum">Manual</em><strong> </strong>as the <em class="device_item">Vehicle Acceleration Lateral Sensor Calibration</em>.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Acceleration Lateral Sensor&nbsp;Offset </em>&nbsp;to 0v.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Acceleration Lateral Sensor Scale </em>&nbsp;to 1m/s.</div></li><li>Set <em class="device_item">Vehicle Acceleration Lateral Sensor Diagnostic Delay </em> to 100mS.</li></ul><p></p>
+              
+            <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Vertical">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch&nbsp;MM5.10 Vertical Acceleration.</p><p class="device_help">If CAN messages fail or time out (0.1s), this channel is set to NAN (not a number).</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Acceleration Vertical:</u></p><ul><li><div class="device_help">Select <em class="device_enum">Firmware 15</em>as <em class="device_item">Vehicle Acceleration Vertical Sensor Resource</em>.</div></li><li><div class="device_help">Select&nbsp;<em class="device_enum">Manual</em><strong> </strong>as the <em class="device_item">Vehicle Acceleration Vertcal Sensor Calibration</em>.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Acceleration Vertical Sensor&nbsp;Offset </em>&nbsp;to 0v.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Acceleration Vertical Sensor Scale </em>&nbsp;to 1m/s.</div></li><li>Set <em class="device_item">Vehicle Acceleration Vertical Sensor Diagnostic Delay </em> to 100mS.</li></ul><p></p>
+              
+            <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[Ly9yZWFkIHRoZXNlIHBhcmFtZXRlcnMgaW4gdGhlIHN0YXJ0dXAgbWVzc2FnZSBzbyB0aGF0IHRoZXkgZmxhZyBhbiBFQ1UgcmVzZXQgaWYgY2hhbmdlZC4KQ0FOIEJ1czsKbG9jYWwgZHVtbXkxID0gQ0FOIElEIE1lc3NhZ2UgMTsKbG9jYWwgZHVtbXkyID0gQ0FOIElEIE1lc3NhZ2UgMjsKbG9jYWwgZHVtbXkzID0gQ0FOIElEIE1lc3NhZ2UgMzsKCmR1bW15MSA9IGR1bW15MTsKZHVtbXkyID0gZHVtbXkyOwpkdW1teTMgPSBkdW1teTM7CgoKLy8gaW5pdGlsaXNlLCBpZiBDQU4gQnVzIGlzIHNldCB0byBub3QgaW4gdXNlLCB0aGVzZSBjaGFubmVscyBhcmUgb3RoZXJ3aXNlIG5ldmVyIHNldC4KQWNjZWxlcmF0aW9uLkxhdGVyYWwgCQk9IENhbGN1bGF0ZS5OQU4oKTsKQWNjZWxlcmF0aW9uLkxvbmdpdHVkaW5hbCAJPSBDYWxjdWxhdGUuTkFOKCk7CkFjY2VsZXJhdGlvbi5WZXJ0aWNhbCAJCT0gQ2FsY3VsYXRlLk5BTigpOwpZYXcgUmF0ZSAJCQkJCT0gQ2FsY3VsYXRlLk5BTigpOwpSb2xsIFJhdGUgCQkJCQk9IENhbGN1bGF0ZS5OQU4oKTsKCg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Receive">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[LyoKICogTWVzc2FnZSAxLCBub3JtYWxseSAweDE3NCwgRyBMYXQgYW5kIFlhdyBSYXRlCiAqLwpsb2NhbCBoMSA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKENBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwID8gQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEgOiAwLCBDQU4gSUQgTWVzc2FnZSAxLCAweDAwMCwgZmFsc2UpOwpsb2NhbCBoMiA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKENBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwID8gQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEgOiAwLCBDQU4gSUQgTWVzc2FnZSAyLCAweDAwMCwgZmFsc2UpOwpsb2NhbCBoMyA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKENBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwID8gQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEgOiAwLCBDQU4gSUQgTWVzc2FnZSAzLCAweDAwMCwgZmFsc2UpOwoKbG9jYWwgZXQgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKCmlmIChDQU4gQnVzIG5lcSBDQU4gQnVzLk5vdCBpbiBVc2UpCnsKCWxvY2FsIHJ4ID0gZmFsc2U7CglzdGF0aWMgbG9jYWwgaDF0aW1lb3V0ID0gMC4wOwoJc3RhdGljIGxvY2FsIGgydGltZW91dCA9IDAuMDsKCXN0YXRpYyBsb2NhbCBoM3RpbWVvdXQgPSAwLjA7CgoKCXJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgxKTsKCXJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgxKSBvciByeDsKCWlmIChyeCkKCXsKCQloMXRpbWVvdXQgPSAwLjE7CS8vc2Vjb25kcyAKCQlZYXcgUmF0ZSAJCQkgPSAoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgxLCA0OCwgMTYpIC0gMzI3NjguMCkgKiAwLjAwNTsJCQkvL1lhdyByYXRlIDAuMDA1ZGVnL3MgcmVzIAoJCUFjY2VsZXJhdGlvbi5MYXRlcmFsID0gKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoMSwgMTYsIDE2KSAtIDMyNzY4LjApICogMC4wMDEyNDkzNjc7CS8vQWNjIFkgYXhpcywgMC4wMDAxMjc0RyByZXMgKGluIG0vczIpCgkJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTEsIFlhdyBSYXRlKTsKCQlTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxMiwgQWNjZWxlcmF0aW9uLkxhdGVyYWwpOwkKCX0KCWVsc2UgaWYgKGgxdGltZW91dCA+IDAuMCkKCXsKCQloMXRpbWVvdXQgLT0gZXQ7Cgl9CgllbHNlCgl7CgkJWWF3IFJhdGUgPSBDYWxjdWxhdGUuTkFOKCk7CgkJQWNjZWxlcmF0aW9uLkxhdGVyYWwgPSBDYWxjdWxhdGUuTkFOKCk7CgkJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTEsIENhbGN1bGF0ZS5OQU4oKSk7CgkJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTIsIENhbGN1bGF0ZS5OQU4oKSk7Cgl9CQoKCS8qCgkgKiBNZXNzYWdlIDIsIG5vcm1hbGx5IDB4MTc4LCBHIExvbmcgYW5kIFJvbGwgUmF0ZQoJICovCglyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoMik7CglyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoMikgb3Igcng7CglpZiAocngpCgl7CgkJaDJ0aW1lb3V0ID0gMC4xOwoJCVJvbGwgUmF0ZSAJCQkJICA9IChDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaDIsIDQ4LCAxNikgLSAzMjc2OC4wKSAqIDAuMDA1OwkJCS8vUm9sbCByYXRlIDAuMDA1ZGVnL3MgcmVzIAoJCUFjY2VsZXJhdGlvbi5Mb25naXR1ZGluYWwgPSAoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgyLCAxNiwgMTYpIC0gMzI3NjguMCkgKiAwLjAwMTI0OTM2NzsJLy9BY2MgWCBheGlzLCAwLjAwMDEyNzRHIHJlcyAoaW4gbS9zMikKCQlTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxMywgUm9sbCBSYXRlKTsKCQlTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxNCwgQWNjZWxlcmF0aW9uLkxvbmdpdHVkaW5hbCk7Cgl9CgllbHNlIGlmIChoMnRpbWVvdXQgPiAwLjApCgl7CgkJaDJ0aW1lb3V0IC09IGV0OwoJfQoJZWxzZQoJewoJCVJvbGwgUmF0ZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQlBY2NlbGVyYXRpb24uTG9uZ2l0dWRpbmFsID0gQ2FsY3VsYXRlLk5BTigpOwoJCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDEzLCBDYWxjdWxhdGUuTkFOKCkpOwoJCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE0LCBDYWxjdWxhdGUuTkFOKCkpOwoJfQkKCgkvKgoJICogTWVzc2FnZSAzLCBub3JtYWxseSAweDE3QywgRyBWZXJ0CgkgKi8KCXJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgzKTsKCXJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgzKSBvciByeDsKCWlmIChyeCkKCXsKCQloM3RpbWVvdXQgPSAwLjE7CgkJQWNjZWxlcmF0aW9uLlZlcnRpY2FsID0gKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoMywgMTYsIDE2KSAtIDMyNzY4LjApICogMC4wMDEyNDkzNjc7CS8vQWNjIFogYXhpcywgMC4wMDAxMjc0RyByZXMgKGluIG0vczIpCgkJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTUsIEFjY2VsZXJhdGlvbi5WZXJ0aWNhbCk7Cgl9CgllbHNlIGlmIChoM3RpbWVvdXQgPiAwLjApCgl7CgkJaDN0aW1lb3V0IC09IGV0OwoJfQoJZWxzZQoJewoJCUFjY2VsZXJhdGlvbi5WZXJ0aWNhbD0gQ2FsY3VsYXRlLk5BTigpOwoJCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE1LCBDYWxjdWxhdGUuTkFOKCkpOwoJfQkKfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Roll Rate">
+        <Props Qty="rad/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="-1.63000000000000000e+002" Max="1.63000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch&nbsp;MM5.10 Roll Rate.</p><p class="device_help">If CAN messages fail or time out (0.1s), this channel is set to NAN (not a number).</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Roll Rate:</u></p><ul><li><div class="device_help">Select <em class="device_enum">Firmware 13</em>as <em class="device_item">Vehicle&nbsp;Roll Rate&nbsp;Sensor Resource</em>.</div></li><li><div class="device_help">Select&nbsp;<em class="device_enum">Manual</em><strong> </strong>as the <em class="device_item">Vehicle&nbsp;Roll Rate&nbsp;Sensor Calibration</em>.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Roll Rate Sensor&nbsp;Translation</em>&nbsp;for 0v to 0deg/s.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle&nbsp;Roll Rate Sensor Translation</em>&nbsp;for 1v to 1deg/s.</div></li><li>Set <em class="device_item">Vehicle Roll Rate Sensor Diagnostic Delay </em>&nbsp;to 100mS..</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Yaw Rate">
+        <Props Qty="rad/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="-1.63000000000000000e+002" Max="1.63000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current value for the Bosch&nbsp;MM5.10 Yaw Rate.</p><p class="device_help">If CAN messages fail or time out (0.1s), this channel is set to NAN (not a number).</p><p class="device_help"><u>To refer to this channel in&nbsp;Vehicle Yaw Rate:</u></p><ul><li><div class="device_help">Select <em class="device_enum">Firmware 11</em>as <em class="device_item">Vehicle&nbsp;Yaw Rate&nbsp;Sensor Resource</em>.</div></li><li><div class="device_help">Select&nbsp;<em class="device_enum">Manual</em><strong> </strong>as the <em class="device_item">Vehicle&nbsp;Yaw Rate&nbsp;Sensor Calibration</em>.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle Yaw Rate Sensor&nbsp;Translation</em>&nbsp;for 0v to 0deg/s.</div></li><li><div class="device_help">Set the <em class="device_item">Vehicle&nbsp;Yaw Rate Sensor Translation</em>&nbsp;for 1v to 1deg/s.</div></li><li><div class="device_help">Set <em class="device_item">Vehicle Yaw Rate Sensor Diagnostic Delay </em>&nbsp;to 100mS.</div></li></ul><li></li>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus"/>
+        <Component Name="CAN ID Message 1">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN ID Message 2">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN ID Message 3">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Acceleration">
+         <Component Name="Longitudinal"/>
+         <Component Name="Lateral"/>
+         <Component Name="Vertical"/>
+        </Component>
+        <Component Name="Startup"/>
+        <Component Name="Receive"/>
+        <Component Name="Roll Rate"/>
+        <Component Name="Yaw Rate"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Bosch OE Integration.Bosch ABS">
+     <BuildHelp>
+<![CDATA[<P class="device_help">This class implements OE Integration for Bosch ABS M4 &amp; M5 installations.</P><EM i>This class superceeds Bosch ABS M4</EM> 
+<P class="device_help">Components include CAN receive messaging for ABS using original naming.</P>
+<H2 class="device_help">Value Inputs</H2>
+<H3 class="device_help">None required.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </H3>
+<P class="device_help">This class is used for reporting values from the ABS unit only.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </P>
+<H2 class="device_help">Data Types</H2>
+<H3 class="device_help">None required</H3>
+<P class="device_help"><BR></P>
+<P class="device_help">
+<H2 class="device_help">Attributes</H2>
+<H3 class="device_help">Event</H3>
+<P class="device_help">Must be 100Hz.</P>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Driver Switch Index Enumeration Data Type" Creation="Custom" Visible="1" TargetCpt="This.ABS Position Switch.Index" TargetRef="Type" DisplayName="Driver Switch Index Enumeration Data Type"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Nine Position Switch State Enumeration Data Type" Creation="Custom" Visible="1" TargetCpt="This.ABS Position Switch.Value" TargetRef="Type" DisplayName="Nine Position Switch State Enumeration Data Type"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <Comment>
+<![CDATA[<P class="device_help">Settings and information related to Bosch ABS systems.</P>
+<P>This system receives CAN messages from the ABS unit. Some of these messages may be accessed by means of Firmware CAN Resources, which can be used as a Resource for an input within this M1 package. For example Firmware Resource 16 can be used as the resource for <EM o>Wheel Speed Front Left</EM> hence eliminating the need to wire the sensor signal to the M1. The table bellow shows the channels that are received via CAN for each model along with the available Firmware Resources.</P>
+<P><IMG src="data:image/png;base64,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"></IMG> </P>
+<P class="device_help">Refer to individual channel help for information on how to configure each Firmware channel for correct operation.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" OldName="Root.Bosch ABS M4.CAN Bus">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">The CAN bus used for all ABS CAN messaging. Normally set to <EM e>CAN Bus 2</EM>.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Type">
+        <Props Type="::This.Bosch OE ABS Type Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[ABS unit model that is connected via <EM o>CAN Bus</EM>.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Front Circumference">
+        <Props Qty="m" Validation="MinMax" ValMin=".001" ValClampMax="false" ValMax="5" OldName="Root.Bosch ABS M4.Front Circumference">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The rolling circumference of the tyre.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Rear Circumference">
+        <Props Qty="m" Validation="MinMax" ValMin=".001" ValClampMax="false" ValMax="5" OldName="Root.Bosch ABS M4.Rear Circumference">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The rolling circumference of the tyre.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.ABS Active">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Active flag.</p>
+<p>If CAN messages fail or time out, this channel is set to <em e>Unknown</em>. Any associated systems will not operate.</p>
+<p><u>To refer to this channel in a Driver Switch:</u></p>
+	<ul><li>Select <em e>Firmware 26</em> as <em o>Driver Switch N Resource</em>.</li>
+		<li>Set <em o>Driver Switch N Pullup Control</em> to <em e>Off</em>.</li>
+		<li>Set <em o>Driver Switch N Active Edge</em> to <em e>Rising</em>.</li>
+		<li>Set <em o>Driver Switch N Threshold</em> to 0.6V.</li>
+		<li>Set <em o>Driver Switch N Hysteresis </em>to 0.2V.</li>
+		<li>Set <em o>Driver Switch N Debounce</em> to 1mS.</li>
+	</ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.ABS Lamp">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>Current value for the ABS Lamp.</P>
+<P>If CAN messages fail or time out, this channel is set to <EM e>Unknown</EM>. Any associated systems will not operate.</P>
+<P><U>To refer to this channel in a Driver Switch:</U></P>
+<UL>
+<LI>Select <EM e>Firmware 27</EM> as <EM o>Driver Switch N Resource</EM>.</LI>
+<LI>Set <EM o>Driver Switch N Pullup Control</EM> to <EM e>Off</EM>.</LI>
+<LI>Set <EM o>Driver Switch N Active Edge</EM> to <EM e>Rising</EM>.</LI>
+<LI>Set <EM o>Driver Switch N Threshold</EM> to 0.6V.</LI>
+<LI>Set <EM o>Driver Switch N Hysteresis </EM>to 0.2V.</LI>
+<LI>Set <EM o>Driver Switch N Debounce</EM> to 1mS.</LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.ABS Malfunction">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>Current value for the ABS Malfunction.</P><EM i>This channel is only available when unit <EM o>Type</EM> equals <EM e>Bosch M5</EM></EM> 
+<P>If CAN messages fail or time out, this channel is set to <EM e>Unknown</EM>.</P>
+<P>This channel is not available as a Firmware Resource.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Acceleration">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Longitudinal">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Longitudinal Acceleration.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Vehicle Acceleration Longitudinal:</u></p>
+	<ul><li>Select <em e>Firmware 23</em> as <em o>Vehicle Acceleration Longitudinal Sensor Resource</em>.</li>
+		<li>Select <em e>CAN 2DP</em> as the <em o>Vehicle Acceleration Longitudinal Sensor Calibration</em>.</li>
+		<li>Set <em o>Vehicle Acceleration Longitudinal Sensor Diagnostic Delay</em> to 100mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Lateral">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Lateral Acceleration.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Vehicle Acceleration Lateral:</u></p>
+	<ul><li>Select <em e>Firmware 22</em> as <em o>Vehicle Acceleration Lateral Sensor Resource</em>.</li>
+		<li>Select <em e>CAN 2DP</em> as the <em o>Vehicle Acceleration Lateral Sensor Calibration</em>.</li>
+		<li>Set <em o>Vehicle Acceleration Lateral Sensor Diagnostic Delay</em> to 100mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Vertical">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="-4.09900000000000020e+001" ValMax="4.09900000000000020e+001">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-3.92299999999999970e+001" Max="3.92299999999999970e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Vertical Acceleration.</p>
+
+<em i>This channel and firmware resource are only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Vehicle Acceleration Vertical:</u></p>
+	<ul><li>Select <em e>Firmware 15</em> as <em o>Vehicle Acceleration Vertical Sensor Resource</em>.</li>
+		<li>Select <em e>CAN 2DP</em> as the <em o>Vehicle Acceleration Vertical Sensor Calibration</em>.</li>
+		<li>Set <em o>Vehicle Acceleration Vertical Sensor Diagnostic Delay</em> to 100mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Brake Pressure">
+        <Props OldName="Root.Bosch ABS M4.Brake Pressure" UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p>If unit <em o>Type</em> equals <em e>Bosch M4</em> then this value is the current value for the ABS Brake Pressure. 
+Otherwise this value is the average of <em o>Brake Pressure Front</em> and <em o>Brake Pressure Rear</em>.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Brake Pressure Front:</u></p>
+	<ul><li>Select <em e>Firmware 24</em> as <em o>Brake Pressure Front Sensor Resource</em>.</li>
+	<li>Select <em e>CAN Gauge 2DP</em> as the <em o>Brake Pressure Front Sensor Calibration</em>.</li>
+	<li>Set <em o>Brake Pressure Front Sensor Diagnostic Delay</em> to 100mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Pressure.Value">
+        <Props Qty="Pa" Validation="MinMax" ValMin="-4.24000000000000000e+007" ValMax="4.25000000000000000e+007">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="bar" DPS="2" Min="0.00000000000000000e+000" Max="4.25000000000000000e+007"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Pressure.Front">
+        <Props Qty="Pa" Validation="MinMax" ValMin="-4.24000000000000000e+007" ValMax="4.25000000000000000e+007">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="bar" DPS="2" Min="0.00000000000000000e+000" Max="4.25000000000000000e+007"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Front Brake Pressure.</p>
+
+<em i>This channel and firmware resource are only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Brake Pressure Front:</u></p>
+	<ul><li>Select <em e>Firmware 30</em> as <em o>Brake Pressure Front Sensor Resource</em>.</li>
+	<li>Select <em e>CAN Gauge 2DP</em> as the <em o>Brake Pressure Front Sensor Calibration</em>.</li>
+	<li>Set <em o>Brake Pressure Front Sensor Diagnostic Delay</em> to 100mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Pressure.Rear">
+        <Props Qty="Pa" Validation="MinMax" ValMin="-4.24000000000000000e+007" ValMax="4.25000000000000000e+007">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="bar" DPS="2" Min="0.00000000000000000e+000" Max="4.25000000000000000e+007"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Rear Brake Pressure.</p>
+
+<em i>This channel and firmware resource are only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Brake Pressure Rear:</u></p>
+	<ul><li>Select <em e>Firmware 31</em> as <em o>Brake Pressure Rear Sensor Resource</em>.</li>
+	<li>Select <em e>CAN Gauge 2DP</em> as the <em o>Brake Pressure Rear Sensor Calibration</em>.</li>
+	<li>Set <em o>Brake Pressure Rear Sensor Diagnostic Delay</em> to 100mS.</li></ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Pressure.Front Balance">
+        <Props DiagnosticLogRate="1S" Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+00" Max="1.00000000000000000e+00"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Calculated Brake Pressure Balance.</p>
+
+<em o>Brake Pressure Front Balance</em> equals <em o>Brake Pressure Front</em> / (<em o>Brake Pressure Front</em> + <em o>Brake Pressure Rear</em>)
+
+<p>If <em o>Brake Pressure Front/Rear</em> CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Switch">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>Current value for the ABS Brake Switch.</P>
+<P>If CAN messages fail or time out, this channel is set to <EM e>Unknown</EM> and associated systems will not operate.</P>
+<P><U>To refer to this channel in Brake Switch:</U></P>
+<UL>
+<LI>Select <EM e>Firmware 28</EM> as <EM o>Brake Switch Resource</EM>.</LI>
+<LI>Set <EM o>Brake Switch Pullup Control</EM> to <EM e>Off</EM>.</LI>
+<LI>Set <EM o>Brake Switch Active Edge</EM> to <EM e>Rising</EM>.</LI>
+<LI>Set <EM o>Brake Switch Threshold</EM> to 0.6V.</LI>
+<LI>Set <EM o>Brake Switch Hysteresis</EM> to 0.2V.</LI>
+<LI>Set <EM o>Brake Switch Debounce</EM> to 1mS.</LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Diagnostic">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.ABS Unit">
+        <Props Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>Current value for the ABS Unit Diagnostic.</P><EM i>This channel is only available when unit <EM o>Type</EM> equals <EM e>Bosch M5</EM>.</EM> 
+<P>If CAN messages fail or time out, this channel is set to NAN (not a number).</P>
+<P>This channel is not available as a Firmware Resource.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Fuse Pump">
+        <Props Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Fuse Pump Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Fuse Valve">
+        <Props Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Fuse Valve Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Front Left">
+        <Props Type="::This.Bosch OE Corner Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Front Left Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Front Right">
+        <Props Type="::This.Bosch OE Corner Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Front Right Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Rear Left">
+        <Props Type="::This.Bosch OE Corner Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Rear Left Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Right Rear">
+        <Props Type="::This.Bosch OE Corner Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Right Rear Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Diagnostic.Wheel Quality">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Wheel Quality.Front Left">
+        <Props Type="::This.Bosch OE Wheel Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Front Left Wheel Quality Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Wheel Quality.Front Right">
+        <Props Type="::This.Bosch OE Wheel Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Front Rigth Wheel Quality Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Wheel Quality.Rear Left">
+        <Props Type="::This.Bosch OE Wheel Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Rear Left Wheel Quality Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Wheel Quality.Right Rear">
+        <Props Type="::This.Bosch OE Wheel Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Right Rear Wheel Quality Diagnostic.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.EBD Lamp">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the EBD Lamp.</p>
+<p>If CAN messages fail or time out, this channel is set to <em e>Unknown</em>. Any associated systems will not operate.</p>
+<p><u>To refer to this channel in a Driver Switch:</u></p>
+	<ul><li>Select <em e>Firmware 29</em> as <em o>Driver Switch N Resource</em>.</li>
+		<li>Set <em o>Driver Switch N Pullup Control</em> to <em e>Off</em>.</li>
+		<li>Set <em o>Driver Switch N Active Edge</em> to <em e>Rising</em>.</li>
+		<li>Set <em o>Driver Switch N Threshold</em> to 0.6V.</li>
+		<li>Set <em o>Driver Switch N Hysteresis </em>to 0.2V.</li>
+		<li>Set <em o>Driver Switch N Debounce</em> to 1mS.</li>
+	</ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Map Switch Position">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Map Switch.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in a Driver Rotary Switch:</u></p>
+	<ul><li>Select <em e>Firmware 25</em> as <em o>Driver Rotary Switch N Resource</em>.</li>
+		<li>Select <em e>CAN Position x 100</em> as the <em o>Driver Rotary Switch N Calibration</em>.</li>
+		<li>Set <em o>Driver Rotary Switch N Diagnostic Delay</em> to 100ms.</li>
+	</ul>
+</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.RTA Ok">
+        <Props DiagnosticLogRate="1S" Type="::This.Bosch OE CAN Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS RTA OK Indicator.</p>
+
+<em i>This channel is only available when unit <em o>Type</em> equals <em e>Bosch M5</em>.</em>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number).</p>
+
+<p>This channel is not available as a Firmware Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Wheel Speed">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Wheel Speed.Front Left">
+        <Props Qty="m/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+00" Max="1.00000000000000000e+02"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Wheel Speed Front Left.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Wheel Speed Front Left:</u></p>
+	<ul><li>Select <em e>Firmware 16</em> as <em o>Wheel Speed Front Left Sensor Resource</em>.</li>
+		<li>Set <em o>Wheel Speed Front Pitch Threshold</em> to 100%.</li>
+		<li>Set <em o>Wheel Speed Front Timeout</em> to 400ms.</li>
+		<li>Set <em o>Wheel Speed Front Final Drive Ratio</em> to 1.00.</li>
+		<li>Set <em o>Wheel Speed Front Left Sensor Scale</em> to 100.0.</li>
+		<li>Set <em o>Wheel Speed Front Left Sensor Teeth</em> to 100.</li>
+		<li>Set <em o>Wheel Speed Front Left Sensor Sample Teeth</em> to 0.</li>
+	</ul>
+</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Wheel Speed.Front Right">
+        <Props Qty="m/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+00" Max="1.00000000000000000e+02"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Wheel Speed Front Right.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Wheel Speed Front Right:</u></p>
+	<ul><li>Select <em e>Firmware 16</em> as <em o>Wheel Speed Front Right Sensor Resource</em>.</li>
+		<li>Set <em o>Wheel Speed Front Pitch Threshold</em> to 100%.</li>
+		<li>Set <em o>Wheel Speed Front Timeout</em> to 400ms.</li>
+		<li>Set <em o>Wheel Speed Front Final Drive Ratio</em> to 1.00.</li>
+		<li>Set <em o>Wheel Speed Front Right Sensor Scale</em> to 100.0.</li>
+		<li>Set <em o>Wheel Speed Front Right Sensor Teeth</em> to 100.</li>
+		<li>Set <em o>Wheel Speed Front Right Sensor Sample Teeth</em> to 0.</li>
+	</ul>
+</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Wheel Speed.Rear Left">
+        <Props Qty="m/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+00" Max="1.00000000000000000e+02"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Wheel Speed Rear Left.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Wheel Speed Rear Left:</u></p>
+	<ul><li>Select <em e>Firmware 16</em> as <em o>Wheel Speed Rear Left Sensor Resource</em>.</li>
+		<li>Set <em o>Wheel Speed Rear Pitch Threshold</em> to 100%.</li>
+		<li>Set <em o>Wheel Speed Rear Timeout</em> to 400ms.</li>
+		<li>Set <em o>Wheel Speed Rear Final Drive Ratio</em> to 1.00.</li>
+		<li>Set <em o>Wheel Speed Rear Left Sensor Scale</em> to 100.0.</li>
+		<li>Set <em o>Wheel Speed Rear Left Sensor Teeth</em> to 100.</li>
+		<li>Set <em o>Wheel Speed Rear Left Sensor Sample Teeth</em> to 0.</li>
+	</ul>
+</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Wheel Speed.Right Rear">
+        <Props Qty="m/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+00" Max="1.00000000000000000e+02"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Wheel Speed Rear Right.</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p><u>To refer to this channel in Wheel Speed Rear Right:</u></p>
+	<ul><li>Select <em e>Firmware 16</em> as <em o>Wheel Speed Rear Right Sensor Resource</em>.</li>
+		<li>Set <em o>Wheel Speed Rear Pitch Threshold</em> to 100%.</li>
+		<li>Set <em o>Wheel Speed Rear Timeout</em> to 400ms.</li>
+		<li>Set <em o>Wheel Speed Rear Final Drive Ratio</em> to 1.00.</li>
+		<li>Set <em o>Wheel Speed Rear Right Sensor Scale</em> to 100.0.</li>
+		<li>Set <em o>Wheel Speed Rear Right Sensor Teeth</em> to 100.</li>
+		<li>Set <em o>Wheel Speed Rear Right Sensor Sample Teeth</em> to 0.</li>
+	</ul>
+</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Yaw Rate">
+        <Props Qty="rad/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="-1.63000000000000000e+002" Max="1.63000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>Current value for the ABS Yaw Rate (Yaw Speed).</p>
+
+<p>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</p>
+
+<p>This channel is available as a Firmware Resource by selecting <em e>Firmware 20</em> in the desired input Resource.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Yaw Acceleration">
+        <Props Qty="rad/s/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="-4.09600000000000000e+03" Max="4.09500000000000000e+03"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Current value for the ABS Yaw Acceleration.</P>
+<P>If unit <EM o>Type</EM> equals <EM e>Bosch M4</EM> then this value is the current value for the Yaw Acceleration as transmitted by the ABS unit. Otherwise this value is calculated from the derivative of <EM o>Yaw Rate</EM>.</P>
+<P>If CAN messages fail or time out, this channel is set to NAN (not a number) and associated systems will not operate.</P>
+<P>This channel is available as a Firmware Resource by selecting <EM e>Firmware 21</EM> in the desired input Resource.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Communications">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Receive 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHgyNEEgLSBBQlMgV2hlZWwgc3BlZWRzIC0gMTAwSHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKENBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwPyBDQU4gQnVzLkFzSW50ZWdlcigpIC0gMSA6IDAgLCAweDI0QSwgMHgwMDAsIGZhbHNlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpIG9yIHJ4OwovKgogKiBDYWxjdWxhdGUgaHViIHNwZWVkIGZyb20gQUJTIHdoZWVsIHNwZWVkOiBvcmlnaW5hbCBzeXN0ZW0gY2Fubm90IGZhY3RvciBkaWZmZXJlbnQgd2hlZWwgc2l6ZXMsCiAqIHRoaXMgT0UgY2lyY3VtZmVyZW5jZSB2YWx1ZSBpcyBjYWxjdWxhdGVkIGZyb20gYWN0dWFsIE9FIHJvYWQgZGF0YS4KICogVGhlb3JldGljYWwgY2lyY3VtZmVyZW5jZSBpcyAxLjk2NG0KICovCgppZiAocngpCnsKCVdoZWVsIFNwZWVkLlJpZ2h0IFJlYXIgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMCwgMTYpICogMC4wMTU2MjU7ICAgLy9SYWRnZXNjaHdpbmRpZ2tlaXQgLyB3aGVlbCBzcGVlZCBkaXJlY3QgUlI7IAoJV2hlZWwgU3BlZWQuUmVhciBMZWZ0ID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDE2LCAxNikgKiAwLjAxNTYyNTsgICAvL1JhZGdlc2Nod2luZGlna2VpdCAvIHdoZWVsIHNwZWVkIGRpcmVjdCBSTDsgCglXaGVlbCBTcGVlZC5Gcm9udCBSaWdodCA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYpICogMC4wMTU2MjU7ICAgLy9SYWRnZXNjaHdpbmRpZ2tlaXQgLyB3aGVlbCBzcGVlZCBkaXJlY3QgRlI7IAoJV2hlZWwgU3BlZWQuRnJvbnQgTGVmdCA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCA0OCwgMTYpICogMC4wMTU2MjU7ICAgLy9SYWRnZXNjaHdpbmRpZ2tlaXQgLyB3aGVlbCBzcGVlZCBkaXJlY3QgRkw7IAoKCS8vRmlybXdhcmUgMSB0byA0OiBmcm9udCBsZWZ0IGh1YiBzcGVlZCBpbiBIZXJ0egoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTYsIFdoZWVsIFNwZWVkLkZyb250IExlZnQgLyBGcm9udCBDaXJjdW1mZXJlbmNlKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE3LCBXaGVlbCBTcGVlZC5Gcm9udCBSaWdodCAvIEZyb250IENpcmN1bWZlcmVuY2UpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMTgsIFdoZWVsIFNwZWVkLlJlYXIgTGVmdCAvIFJlYXIgQ2lyY3VtZmVyZW5jZSk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxOSwgV2hlZWwgU3BlZWQuUmlnaHQgUmVhciAvIFJlYXIgQ2lyY3VtZmVyZW5jZSk7Cn0KCi8qCiAqIDB4MDcwIC0gWWF3IFJhdGUgYW5kIExhdGVyYWwgQWNjZWxlcmF0aW9uIC0gMTAwaHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKENBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwPyBDQU4gQnVzLkFzSW50ZWdlcigpIC0gMSA6IDAsIDB4MDcwLCAweDAwMCwgZmFsc2UpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7CmxvY2FsIHJ4MDcwdGltZW91dCA9IERlbGF5LlJpc2luZyhub3QgcngsIDAuMTApOwppZiAocngpCnsKCVlhdyBSYXRlID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsNDgsIDE2KSAqIDAuMDA1IC0gMTYzLjg0OwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjAsIFlhdyBSYXRlKTsKCUFjY2VsZXJhdGlvbi5MYXRlcmFsID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsMTYsIDE2KSAqIDAuMDAxMjQ5NyAtIDQwLjk2Mzk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMiwgQWNjZWxlcmF0aW9uLkxhdGVyYWwgLyA5OC4xKTsKfQplbHNlIGlmIChyeDA3MHRpbWVvdXQpCnsKCVlhdyBSYXRlID0gQ2FsY3VsYXRlLk5BTigpOwoJQWNjZWxlcmF0aW9uLkxhdGVyYWwgPSBDYWxjdWxhdGUuTkFOKCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyMCxDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjIsQ2FsY3VsYXRlLk5BTigpKTsKfQoKLyoKICogMHgwODAgLSBZYXcgQWNjZWwgYW5kIExvbmdpdHVkaW5hbCBBY2NlbGVyYXRpb24gLSAxMDBoeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSA+IDA/IENBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxIDogMCwgMHgwODAsIDB4MDAwLCBmYWxzZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKSBvciByeDsKbG9jYWwgcngwODB0aW1lb3V0ID0gRGVsYXkuUmlzaW5nKG5vdCByeCwgMC4xMCk7CmxvY2FsIFlhd1JhdGVEZXJ2ID0gRGVyaXZhdGl2ZS5Ob3JtYWwoWWF3IFJhdGUpOwppZiAocngpCnsKCXdoZW4gKFR5cGUpCgl7CgkJaXMgKEJvc2NoIE00KQoJCXsKCQkJWWF3IEFjY2VsZXJhdGlvbiA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLDQ4LCAxNikgKiAwLjEyNSAtIDQwOTYuMDsKCQl9CgkJaXMgKEJvc2NoIE01KQoJCXsKCQkJWWF3IEFjY2VsZXJhdGlvbiA9IFlhd1JhdGVEZXJ2OwoJCX0KCX0KCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDIxLCBZYXcgQWNjZWxlcmF0aW9uKTsKCUFjY2VsZXJhdGlvbi5Mb25naXR1ZGluYWwgPSAoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsMTYsIDE2KSAqIDAuMDAxMjQ5NykgLSA0MC45NjM5OwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjMsIEFjY2VsZXJhdGlvbi5Mb25naXR1ZGluYWwgLyA5OC4xKTsKfQplbHNlIGlmIChyeDA4MHRpbWVvdXQpCnsKCVlhdyBBY2NlbGVyYXRpb24gPSBDYWxjdWxhdGUuTkFOKCk7CglBY2NlbGVyYXRpb24uTG9uZ2l0dWRpbmFsID0gQ2FsY3VsYXRlLk5BTigpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjEsQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDIzLENhbGN1bGF0ZS5OQU4oKSk7Cn0KCi8qCiAqIDB4NTc2IC0gVmVydGljYWwgQWNjZWxlcmF0aW9uIC0gMTAwaHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKENBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwPyBDQU4gQnVzLkFzSW50ZWdlcigpIC0gMSA6IDAsIDB4NTc2LCAweDAwMCwgZmFsc2UpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7CmxvY2FsIHJ4NTc2dGltZW91dCA9IERlbGF5LlJpc2luZyhub3QgcngsIDAuMTApOwppZiAocngpCnsKCUFjY2VsZXJhdGlvbi5WZXJ0aWNhbCA9IChDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwxNiwgMTYpICogMC4wMDEyNDk3KSAtIDQwLjk2Mzk7ICAgLy9BWiAKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE1LCBBY2NlbGVyYXRpb24uVmVydGljYWwgLyA5OC4xKTsKfQplbHNlIGlmIChyeDU3NnRpbWVvdXQpCnsKCUFjY2VsZXJhdGlvbi5WZXJ0aWNhbCA9IENhbGN1bGF0ZS5OQU4oKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDE1LCBDYWxjdWxhdGUuTkFOKCkpOwp9CgovKgogKiAweDM0MiAtIFdoZWVsIFF1YWxpdHkgLSAxMDBoeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSA+IDA/IENBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxIDogMCwgMHgzNDIsIDB4MDAwLCBmYWxzZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKSBvciByeDsKbG9jYWwgcngzNDJ0aW1lb3V0ID0gRGVsYXkuUmlzaW5nKG5vdCByeCwgMC4xMCk7CmlmIChyeCBhbmQgVHlwZSBlcSBUeXBlLkJvc2NoIE01KQp7CglEaWFnbm9zdGljLldoZWVsIFF1YWxpdHkuUmlnaHQgUmVhci5TZXQoQ29udmVydC5Ub0ludGVnZXIoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDAsIDgpKSk7ICAgLy8gICAgNT1JbnZhbGlkVW5kZXJWb2x0YWdlLCA0PU5vdENhbGN1bGF0ZWQsIDM9UmVkdWNlZE1vbml0b3JlZCwgMj1GYXVsdHksIDE9Tm9ybWFsLCAwPU5vdEluaXRpYWxpemVkLCAKCURpYWdub3N0aWMuV2hlZWwgUXVhbGl0eS5SZWFyIExlZnQuU2V0KENvbnZlcnQuVG9JbnRlZ2VyKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCA4LCA4KSkpOyAgIC8vICAgIDU9SW52YWxpZFVuZGVyVm9sdGFnZSwgND1Ob3RDYWxjdWxhdGVkLCAzPVJlZHVjZWRNb25pdG9yZWQsIDI9RmF1bHR5LCAxPU5vcm1hbCwgMD1Ob3RJbml0aWFsaXplZCwgCglEaWFnbm9zdGljLldoZWVsIFF1YWxpdHkuRnJvbnQgUmlnaHQuU2V0KENvbnZlcnQuVG9JbnRlZ2VyKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgOCkpKTsgICAvLyAgICA1PUludmFsaWRVbmRlclZvbHRhZ2UsIDQ9Tm90Q2FsY3VsYXRlZCwgMz1SZWR1Y2VkTW9uaXRvcmVkLCAyPUZhdWx0eSwgMT1Ob3JtYWwsIDA9Tm90SW5pdGlhbGl6ZWQsIAoJRGlhZ25vc3RpYy5XaGVlbCBRdWFsaXR5LkZyb250IExlZnQuU2V0KENvbnZlcnQuVG9JbnRlZ2VyKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAyNCwgOCkpKTsgICAvLyAgICA1PUludmFsaWRVbmRlclZvbHRhZ2UsIDQ9Tm90Q2FsY3VsYXRlZCwgMz1SZWR1Y2VkTW9uaXRvcmVkLCAyPUZhdWx0eSwgMT1Ob3JtYWwsIDA9Tm90SW5pdGlhbGl6ZWQsIAoKfQplbHNlIGlmIChyeDM0MnRpbWVvdXQgb3IgVHlwZSBlcSBUeXBlLkJvc2NoIE00KQp7CglEaWFnbm9zdGljLldoZWVsIFF1YWxpdHkuUmlnaHQgUmVhciA9IERpYWdub3N0aWMuV2hlZWwgUXVhbGl0eS5SaWdodCBSZWFyLlVua25vd247CglEaWFnbm9zdGljLldoZWVsIFF1YWxpdHkuUmVhciBMZWZ0ID0gRGlhZ25vc3RpYy5XaGVlbCBRdWFsaXR5LlJlYXIgTGVmdC5Vbmtub3duOwoJRGlhZ25vc3RpYy5XaGVlbCBRdWFsaXR5LkZyb250IFJpZ2h0ID0gRGlhZ25vc3RpYy5XaGVlbCBRdWFsaXR5LkZyb250IFJpZ2h0LlVua25vd247CglEaWFnbm9zdGljLldoZWVsIFF1YWxpdHkuRnJvbnQgTGVmdCA9IERpYWdub3N0aWMuV2hlZWwgUXVhbGl0eS5Gcm9udCBMZWZ0LlVua25vd247Cgp9CgovKgogKiAweDU0MSAtIEFCUyBEaWFnbm9zdGljIC0gMTAwaHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKENBTiBCdXMuQXNJbnRlZ2VyKCkgPiAwPyBDQU4gQnVzLkFzSW50ZWdlcigpIC0gMSA6IDAsIDB4NTQxLCAweDAwMCwgZmFsc2UpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7CmxvY2FsIHJ4NTQxdGltZW91dCA9IERlbGF5LlJpc2luZyhub3QgcngsIDAuMTApOwppZiAocnggYW5kIFR5cGUgZXEgVHlwZS5Cb3NjaCBNNSkKewoJRGlhZ25vc3RpYy5GdXNlIFZhbHZlLlNldChDb252ZXJ0LlRvSW50ZWdlcihDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgNTMsIDEpKSk7ICAgLy9EaWFnX0Z1c2VWYWx2ZTogVmVudGlscmVsYWlzIEZlaGxlciBGdXNlIHJlbGF0ZWQgKFVCLVZSKTsgIAoJRGlhZ25vc3RpYy5GdXNlIFB1bXAuU2V0KENvbnZlcnQuVG9JbnRlZ2VyKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCA1NCwgMSkpKTsgICAvL0RpYWdfRnVzZVB1bXA6IFB1bXBlbmZlaGxlciBGdXNlIHJlbGF0ZWQgKFVCLU1SKTsgCglEaWFnbm9zdGljLkFCUyBVbml0LlNldChDb252ZXJ0LlRvSW50ZWdlcihDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgNTUsIDEpKSk7ICAgLy9EaWFnX0FCU1VuaXQ6IGFuZGVyZSBIVy1GZWhsZXIgZGllIGRlbiBBQlMgUmVsZ2xlciBhYnNjaGFsdGVuOyAKCURpYWdub3N0aWMuUmlnaHQgUmVhci5TZXQoQ29udmVydC5Ub0ludGVnZXIoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDU2LCAyKSkpOyAgIC8vRGlhZ19SUjogQml0MDogU2lnbmFsIFBsYXVzaWJpbGl0YWV0IEJpdDE6IFZlcmthYmVsdWduc3Byb2JsZW0gKG9wZW4sIHNob3J0LC4uLik7ICAgIDI9U2lnbmFsIGVycm9yLCAxPUxpbmUgZXJyb3IsIDA9U2lnbmFsIG9rLCAKCURpYWdub3N0aWMuUmVhciBMZWZ0LlNldChDb252ZXJ0LlRvSW50ZWdlcihDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgNTgsIDIpKSk7ICAgLy9EaWFnX1JMOiBCaXQwOiBTaWduYWwgUGxhdXNpYmlsaXRhZXQgQml0MTogVmVya2FiZWx1Z25zcHJvYmxlbSAob3Blbiwgc2hvcnQsLi4uKTsgICAgMj1TaWduYWwgZXJyb3IsIDE9TGluZSBlcnJvciwgMD1TaWduYWwgb2ssIAoJRGlhZ25vc3RpYy5Gcm9udCBSaWdodC5TZXQoQ29udmVydC5Ub0ludGVnZXIoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDYwLCAyKSkpOyAgIC8vRGlhZ19GUjogQml0MDogU2lnbmFsIFBsYXVzaWJpbGl0YWV0IEJpdDE6IFZlcmthYmVsdWduc3Byb2JsZW0gKG9wZW4sIHNob3J0LC4uLik7ICAgIDI9U2lnbmFsIGVycm9yLCAxPUxpbmUgZXJyb3IsIDA9U2lnbmFsIG9rLCAKCURpYWdub3N0aWMuRnJvbnQgTGVmdC5TZXQoQ29udmVydC5Ub0ludGVnZXIoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDYyLCAyKSkpOyAgIC8vRGlhZ19GTDogQml0MDogU2lnbmFsIFBsYXVzaWJpbGl0YWV0IEJpdDE6IFZlcmthYmVsdWduc3Byb2JsZW0gKG9wZW4sIHNob3J0LC4uLik7ICAgIDI9U2lnbmFsIGVycm9yLCAxPUxpbmUgZXJyb3IsIDA9U2lnbmFsIG9rLCAKfQplbHNlIGlmIChyeDU0MXRpbWVvdXQgb3IgVHlwZSBlcSBUeXBlLkJvc2NoIE00KQp7CglEaWFnbm9zdGljLkZ1c2UgVmFsdmUgPSBEaWFnbm9zdGljLkZ1c2UgVmFsdmUuVW5rbm93bjsKCURpYWdub3N0aWMuRnVzZSBQdW1wID0gRGlhZ25vc3RpYy5GdXNlIFB1bXAuVW5rbm93bjsKCURpYWdub3N0aWMuQUJTIFVuaXQgPSBEaWFnbm9zdGljLkFCUyBVbml0LlVua25vd247CglEaWFnbm9zdGljLlJpZ2h0IFJlYXIgPSBEaWFnbm9zdGljLlJpZ2h0IFJlYXIuVW5rbm93bjsKCURpYWdub3N0aWMuUmVhciBMZWZ0ID0gRGlhZ25vc3RpYy5SZWFyIExlZnQuVW5rbm93bjsKCURpYWdub3N0aWMuRnJvbnQgUmlnaHQgPSBEaWFnbm9zdGljLkZyb250IFJpZ2h0LlVua25vd247CglEaWFnbm9zdGljLkZyb250IExlZnQgPSBEaWFnbm9zdGljLkZyb250IExlZnQuVW5rbm93bjsKfQoKLyoKICogMHg1QzAgLSBTdGF0dXMgLSAxMDBoeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSA+IDA/IENBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxIDogMCwgMHg1QzAsIDB4MDAwLCBmYWxzZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKSBvciByeDsKbG9jYWwgcng1QzB0aW1lb3V0ID0gRGVsYXkuUmlzaW5nKG5vdCByeCwgMC4xMCk7CmlmIChyeCkKewoJTWFwIFN3aXRjaCBQb3NpdGlvbiA9IENhbkNvbW1zLkdldEludGVnZXIoaCwgNTYsIDgpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjUsIE1hcCBTd2l0Y2ggUG9zaXRpb24gKiAwLjEpOwoJCgl3aGVuIChUeXBlKQoJewoJCWlzIChCb3NjaCBNNCkKCQl7CgkJCUFCUyBNYWxmdW5jdGlvbiA9IEFCUyBNYWxmdW5jdGlvbi5Vbmtub3duOwoJCQlSVEEgT2sgPSBSVEEgT2suVW5rbm93bjsKCQkJQnJha2UgUHJlc3N1cmUuRnJvbnQgPSBDYWxjdWxhdGUuTkFOKCk7CgkJCUJyYWtlIFByZXNzdXJlLlJlYXIgPSBDYWxjdWxhdGUuTkFOKCk7CgkJCUJyYWtlIFByZXNzdXJlLkZyb250IEJhbGFuY2UgPSBDYWxjdWxhdGUuTkFOKCk7CgkJCUJyYWtlIFByZXNzdXJlID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoLDQwLCAxNikgKiAxNTMwOwoJCQlTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNCwgQnJha2UgUHJlc3N1cmUgLyAxMDAwMC4wKTsKCQkJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMzAsQ2FsY3VsYXRlLk5BTigpKTsKCQl9CgkJaXMgKEJvc2NoIE01KQoJCXsKCQkJQUJTIE1hbGZ1bmN0aW9uLlNldChDb252ZXJ0LlRvSW50ZWdlcihDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMzUsIDEpKSk7CgkJCVJUQSBPay5TZXQoQ29udmVydC5Ub0ludGVnZXIoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDM4LCAxKSkpOwoJCQlCcmFrZSBQcmVzc3VyZS5SZWFyID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQwLCA4KSAvIDAuMDAwMDE7ICAgLy9QX1JBIAoJCQlCcmFrZSBQcmVzc3VyZS5Gcm9udCA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCA0OCwgOCkgLyAwLjAwMDAxOyAgIC8vUF9GQSAKCQkJQnJha2UgUHJlc3N1cmUuRnJvbnQgQmFsYW5jZSA9IEJyYWtlIFByZXNzdXJlLkZyb250IC8gKEJyYWtlIFByZXNzdXJlLkZyb250ICsgQnJha2UgUHJlc3N1cmUuUmVhcik7IC8vQnJha2UgQmFsYW5jZQoJCQlCcmFrZSBQcmVzc3VyZSA9IENhbGN1bGF0ZS5BdmVyYWdlKEJyYWtlIFByZXNzdXJlLkZyb250LCBCcmFrZSBQcmVzc3VyZS5SZWFyKTsKCQkJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjQsIEJyYWtlIFByZXNzdXJlIC8gMTAwMDAuMCk7CgkJCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDMwLCBCcmFrZSBQcmVzc3VyZS5Gcm9udCAvIDEwMDAwLjApOwoJCQlTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgzMSwgQnJha2UgUHJlc3N1cmUuUmVhciAvIDEwMDAwLjApOwoJCX0KCX0KCUJyYWtlIFN3aXRjaCA9IENhbkNvbW1zLkdldEJpdChoLCAzOSkgPyBCcmFrZSBTd2l0Y2guT24gOiBCcmFrZSBTd2l0Y2guT2ZmOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjgsIENhbkNvbW1zLkdldEJpdChoLCAzOSkgPyAxLjAgOiAwLjApOwoJQUJTIEFjdGl2ZSA9IENhbkNvbW1zLkdldEJpdChoLCAzNCkgPyBBQlMgQWN0aXZlLk9uIDogQUJTIEFjdGl2ZS5PZmY7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNiwgQ2FuQ29tbXMuR2V0Qml0KGgsIDM0KSA/IDEuMCA6IDAuMCk7CglFQkQgTGFtcCA9IENhbkNvbW1zLkdldEJpdChoLCAzMykgPyBFQkQgTGFtcC5PbiA6IEVCRCBMYW1wLk9mZjsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI5LCBDYW5Db21tcy5HZXRCaXQoaCwgMzMpID8gMS4wIDogMC4wKTsKCUFCUyBMYW1wID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDMyKSA/IEFCUyBMYW1wLk9uIDogQUJTIExhbXAuT2ZmOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjcsIENhbkNvbW1zLkdldEJpdChoLCAzMikgPyAxLjAgOiAwLjApOwp9CmVsc2UgaWYgKHJ4NUMwdGltZW91dCkKewoJTWFwIFN3aXRjaCBQb3NpdGlvbiA9IENhbGN1bGF0ZS5OQU4oKTsKCUJyYWtlIFByZXNzdXJlID0gQ2FsY3VsYXRlLk5BTigpOwoJQnJha2UgUHJlc3N1cmUuRnJvbnQgPSBDYWxjdWxhdGUuTkFOKCk7CglCcmFrZSBQcmVzc3VyZS5SZWFyID0gQ2FsY3VsYXRlLk5BTigpOwoJQnJha2UgUHJlc3N1cmUuRnJvbnQgQmFsYW5jZSA9IENhbGN1bGF0ZS5OQU4oKTsKCUJyYWtlIFN3aXRjaCA9IEJyYWtlIFN3aXRjaC5Vbmtub3duOwoJQUJTIEFjdGl2ZSA9IEFCUyBBY3RpdmUuVW5rbm93bjsKCUFCUyBMYW1wID0gQUJTIExhbXAuVW5rbm93bjsKCUVCRCBMYW1wID0gRUJEIExhbXAuVW5rbm93bjsKCUFCUyBNYWxmdW5jdGlvbiA9IEFCUyBNYWxmdW5jdGlvbi5Vbmtub3duOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjUsQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI0LENhbGN1bGF0ZS5OQU4oKSk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgzMCxDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMzEsQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI4LENhbGN1bGF0ZS5OQU4oKSk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyNixDYWxjdWxhdGUuTkFOKCkpOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMjksQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDI3LENhbGN1bGF0ZS5OQU4oKSk7Cn0KCg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.ABS Position Switch">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<P class="device_help">A multi position switch function (assigns a <EM class="device_enum">Zero</EM> to <EM class="device_enum">Nine</EM> state to each of the possible switch positions) which can be linked to one of <EM class="device_chan">Driver Switch N</EM> or <EM class="device_chan">Driver Rotary Switch N</EM>. </P>
+<P class="device_help">This switch state is transmitted to the Bosch ABS module when&nbsp;<EM class="device_item">Type</EM>&nbsp;is <EM class="device_enum">Bosch M5</EM>,&nbsp;<EM class="device_item">ABS Position Switch Index</EM> has a resource assigned and <EM class="device_item">ABS Position Switch</EM> value is between 0 and 11.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.ABS Position Switch.Value">
+        <Props Type="::This.Bosch OE Nine Position Switch State Enumeration">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.ABS Position Switch.Index">
+        <Props Type="::This.Bosch OE Driver Switch Index Enumeration">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">Links the switch function to one of the available switches.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.ABS Position Switch.Update">
+        <Props>
+         <List.Triggers Target="$(Parent.Parent.Communications.Transmit 100Hz:Triggers)"/>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgc3cgPSAtMTsKCmlmIChJbmRleC5Bc0ludGVnZXIoKSA+IDApCnsKCXN3ID0gU3dpdGNoLkdldChJbmRleC5Bc0ludGVnZXIoKSAtIDEpOwp9CgpWYWx1ZS5TZXQoc3cpOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCmlmIChDQU4gQnVzIG5lcSBDQU4gQnVzLk5vdCBpbiBVc2UpCnsKCWxvY2FsIG9rID0gdHJ1ZTsKCQkKCS8qCgkgKiBBQlMgMHgyNEMgPz8/SHogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgkgKi8gCglpZiAoVHlwZSBlcSBUeXBlLkJvc2NoIE01CgkJYW5kIEFCUyBQb3NpdGlvbiBTd2l0Y2guSW5kZXggbmVxIEFCUyBQb3NpdGlvbiBTd2l0Y2guSW5kZXguTm90IGluIFVzZQoJCWFuZCBBQlMgUG9zaXRpb24gU3dpdGNoLkFzSW50ZWdlcigpID49IDAgYW5kIEFCUyBQb3NpdGlvbiBTd2l0Y2guQXNJbnRlZ2VyKCkgPD0gMTEpIC8vQUJTIG1vZHVsZSBvbmx5IGFjY2VwdHMgdmFsdWVzIGZyb20gMC0xMQoJewoJCUNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCAxKTsKCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgIDAsIDgsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoQUJTIFBvc2l0aW9uIFN3aXRjaC5Bc0ludGVnZXIoKSkpOwoJCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEsIDB4MjRDKTsKCX0JCgkgCgkvKgoJICogU2h1dCB1cCBidWlsZCAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCSAqLyAKCW9rID0gb2s7Cn0=]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus"/>
+        <Component Name="Type"/>
+        <Component Name="Front Circumference"/>
+        <Component Name="Rear Circumference"/>
+        <Component Name="ABS Active"/>
+        <Component Name="ABS Lamp"/>
+        <Component Name="ABS Malfunction"/>
+        <Component Name="ABS Position Switch">
+         <Component Name="Value"/>
+         <Component Name="Index"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Acceleration">
+         <Component Name="Longitudinal"/>
+         <Component Name="Lateral"/>
+         <Component Name="Vertical"/>
+        </Component>
+        <Component Name="Brake Pressure">
+         <Component Name="Value"/>
+         <Component Name="Front"/>
+         <Component Name="Rear"/>
+         <Component Name="Front Balance"/>
+        </Component>
+        <Component Name="Brake Switch"/>
+        <Component Name="Diagnostic">
+         <Component Name="ABS Unit"/>
+         <Component Name="Fuse Pump"/>
+         <Component Name="Fuse Valve"/>
+         <Component Name="Front Left"/>
+         <Component Name="Front Right"/>
+         <Component Name="Rear Left"/>
+         <Component Name="Right Rear"/>
+         <Component Name="Wheel Quality">
+          <Component Name="Front Left"/>
+          <Component Name="Front Right"/>
+          <Component Name="Rear Left"/>
+          <Component Name="Right Rear"/>
+         </Component>
+        </Component>
+        <Component Name="EBD Lamp"/>
+        <Component Name="Map Switch Position"/>
+        <Component Name="RTA Ok"/>
+        <Component Name="Wheel Speed">
+         <Component Name="Front Left"/>
+         <Component Name="Front Right"/>
+         <Component Name="Rear Left"/>
+         <Component Name="Right Rear"/>
+        </Component>
+        <Component Name="Yaw Rate"/>
+        <Component Name="Yaw Acceleration"/>
+        <Component Name="Communications">
+         <Component Name="Receive 100Hz"/>
+         <Component Name="Transmit 100Hz"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Old"/>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Bosch OE Integration">
+     <Module Name="Bosch ABS"/>
+     <Module Name="Bosch Inertial Sensor MM510"/>
+    </ModuleGroup>
+    <ModuleGroup Name="Old">
+     <Module Name="Bosch ABS M4"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Types" VersionMajor="1" VersionMinor="6" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0001"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">System changed to 01.03.17.</li>
+              <li class="device_help">CAN Bus Enumeration 2 added.</li>
+              <li class="device_help">Subsystem Enable Enumeration added.</li>
+              <li class="device_help">5 unused enumerations deleted.</li>
+            </ul>
+          <h4 class="device_help">01.04.0006</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <DataTypes>
+  <Type Name="Mode Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The subsystem is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The subsystem is enabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Bus Enumeration 2" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Bus 1" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 2" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 3" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The CAN Bus is not in use. Functionality relying on this CAN Bus is not effective.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Output Drive Enumeration" Storage="enum" Default="Low Side">
+   <Enum Name="Low Side" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The output will switch to battery negative.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="High Side" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The output will switch to battery positive.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Engine State Enumeration" Storage="enum" Default="Startup">
+   <Enum Name="Startup" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The engine has not cranked or run since the ECU started.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stop" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The engine has cranked or run and is now stationary.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Run" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The engine is currently running.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Crank" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The engine is currently cranking.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Subsystem Enable Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The subsystem is not in use.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The subsystem is enabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+</MoTecM1BuildModuleSet>

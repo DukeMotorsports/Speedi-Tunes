@@ -1,0 +1,1167 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Output" VersionMajor="1" VersionMinor="9" BuildNumber="5">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0016"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Some tags exposed.</li>
+              <li class="device_help">Fuel Pump goes from Hold to On when request is true.</li>
+              <li class="device_help">Help corrections.</li>
+            </ul>
+          <h4 class="device_help">01.07.0002</h4>
+            <ul class="device_help">
+              <li class="device_help">System changed to 01.04.</li>
+              <li class="device_help">Deleted Mode, added Test.</li>
+              <li class="device_help">Hardcoded Pin Peak Current, made Pin Hold Current an Open Current parameter.</li>
+              <li class="device_help">Tags added.</li>
+            </ul>
+          <h4 class="device_help">01.05.0008</h4>
+            <ul class="device_help">
+              <li class="device_help">Switch pump off when request becomes false and Hold=0.</li>
+              <li class="device_help">Correct and update help.</li>
+            </ul>
+            <h4 class="device_help">01.05.0006</h4>
+            <ul class="device_help">
+              <li class="device_help">Fuel Pump Relay: Add 'Polarity' value input.</li>
+              <li class="device_help">Fuel Pump Relay: Support using 'Peak Hold Injector' outputs.</li>
+            </ul>
+            <h4 class="device_help">01.05.0004</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Switched Output Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Help>
+<![CDATA[<BODY class="device_help"/>]]>
+   </Help>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The output is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Off Voltage" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The output is off however the measured voltage is below the diagnostic threshold. This may
+              indicate:
+              <ul class="device_help">
+                <li class="device_help">A wiring fault.</li>
+                <li class="device_help">That the load is open circuit.</li>
+              </ul>
+            </p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On Voltage" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The output is on however the measured voltage is above the diagnostic threshold. This may
+              indicate:
+              <ul class="device_help">
+                <li class="device_help">A wiring fault.</li>
+                <li class="device_help">That the load is short circuit.</li>
+              </ul>
+            </p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The output is disabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Fuel Pump Relay Test Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Normal operation (Test is disabled).</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">Pump is driven according to the <em class="device_item">Drive</em> and <em class="device_item">Polarity</em> settings for output test.
+            Other settings are not considered.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Fuel Pump Relay State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Pump operation is off. Output is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Pump operation is on. Output is driven according to the drive setting.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Prime" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">Pump operation is on for priming. Output is driven according to the drive setting.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Hold" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">Pump operation is held on. Output is driven according to the drive setting.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Test" ContainerOrder="4" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">Pump operation is on for testing. Output is driven according to the drive setting.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Fuel Pump Relay Polarity Enumeration" Storage="enum" Default="Normal">
+   <Enum Name="Normal" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The output is driven when the pump is requested to be on.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Inverting" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The output is driven when the pump is requested to be off.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Switched Output Test Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Normal operation (Test is disabled).</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">Output is driven according to the <em class="device_item">Drive</em> setting for output test.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Switched Output State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Output is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Output is driven according to the <em class="device_item">Drive</em> setting.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Test" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">Output is driven according to the <em class="device_item">Drive</em> setting.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Switched Output Polarity Enumeration" Storage="enum" Default="Normal">
+   <Enum Name="Normal" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The output is driven when the output state is on.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Inverting" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The output is driven when the output state is off.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Output"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Output.Switched Output">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class controls a switched output.</p>
+            <h2 class="device_help">Hardware</h2>
+            <h3 class="device_help">Output Resource</h3>
+            <p class="device_help">It is recommended to define this as a parameter in generic applications. For targeted applications it
+              may be set as a constant.</p>
+            <h2 class="device_help">Input</h2>
+            <h3 class="device_help">Test</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h3 class="device_help">Drive</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h3 class="device_help">Polarity</h3>
+            <p class="device_help">Normally a constant set to <em class="device_enum">Normal</em>.</p>
+            <h3 class="device_help">Open Current</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Output Update Event</h3>
+            <p class="device_help">Typically 10Hz or 50Hz.</p>
+            <h3 class="device_help">Voltage Update Event</h3>
+            <p class="device_help">The rate at which the diagnostic voltage is updated.</p>
+            <p class="device_help">Recommend 100Hz.</p>
+            <h2 class="device_help">Methods</h2>
+            <h3 class="device_help">SetState</h3>
+            <p class="device_help">The SetState method sets the output to on or off.</p>
+            <p class="device_help">For example, a switch could be used to enable a relay:</p>
+<pre class="device_help">Start Relay.SetState(Engine.Run Switch eq Engine.Run Switch.On
+	? Output State Enumeration.On
+	: Output State Enumeration.Off
+);</pre>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Output Event" Creation="Custom" Visible="1" TargetCpt="This.Output.Update" TargetRef="SelectedTrigger" DisplayName="Output Event"/>
+         <Property Name="Pin Diagnostic Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Pin.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Pin Diagnostic Diagnostic Log Rate"/>
+         <Property Name="Pin Diagnostic Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Pin.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Pin Diagnostic Diagnostic Logging"/>
+         <Property Name="Test Tags" Creation="Custom" Visible="1" TargetCpt="This.Test" TargetRef="UserTags" DisplayName="Test Tags"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Voltage.Update" TargetRef="SelectedTrigger" DisplayName="Voltage Event"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Drive" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Resource" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Open Current" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Test" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Pin" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Polarity" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">This system operates a switched output, typically to control a relay or other external power
+                    device.</p>
+                  <p class="device_help">The requested state of the output is reported by <em class="device_chan">State</em>.</p>
+                  <p class="device_help">For this system to operate the following requirements must be met:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_item">Output Resource</em> must be configured.</li>
+                      <li class="device_help"><em class="device_param">Drive</em> must be configured.</li>
+                      <li class="device_help"><em class="device_param">Polarity</em> must be configured if exposed.</li>
+                      <li class="device_help"><em class="device_param">Open Current</em> must be configured if a Peak Hold Injector output is used.</li>
+                    </ul>
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Duty Cycle">
+        <Props TargetCreation="AutoChannel" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Frequency">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Output"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information regarding the connector pin voltage measurement.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameTarget="Parent.Parent.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Output">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information regarding the calculation that generated the output waveform.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Pin">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information regarding the properties of the electrical output.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Pin.Diagnostic">
+        <Props DiagnosticLogRate="1S">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Update"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered">
+        <Props DefaultLogRate="100MS">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute">
+        <Props DefaultLogRate="100MS">
+         <List.UserTags>
+          <Entry Value="Output"/>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Output.Frequency.Value">
+        <Props Value="1.20000000000000000e+001"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output.Duty Cycle.Value">
+        <Props DefaultLogRate="1S"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props DefaultLogRate="1S" Type="::This.Switched Output State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Requested output state.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Drive">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Pin.Drive.Value">
+        <Props Value="SAT"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Peak Current">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Hold Current">
+        <Props ValMax="5.00000000000000000e-001" Target="Parent.Parent.Open Current">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Drive">
+        <Props Type="MoTeC Types.Output Drive Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Specifies the type of drive for the output. This is dependant on the vehicle
+                    wiring.</p>
+                  <p class="device_help">High side drive is only supported when a Half Bridge Output resource is selected.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Resource.Value">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Resource">
+        <Props OldName="Output.Resource" NameCreation="AutoParam" NameTarget="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The output resource. Other settings for the output will only be visible when a resource is assigned.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Test.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Test">
+        <Props Type="::This.Switched Output Test Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Can be used for output testing.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Open Current.Value"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Pin.Peak Current.Value">
+        <Props Value="3.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Open Current">
+        <Props Qty="A" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="5.00000000000000000e-001" OldName="Pin.Hold Current" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Open circuit detection threshold. If the current is below this value when the ouput is driven
+                  an open circuit diagnostic will be generated.</p>
+                  <p class="device_help">This setting is only applicable when the output pin type is Peak Hold Injector.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Polarity">
+        <Props Type="::This.Switched Output Polarity Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the output polarity.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.SetState">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="state" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[<   P   >   R   e   q   u   e   s   t   e   d       o   u   t   p   u   t       s   t   a   t   e   <   /   P   >]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[aWYgKE91dHB1dC5Jc0FjdGl2ZSgpKQp7Cglsb2NhbCBvbiA9IGZhbHNlOwoKCWlmIChUZXN0IGVxIFRlc3QuRW5hYmxlZCkKCXsKCQlTdGF0ZSA9IFN0YXRlLlRlc3Q7CgkJb24gPSB0cnVlOwoJfQoJZWxzZSBpZiAoaW4uc3RhdGUpCgl7CgkJU3RhdGUgPSBTdGF0ZS5PbjsKCQlvbiA9IHRydWU7Cgl9CgllbHNlCgl7CgkJU3RhdGUgPSBTdGF0ZS5PZmY7Cgl9CgkKCWlmIChvbikKCXsKCQl3aGVuIChQb2xhcml0eSkKCQl7CgkJCWlzIChOb3JtYWwpCgkJCXsKCQkJCXdoZW4gKERyaXZlKQoJCQkJewoJCQkJCWlzIChMb3cgU2lkZSkKCQkJCQl7CgkJCQkJCU91dHB1dC5EdXR5IEN5Y2xlID0gMC45OTk1OyAvLyBPZmYgZm9yIGFwcHJveCA1MHVzZWMgZm9yIGRpYWdub3N0aWMgdXBkYXRlIHdpdGggc29tZSBvdXRwdXQgdHlwZXMKCQkJCQl9CgkJCQkJaXMgKEhpZ2ggU2lkZSkKCQkJCQl7CgkJCQkJCU91dHB1dC5EdXR5IEN5Y2xlID0gLTAuOTk5NTsgLy8gT2ZmIGZvciBhcHByb3ggNTB1c2VjIGZvciBkaWFnbm9zdGljIHVwZGF0ZSB3aXRoIHNvbWUgb3V0cHV0IHR5cGVzCgkJCQkJfQoJCQkJfQoJCQl9CgkJCWlzIChJbnZlcnRpbmcpCgkJCXsKCQkJCU91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwoJCQl9CgkJfQoJfQoJZWxzZQoJewoJCXdoZW4gKHBvbGFyaXR5KQoJCXsKCQkJaXMgKE5vcm1hbCkKCQkJewoJCQkJT3V0cHV0LkR1dHkgQ3ljbGUgPSAwLjA7CgkJCX0KCQkJaXMgKEludmVydGluZykKCQkJewoJCQkJd2hlbiAoRHJpdmUpCgkJCQl7CgkJCQkJaXMgKExvdyBTaWRlKQoJCQkJCXsKCQkJCQkJT3V0cHV0LkR1dHkgQ3ljbGUgPSAwLjk5OTU7IC8vIE9mZiBmb3IgYXBwcm94IDUwdXNlYyBmb3IgZGlhZ25vc3RpYyB1cGRhdGUgd2l0aCBzb21lIG91dHB1dCB0eXBlcwoJCQkJCX0KCQkJCQlpcyAoSGlnaCBTaWRlKQoJCQkJCXsKCQkJCQkJT3V0cHV0LkR1dHkgQ3ljbGUgPSAtMC45OTk1OyAvLyBPZmYgZm9yIGFwcHJveCA1MHVzZWMgZm9yIGRpYWdub3N0aWMgdXBkYXRlIHdpdGggc29tZSBvdXRwdXQgdHlwZXMKCQkJCQl9CgkJCQl9CgkJCX0KCQl9Cgl9Cn0KZWxzZQp7CglPdXRwdXQuRHV0eSBDeWNsZSA9IDAuMDsKCVN0YXRlID0gU3RhdGUuT2ZmOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Polarity.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Drive.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Resource">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="State"/>
+        <Component Name="Drive">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Test">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Polarity">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Open Current">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Output">
+         <Component Name="Frequency">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Duty Cycle">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+         <Component Name="Input Impedance"/>
+         <Component Name="Input Source"/>
+         <Component Name="Input Bandwidth"/>
+         <Component Name="Input Minimum"/>
+         <Component Name="Input Maximum"/>
+         <Component Name="Input Resolution"/>
+        </Component>
+        <Component Name="Pin">
+         <Component Name="Diagnostic"/>
+         <Component Name="Drive">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Peak Current">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Hold Current"/>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="SetState"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Output.Fuel Pump Relay">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class controls a fuel pump relay output.</p>
+            <h2 class="device_help">Project Integration</h2>
+            <p class="device_help">To run the pump the Update method has to be called. The method has 2 arguments: request and enable.
+            The conditions that set request and enabled in the project should be mentioned in the project help.
+            Examples are given below.</p>
+            <p class="device_help">If enable is false the pump <em class="device_chan">State</em> will be <em class="device_enum">Off</em> independent from the value of request.</p>
+            <p class="device_help">If enable
+              transitions to true and <em class="device_param">Prime</em> is greater than zero the pump will run for 
+              the time specified by <em class="device_param">Prime</em> independent from the
+              value of request. After the time specified by <em class="device_param">Prime</em> is expired or when <em class="device_param">Prime</em> is zero,
+              the value of request
+              becomes relevant: if true the pump will run (<em class="device_chan">State</em> will be <em class="device_enum">On</em>),
+              if false the pump will be or remain switched off.
+            </p>
+            <p class="device_help">Once <em class="device_chan">State</em> is <em class="device_enum">On</em> the following logic applies: if enable becomes false, the pump
+            is immediately switched off independent from the values of request or <em class="device_param">Hold</em>. 
+            If enable is true the pump can be switched off and on with request set to false
+            or true, where the switch off with request=false is delayed by the time specified with <em class="device_param">Hold</em>.
+            </p>
+            <p class="device_help">enable is usually defined by the engine run switch, or if no run switch is implemented then enable
+            is set to true by default (means the pump will prime, when configured, as soon as the ECU is powered).
+            </p>
+            <p class="device_help">request is usually set to true when the engine is turning.
+            </p>
+            <p class="device_help">A typical code integration is as follows:
+            </p>
+<pre class="device_help">local turning = (Engine.Speed.Reference.State eq First Edge)
+    or (Engine.Speed.Reference.State eq First Period)
+    or (Engine.Speed.Reference.State eq Search)
+    or (Engine.Speed.Reference.State eq Pattern Lock)
+    or (Engine.Speed.Reference.State eq Cycle Lock);
+Fuel.Pump.Update(
+	turning,
+	not Engine.Run Switch.IsActive() or (Engine.Run Switch eq Engine.Run Switch.On)
+);</pre>  
+              <h2 class="device_help">Typical Help text to copy into the project Help:
+              </h2>
+              <p class="device_help">The pump will run constantly when the engine is turning/running. 
+              When the engine stops, pump operation will be maintained for <em class="device_param">Hold</em>
+            seconds and then the pump will be switched off.
+              </p>
+            <h3 class="device_help">If an engine run switch (ignition switch) is fitted:</h3>
+            <ul class="device_help">
+              <li class="device_help">Priming commences when the engine run switch is switched on and <em class="device_param">Prime</em> is &gt; 0.</li>
+              <li class="device_help">The pump will not run when the engine run switch is switched off.</li>
+            </ul>
+            <h3 class="device_help">If an engine run switch is not fitted:</h3>
+            <ul class="device_help">
+              <li class="device_help">Priming commences when the ECU is switched on and <em class="device_param">Prime</em> is &gt; 0.</li>
+              <li class="device_help">The pump will not run when the ECU is switched off.</li>
+              </ul>
+            <h2 class="device_help">Hardware</h2>
+            <h3 class="device_help">Output Resource</h3>
+            <p class="device_help">It is recommended to define this as a parameter in generic applications. For targeted applications it
+              may be set as a constant.</p>
+            <h2 class="device_help">Input</h2>
+            <h3 class="device_help">Test</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h3 class="device_help">Prime</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h3 class="device_help">Drive</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h3 class="device_help">Polarity</h3>
+            <p class="device_help">Normally a constant set to <em class="device_enum">Normal</em>.</p>
+            <p class="device_help">It is unusual to require an inverting fuel pump drive, however certain OE systems are configured
+              this way.</p>
+            <h3 class="device_help">Open Current</h3>
+            <p class="device_help">Normally a parameter.</p>
+              <h3 class="device_help">Diagnostic Delay</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h3 class="device_help">Diagnostic Threshold</h3>
+            <p class="device_help">Normally a parameter.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Output Event</h3>
+            <p class="device_help">Typically 10Hz or 50Hz.</p>
+            <h3 class="device_help">Voltage Event</h3>
+            <p class="device_help">The rate at which the diagnostic voltage is updated.</p>
+            <p class="device_help">Recommend 100Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Diagnostic Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic.Value" TargetRef="DiagnosticLogRate" DisplayName="Diagnostic Diagnostic Log Rate"/>
+         <Property Name="Diagnostic Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic.Value" TargetRef="DiagnosticLog" DisplayName="Diagnostic Diagnostic Logging"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Output Event" Creation="Custom" Visible="1" TargetCpt="This.Output.Update" TargetRef="SelectedTrigger" DisplayName="Output Event"/>
+         <Property Name="Test Tags" Creation="Custom" Visible="1" TargetCpt="This.Test" TargetRef="UserTags" DisplayName="Test Tags"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Voltage.Update" TargetRef="SelectedTrigger" DisplayName="Voltage Event"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Prime" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Drive" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Diagnostic" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Diagnostic.Delay" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Diagnostic.Threshold" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Polarity" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Resource" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Test" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Open Current" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Pin" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">This system operates a low pressure fuel pump via a relay or other external power device.</p>
+                  <p class="device_help">For this system to operate the following requirements must be met:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_item">Output Resource</em> must be allocated.</li>
+                      <li class="device_help"><em class="device_item">Drive</em> must be configured.</li>
+                      <li class="device_help"><em class="device_param">Polarity</em> must be configured if exposed.</li>
+                      <li class="device_help"><em class="device_param">Open Current</em> must be configured if a Peak Hold Injector output is used.</li>
+                      <li class="device_help">If prime or hold operation is required, <em class="device_param">Prime</em> or <em class="device_param">Hold</em> must be non-zero.</li>
+                    </ul>
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Hold">
+        <Props Qty="s" Validation="MinMax" ValMin="0.1" ValMax="20.0" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Delay until fuel pump is switched off.</p>
+                  <p class="device_help">Set to 0 to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Prime">
+        <Props Qty="s" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+001" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Fuel pump priming duration.</p>
+                  <p class="device_help">Set to 0 to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.Run Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.Run Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.Run Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Duty Cycle">
+        <Props TargetCreation="AutoChannel" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Frequency">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Output"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameTarget="Parent.Parent.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Output">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute">
+        <Props DefaultLogRate="100MS">
+         <List.UserTags>
+          <Entry Value="Output"/>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered">
+        <Props DefaultLogRate="100MS">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Output.Frequency.Value">
+        <Props Value="0.000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Hold.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Prime.Value"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output.Duty Cycle.Value">
+        <Props>
+         <Locale>
+          <Default Min="-1.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Drive">
+        <Props Type="MoTeC Types.Output Drive Enumeration" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Specifies the type of output drive for the fuel pump relay. This is dependant on the vehicle
+                    wiring.</p>
+                  <p class="device_help">High side drive is only supported when a Half Bridge Output resource is selected.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.Fuel Pump Relay State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Requested fuel pump state.</p>
+                  <p class="device_help">The pump output will be driven when <em class="device_chan">State</em> is not <em class="device_enum">Off</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Update">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="request" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[<p>Set to <em>true</em> to run the fuel pump when enable is <em>true</em> and&nbsp;<em class="device_item">Prime</em> is expired. If set to <em>false</em> the pump will switch off after&nbsp;<em class="device_item">Hold</em> is expired.&nbsp;</p>]]>
+           </Description>
+          </Param>
+          <Param Name="enable" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[<p>Set to <em>true</em> to enable the fuel pump. This will prime the pump for&nbsp;<em class="device_item">Prime</em> seconds.</p><p>Setting to <em>false</em> disables the fuel pump, ignoring <em class="device_item">Hold</em>.</p>]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[This method sets the state of the output.]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[c3RhdGljIGxvY2FsIHByaW1lZCA9IGZhbHNlOwoKd2hlbiAoVGVzdCkKewoJaXMgKEVuYWJsZWQpCgl7CgkJU3RhdGUgPSBTdGF0ZS5UZXN0OwoJfQoJaXMgKERpc2FibGVkKQoJewoJCWlmIChub3QgT3V0cHV0LklzQWN0aXZlKCkgb3IKCQkJbm90IGluLmVuYWJsZSkKCQl7CgkJCXByaW1lZCA9IGZhbHNlOwoJCQlTdGF0ZSA9IFN0YXRlLk9mZjsKCQl9CgkJZWxzZQoJCXsKCQkJd2hlbiAoU3RhdGUpCgkJCXsKCQkJCWlzIChPZmYpCgkJCQl7CgkJCQkJaWYgKG5vdCBwcmltZWQgYW5kCgkJCQkJCVByaW1lID4gMC4wKQoJCQkJCXsKCQkJCQkJUnVuIFRpbWVyLlN0YXJ0KFByaW1lKTsKCQkJCQkJU3RhdGUgPSBTdGF0ZS5QcmltZTsKCQkJCQkJcHJpbWVkID0gdHJ1ZTsKCQkJCQl9CgkJCQkJZWxzZSBpZiAoaW4ucmVxdWVzdCkKCQkJCQl7CgkJCQkJCVN0YXRlID0gU3RhdGUuT247CgkJCQkJfQoJCQkJfQoJCQkJaXMgKE9uKQoJCQkJewoJCQkJCWlmIChub3QgaW4ucmVxdWVzdCkKCQkJCQl7CgkJCQkJCWlmIChIb2xkID4gMC4wKQoJCQkJCQl7CgkJCQkJCQkvKiBjYXRlciBmb3IgUHJpbWUgPiBIb2xkOiBndWFyYW50ZWUgdGhlIHByaW1lIHRpbWUgKi8KCQkJCQkJCWlmIChSdW4gVGltZXIuUmVtYWluaW5nKCkgPD0gQmFzZS5Ib2xkKQoJCQkJCQkJewoJCQkJCQkJCVJ1biBUaW1lci5TdGFydChCYXNlLkhvbGQpOwoJCQkJCQkJfQoJCQkJCQkJU3RhdGUgPSBTdGF0ZS5Ib2xkOwoJCQkJCQl9CgkJCQkJCWVsc2UKCQkJCQkJewoJCQkJCQkJU3RhdGUgPSBTdGF0ZS5PZmY7CgkJCQkJCX0KCQkJCQl9CgkJCQl9CgkJCQlpcyAoUHJpbWUpCgkJCQl7CgkJCQkJaWYgKGluLnJlcXVlc3QpCgkJCQkJewoJCQkJCQlTdGF0ZSA9IFN0YXRlLk9uOwoJCQkJCX0KCQkJCQllbHNlIGlmIChSdW4gVGltZXIuUmVtYWluaW5nKCkgPD0gMC4wKQoJCQkJCXsKCQkJCQkJU3RhdGUgPSBTdGF0ZS5PZmY7CgkJCQkJfQoJCQkJfQoJCQkJaXMgKEhvbGQpCgkJCQl7CgkJCQkJaWYgKGluLnJlcXVlc3QpCgkJCQkJewoJCQkJCQlTdGF0ZSA9IFN0YXRlLk9uOwoJCQkJCX0KCQkJCQllbHNlIGlmIChSdW4gVGltZXIuUmVtYWluaW5nKCkgPD0gMC4wKQoJCQkJCXsKCQkJCQkJU3RhdGUgPSBTdGF0ZS5PZmY7CgkJCQkJfQoJCQkJfQoJCQkJaXMgKFRlc3QpCgkJCQl7CgkJCQkJLyogT25seSByZWFjaGVkIHdoZW4gdHJhbnNpdGlvbmluZyBmcm9tIE1vZGU9VGVzdC0+RW5hYmxlZCAqLwoJCQkJCVN0YXRlID0gU3RhdGUuT2ZmOwoJCQkJfQoJCQl9CgkJfQoJfQp9Cgpsb2NhbCBydW4gPSBmYWxzZTsKd2hlbiAoU3RhdGUpCnsKCWlzIChPZmYpCgl7CgkJd2hlbiAoUG9sYXJpdHkpCgkJewoJCQlpcyAoTm9ybWFsKQoJCQl7CgkJCQlPdXRwdXQuRHV0eSBDeWNsZSA9IDAuMDsKCQkJfQoJCQlpcyAoSW52ZXJ0aW5nKQoJCQl7CgkJCQl3aGVuIChEcml2ZSkKCQkJCXsKCQkJCQlpcyAoTG93IFNpZGUpCgkJCQkJewoJCQkJCQlPdXRwdXQuRHV0eSBDeWNsZSA9IDEuMDsKCQkJCQl9CgkJCQkJaXMgKEhpZ2ggU2lkZSkKCQkJCQl7CgkJCQkJCU91dHB1dC5EdXR5IEN5Y2xlID0gLTEuMDsKCQkJCQl9CgkJCQl9CgkJCX0KCQl9Cgl9CglpcyAoT24gb3IgUHJpbWUgb3IgSG9sZCBvciBUZXN0KQoJewoJCXdoZW4gKFBvbGFyaXR5KQoJCXsKCQkJaXMgKE5vcm1hbCkKCQkJewoJCQkJd2hlbiAoRHJpdmUpCgkJCQl7CgkJCQkJaXMgKExvdyBTaWRlKQoJCQkJCXsKCQkJCQkJT3V0cHV0LkR1dHkgQ3ljbGUgPSAxLjA7CgkJCQkJfQoJCQkJCWlzIChIaWdoIFNpZGUpCgkJCQkJewoJCQkJCQlPdXRwdXQuRHV0eSBDeWNsZSA9IC0xLjA7CgkJCQkJfQoJCQkJfQoJCQl9CgkJCWlzIChJbnZlcnRpbmcpCgkJCXsKCQkJCU91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwoJCQl9CgkJfQoJCXJ1biA9IHRydWU7Cgl9Cn0KCmxvY2FsIE91dHB1dExvdyA9IChWb2x0YWdlIDwgRGlhZ25vc3RpYy5UaHJlc2hvbGQpOwovKgogKiB3aGVuIG5vdCBlbmFibGVkIE91dHB1dExvdyBtYXkgYmUgdHJ1ZSB3aGVuIHRoZSByZWxheSBwb3dlciBpcyBzdXBwbGllZCBieSB0aGUgaWduaXRpb24gY2lyY3VpdCAoZWcgU3ViYXJ1KQogKiBzbyBkb24ndCB0cmVhdCB0aGlzIGFzIE91dHB1dE9uIHRvIHByZXZlbnQgcG9zc2libGUgZmF1bHQgT3V0cHV0T2ZmRmF1bHQgcmVwb3J0aW5nCiAqLwpsb2NhbCBPdXRwdXRPbiA9IChEcml2ZSBlcSBEcml2ZS5IaWdoIFNpZGUpID8gKG5vdCBPdXRwdXRMb3cpIDogKE91dHB1dExvdyBhbmQgaW4uZW5hYmxlKTsKbG9jYWwgT3V0cHV0T25GYXVsdCA9IExpYnJhcnkuRGVsYXkuUmlzaW5nKHJ1biBhbmQgbm90IE91dHB1dE9uLCBEaWFnbm9zdGljLkRlbGF5KTsKbG9jYWwgT3V0cHV0T2ZmRmF1bHQgPSBMaWJyYXJ5LkRlbGF5LlJpc2luZyhub3QgcnVuIGFuZCBPdXRwdXRPbiwgRGlhZ25vc3RpYy5EZWxheSk7CmxvY2FsIE91dHB1dE9LID0gTGlicmFyeS5EZWxheS5SaXNpbmcobm90IChPdXRwdXRPbkZhdWx0IG9yIE91dHB1dE9mZkZhdWx0KSwgMS4wKTsKaWYgKG5vdCBPdXRwdXQuSXNBY3RpdmUoKSkKewoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuTm90IGluIFVzZTsKfQplbHNlIGlmIChPdXRwdXRPbkZhdWx0KQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PbiBWb2x0YWdlOwp9CmVsc2UgaWYgKE91dHB1dE9mZkZhdWx0KQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PZmYgVm9sdGFnZTsKfQplbHNlIGlmIChPdXRwdXRPSykKewoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuT0s7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic.Value">
+        <Props DiagnosticLogRate="1S" Type="::This.Switched Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the status of the output pin hardware.</p>
+                  <p class="device_help">Use this information to detect faults in wiring or the external load (for example a solenoid or
+                    relay).</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Diagnostic.Delay">
+        <Props Qty="s" Validation="MinMax" ValMin="0.1" ValMax="2.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The delay before a diagnostic is reported for an incorrect pin state.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Diagnostic.Delay.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Diagnostic.Threshold">
+        <Props Qty="V" Validation="MinMax" ValMin="1.00000000000000010e-001" ValMax="5.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Threshold to distinguish the pin voltage when the pump is switched on from the pin voltage
+                    when the pump is switched off for pin state fault detection.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Diagnostic">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem monitors the pin voltage.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Diagnostic.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Test">
+        <Props Type="::This.Fuel Pump Relay Test Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Can be used for output testing.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Polarity">
+        <Props Type="::This.Fuel Pump Relay Polarity Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the output polarity.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Pin">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information regarding the properties of the electrical output.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Update"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Pin.Diagnostic">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Drive">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Pin.Drive.Value">
+        <Props Value="SAT"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Peak Current">
+        <Props TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Pin.Hold Current">
+        <Props ValMax="5.00000000000000000e-001" Target="Parent.Parent.Open Current">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Pin.Release"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Resource.Value">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Resource">
+        <Props OldName="Output.Resource" NameCreation="AutoParam" NameTarget="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The output resource. Other settings for the pump will only be visible when a resource is assigned.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Test.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Open Current.Value"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Pin.Peak Current.Value">
+        <Props Value="3.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Open Current">
+        <Props Qty="A" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="5.00000000000000000e-001" OldName="Pin.Hold Current" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Open circuit detection threshold. If the current is below this value when the ouput is driven
+                  an open circuit diagnostic will be generated.</p>
+                  <p class="device_help">This setting is only applicable when the output pin type is Peak Hold Injector.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Polarity.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Resource">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="State"/>
+        <Component Name="Test">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Hold">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Prime">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Drive">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Polarity">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Open Current">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Output">
+         <Component Name="Frequency">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Duty Cycle">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+         <Component Name="Input Impedance"/>
+         <Component Name="Input Source"/>
+         <Component Name="Input Bandwidth"/>
+         <Component Name="Input Minimum"/>
+         <Component Name="Input Maximum"/>
+         <Component Name="Input Resolution"/>
+        </Component>
+        <Component Name="Pin">
+         <Component Name="Diagnostic"/>
+         <Component Name="Drive">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Peak Current">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Hold Current"/>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Diagnostic">
+         <Component Name="Value"/>
+         <Component Name="Delay">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Threshold">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Run Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Output">
+     <Module Name="Switched Output"/>
+     <Module Name="Fuel Pump Relay"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

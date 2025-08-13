@@ -1,0 +1,434 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC E8XX" VersionMajor="1" VersionMinor="2" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0016"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version (01.02.0000)</h4><ul><li><div class="device_help">Update to system 01.04.00.0016</div></li></ul><h4 class="device_help">01.01.0000</h4>
+            <ul class="device_help">
+              <li class="device_help">'E8XX' class imported from 'MoTeC Comms' module.</li>
+              <li class="device_help">Update to system 01.03.17.</li>
+              <li class="device_help">Add tags.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="E8XX Output Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Timeout" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">No E8XX data has been received for longer than 500mS.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fault" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The E8XX is reporting a fault with the output. Refer to the E8XX documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[E8XX message reception is disabled.]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help>
+<![CDATA[The output is operating correctly.]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="E8XX Receive Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Timeout" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No E8XX data has been received for longer than 500mS.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">E8XX message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The E8XX is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid Configuration" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The selected CAN bus is invalid.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.E8XX">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class manages a MoTeC Expander (E888 or E816) device connected via CAN.</p>
+            <p class="device_help">Only a single instance of this class is supported.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <p class="device_help">When <em class="device_enum">Enabled</em> E8XX message reception is enabled.</p>
+            <h3 class="device_help">CAN Bus Input Object</h3>
+            <p class="device_help">Controls the CAN bus used to receive E8XX messages.</p>
+            <h3 class="device_help">CAN ID Base Input Object</h3>
+            <p class="device_help">Sets the CAN ID Base used to receive E8XX messages.</p>
+            <h2 class="device_help">External Dependencies</h2>
+            <p class="device_help">A 'CAN Bus' class is required to initialise the CAN bus.</p>
+            <p class="device_help">Data can be transmitted to the E8XX using the 'CanComms' library functions. Refer to the E8XX
+              documentation for more information.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used to receive E8XX messages.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID Base" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to a single MoTeC Expander (E888 or E816) device connected via
+                    CAN.</p>
+                  <p class="device_help">For data to be received from this device the following items must be calibrated:
+                    <ul class="device_help">
+                      <li class="device_help">Configure <em class="device_param">CAN Bus</em>.</li>
+                      <li class="device_help">Configure <em class="device_param">CAN ID Base</em>.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.E8XX Receive Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the E8XX.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKERpYWdub3N0aWMgZXEgRGlhZ25vc3RpYy5JbnZhbGlkIENvbmZpZ3VyYXRpb24gb3IKCURpYWdub3N0aWMgZXEgRGlhZ25vc3RpYy5Ob3QgaW4gVXNlKQp7CgkvKiBCYWQgY29uZmlndXJhdGlvbiBvciBzd2l0Y2hlZCBvZmYgKi8KfQplbHNlCnsKCVJlY2VpdmUgVGltZSA9IEU4WFguUnhUaWNrc1NpbmNlKCkgKiBTeXN0ZW0uVGlja1BlcmlvZCgpOwoKCWlmIChSZWNlaXZlIFRpbWUgPCAwLjUpCgl7CgkJQ29sZCBKdW5jdGlvbiBDb21wZW5zYXRpb24gMSA9IEU4WFguQ29sZEp1bmN0aW9uKDApOwoJCUNvbGQgSnVuY3Rpb24gQ29tcGVuc2F0aW9uIDIgPSBFOFhYLkNvbGRKdW5jdGlvbigxKTsKCQlJbnRlcm5hbCBUZW1wZXJhdHVyZSA9IEU4WFguQ29sZEp1bmN0aW9uKDIpOwoKCQlleHBhbmQgKG4gPSAxIHRvIDgpCgkJewoJCQlPdXRwdXQgJChuKSBEaWFnbm9zdGljID0gRThYWC5PdXRwdXRGYXVsdCgwKSA/CgkJCQlPdXRwdXQgJChuKSBEaWFnbm9zdGljLkZhdWx0IDoKCQkJCU91dHB1dCAkKG4pIERpYWdub3N0aWMuT0s7CgkJfQoKCQlJbnRlcm5hbCA1ViBBdXggPSBFOFhYLlJhaWw1dkF1eCgpOwoJCUludGVybmFsIDhWIEF1eCA9IEU4WFguUmFpbDh2QXV4KCk7CgkJSW50ZXJuYWwgTmVnYXRpdmUgNVYgPSBFOFhYLlJhaWxNaW51czV2KCk7CgkJSW50ZXJuYWwgNFY1ID0gRThYWC5SYWlsdjQ1KCk7CgkJQmF0dGVyeSBWb2x0YWdlID0gRThYWC5SYWlsdkJhdCgpOwoJCQoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJfQoJZWxzZQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkNBTiBUaW1lb3V0OwoKCQlDb2xkIEp1bmN0aW9uIENvbXBlbnNhdGlvbiAxID0gQ2FsY3VsYXRlLk5BTigpOwoJCUNvbGQgSnVuY3Rpb24gQ29tcGVuc2F0aW9uIDIgPSBDYWxjdWxhdGUuTkFOKCk7CgkJSW50ZXJuYWwgVGVtcGVyYXR1cmUgPSBDYWxjdWxhdGUuTkFOKCk7CgkJCgkJZXhwYW5kIChuID0gMSB0byA4KQoJCXsKCQkJT3V0cHV0ICQobikgRGlhZ25vc3RpYyA9IE91dHB1dCAkKG4pIERpYWdub3N0aWMuQ0FOIFRpbWVvdXQ7CgkJfQoJCQoJCUludGVybmFsIDVWIEF1eCA9IENhbGN1bGF0ZS5OQU4oKTsKCQlJbnRlcm5hbCA4ViBBdXggPSBDYWxjdWxhdGUuTkFOKCk7CgkJSW50ZXJuYWwgTmVnYXRpdmUgNVYgPSBDYWxjdWxhdGUuTkFOKCk7CgkJSW50ZXJuYWwgNFY1ID0gQ2FsY3VsYXRlLk5BTigpOwoJCUJhdHRlcnkgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Receive Time">
+        <Props Qty="s">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="ms" DPS="0" Min="0.00000000000000000e+000" Max="5.00000000000000000e-001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Time since last CAN message was received.</p>
+                  <p class="device_help">This value can be useful for diagnosing CAN reception problems.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Temperature">
+        <Props Qty="K">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="-3.00000000000000000e+001" Max="1.50000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal temperature as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Cold Junction Compensation 1">
+        <Props Qty="K">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="-3.00000000000000000e+001" Max="1.50000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Cold junction compensation 1 temperature as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Cold Junction Compensation 2">
+        <Props Qty="K">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="-3.00000000000000000e+001" Max="1.50000000000000000e+002"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Cold junction compensation 2 temperature as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 1 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 1.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 2 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 2.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 3 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 3.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 4 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 4.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Battery Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="8.00000000000000000e+000" Max="1.60000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Vehicle battery voltage as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal 5V Aux">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="4.00000000000000000e+000" Max="6.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal 5V Aux voltage as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal 8V Aux">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="7.00000000000000000e+000" Max="9.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal 8V Aux voltage as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal 4V5">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="3.50000000000000000e+000" Max="5.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal 4.5V voltage as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Negative 5V">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="-6.00000000000000000e+000" Max="-4.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal Negative 5V voltage as received from the E8XX.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKENBTiBCdXMgbmVxIENBTiBCdXMuTm90IGluIFVzZSkKewoJaWYgKG5vdCBFOFhYLkluaXQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEsIENBTiBJRCBCYXNlKSkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5JbnZhbGlkIENvbmZpZ3VyYXRpb247Cgl9CgllbHNlCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ0FOIFRpbWVvdXQ7Cgl9Cn0KZWxzZQp7CgkvKiBMZWF2ZSBkaWFnbm9zdGljIGF0ICdOb3QgaW4gVXNlJyAqLwp9CgpSZWNlaXZlIFRpbWUgPSBDYWxjdWxhdGUuTkFOKCk7CkNvbGQgSnVuY3Rpb24gQ29tcGVuc2F0aW9uIDEgPSBDYWxjdWxhdGUuTkFOKCk7CkNvbGQgSnVuY3Rpb24gQ29tcGVuc2F0aW9uIDIgPSBDYWxjdWxhdGUuTkFOKCk7CkludGVybmFsIFRlbXBlcmF0dXJlID0gQ2FsY3VsYXRlLk5BTigpOwoKaWYgKERpYWdub3N0aWMgZXEgRGlhZ25vc3RpYy5DQU4gVGltZW91dCkKewoJZXhwYW5kIChuID0gMSB0byA4KQoJewoJCU91dHB1dCAkKG4pIERpYWdub3N0aWMgPSBPdXRwdXQgJChuKSBEaWFnbm9zdGljLkNBTiBUaW1lb3V0OwoJfQp9CgpJbnRlcm5hbCA1ViBBdXggPSBDYWxjdWxhdGUuTkFOKCk7CkludGVybmFsIDhWIEF1eCA9IENhbGN1bGF0ZS5OQU4oKTsKSW50ZXJuYWwgTmVnYXRpdmUgNVYgPSBDYWxjdWxhdGUuTkFOKCk7CkludGVybmFsIDRWNSA9IENhbGN1bGF0ZS5OQU4oKTsKQmF0dGVyeSBWb2x0YWdlID0gQ2FsY3VsYXRlLk5BTigpOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 5 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 5.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 6 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 6.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 7 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 7.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 8 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about E8XX output 8.</p>
+                  <p class="device_help">Refer to the E8XX documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID Base">
+        <Props Type="u32" Validation="MinMax" ValMin="240" ValMax="252" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Format="Hex"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN ID used to receive E8XX messages.</p>
+                  <p class="device_help"><em class="device_help">This value must be 0xf0, 0xf4, 0xf8 or 0xfc.</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN ID Base.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN ID Base">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Diagnostic"/>
+        <Component Name="Receive Time"/>
+        <Component Name="Internal Temperature"/>
+        <Component Name="Cold Junction Compensation 1"/>
+        <Component Name="Cold Junction Compensation 2"/>
+        <Component Name="Output 1 Diagnostic"/>
+        <Component Name="Output 2 Diagnostic"/>
+        <Component Name="Output 3 Diagnostic"/>
+        <Component Name="Output 4 Diagnostic"/>
+        <Component Name="Output 5 Diagnostic"/>
+        <Component Name="Output 6 Diagnostic"/>
+        <Component Name="Output 7 Diagnostic"/>
+        <Component Name="Output 8 Diagnostic"/>
+        <Component Name="Battery Voltage"/>
+        <Component Name="Internal 5V Aux"/>
+        <Component Name="Internal 8V Aux"/>
+        <Component Name="Internal 4V5"/>
+        <Component Name="Internal Negative 5V"/>
+        <Component Name="Startup"/>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="E8XX"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

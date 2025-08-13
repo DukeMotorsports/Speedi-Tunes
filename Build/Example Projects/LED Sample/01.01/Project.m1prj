@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<MoTeCM1BuildSession Locale="English_Australia.1252" DefaultLocale="C" ProductName="M1Build" ProductVersion="1.4.0.80">
+ <Project FileFormat="10103" Name="LED Sample" VersionMajor="1" VersionMinor="1" BuildNumber="0" Author="Example Man" Company="MoTeC Pty. Ltd." ContactNo="+61 3 9761 5050" Address="121 merrindale Drive, Croydon South, VIC 3136, Australia" Email="support@motec.com.au" SupportURL="www.motec.com.au" Copyright="MoTeC" TargetHardware="ecu60" SecurityLevel="Off" DiagnosticLoggingCondition="">
+  <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0016" SelectedRelease="0"/>
+  <DataTypes>
+   <Type Name="Waveform Type" Storage="enum" Default="Sawtooth">
+    <Enum Name="Sawtooth" ContainerOrder="0">
+     <Help>
+<![CDATA[]]>
+     </Help>
+    </Enum>
+    <Enum Name="Square" ContainerOrder="1">
+     <Help>
+<![CDATA[]]>
+     </Help>
+    </Enum>
+    <Enum Name="Sine" ContainerOrder="2">
+     <Help>
+<![CDATA[]]>
+     </Help>
+    </Enum>
+   </Type>
+  </DataTypes>
+  <PkgUpgrades>
+   <Project Name="LED Example" Version="Stage 1" Major="1" Minor="1" Build="0"/>
+  </PkgUpgrades>
+  <Build PackageSignKey="MoTeC AU Applications.M1.Package.Development 01.04.00"/>
+  <ComponentStream>
+   <List>
+    <Component Classname="BuiltIn.GroupLeaf" Name="Root">
+     <Comment>
+<![CDATA[]]>
+     </Comment>
+    </Component>
+    <Component Classname="BuiltIn.Channel" Name="Root.Counter">
+     <Props>
+      <List.UserTags>
+       <Entry Value="Vehicle"/>
+       <Entry Value="Normal"/>
+      </List.UserTags>
+      <Locale>
+       <Default Min="0.00000000000000000e+000" Max="3.60000000000000000e+002"/>
+      </Locale>
+     </Props>
+     <Comment>
+<![CDATA[]]>
+     </Comment>
+    </Component>
+    <Component Classname="BuiltIn.FuncUser" Filename="Counter Operation.m1scr" Name="Root.Counter Operation">
+     <Props SelectedTrigger="Parent.Events.On 100Hz"/>
+    </Component>
+    <Component Classname="BuiltIn.GroupCompound" Name="Root.Events">
+     <Comment>
+<![CDATA[]]>
+     </Comment>
+    </Component>
+    <Component Classname="BuiltIn.EventKernel" Name="Root.Events.On 100Hz">
+     <Props EventResource="res.knl.10MS"/>
+    </Component>
+    <Component Classname="BuiltIn.Parameter" Name="Root.Type">
+     <Props Type="::This.Waveform Type">
+      <List.UserTags>
+       <Entry Value="Vehicle"/>
+       <Entry Value="Tune"/>
+      </List.UserTags>
+     </Props>
+     <Comment>
+<![CDATA[]]>
+     </Comment>
+    </Component>
+   </List>
+   <Organisation>
+    <Component Name="Root">
+     <Component Name="Events">
+      <Component Name="On 100Hz"/>
+     </Component>
+     <Component Name="Counter"/>
+     <Component Name="Counter Operation"/>
+     <Component Name="Type"/>
+    </Component>
+   </Organisation>
+  </ComponentStream>
+  <SecurityMgr>
+   <SecurityRoles>
+    <SecurityRole Name="Default Security Group"/>
+   </SecurityRoles>
+  </SecurityMgr>
+  <Users>
+   <User Id="MoTeC.M1.Firmware.Default">
+    <Permissions>
+     <LogData>
+      <Permission Flags="17" Index="0"/>
+      <Permission Flags="17" Index="1"/>
+      <Permission Flags="17" Index="2"/>
+      <Permission Flags="17" Index="3"/>
+      <Permission Flags="17" Index="4"/>
+      <Permission Flags="17" Index="5"/>
+      <Permission Flags="17" Index="6"/>
+      <Permission Flags="17" Index="7"/>
+     </LogData>
+     <ManageUsers Flags="4"/>
+     <Kernel Flags="4"/>
+     <Firmware Flags="68"/>
+     <Enables Flags="4"/>
+     <Login Flags="8"/>
+     <Clone Flags="8"/>
+     <EditPassword Flags="12"/>
+     <EditWorkbooks Flags="2"/>
+     <EditECUName Flags="6"/>
+     <LogErase>
+      <Permission Flags="12" Index="0"/>
+      <Permission Flags="12" Index="1"/>
+      <Permission Flags="12" Index="2"/>
+      <Permission Flags="12" Index="3"/>
+      <Permission Flags="12" Index="4"/>
+      <Permission Flags="12" Index="5"/>
+      <Permission Flags="12" Index="6"/>
+      <Permission Flags="12" Index="7"/>
+     </LogErase>
+     <LogSetup>
+      <Permission Flags="15" Index="0"/>
+      <Permission Flags="15" Index="1"/>
+      <Permission Flags="15" Index="2"/>
+      <Permission Flags="15" Index="3"/>
+      <Permission Flags="15" Index="4"/>
+      <Permission Flags="15" Index="5"/>
+      <Permission Flags="15" Index="6"/>
+      <Permission Flags="15" Index="7"/>
+     </LogSetup>
+    </Permissions>
+    <UserRoles>
+     <UserRole Name="Default Security Group" AccessType="2"/>
+    </UserRoles>
+    <AuthAnonymous Id="MoTeC.M1.Firmware.Default"/>
+   </User>
+  </Users>
+ </Project>
+</MoTeCM1BuildSession>

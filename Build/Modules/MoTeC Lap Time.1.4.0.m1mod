@@ -1,0 +1,933 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Lap Time" VersionMajor="1" VersionMinor="4" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0018"/>
+ <BuildHelp>
+<![CDATA[<H3>Latest Version</H3>
+<UL>
+<LI>Rewrite Lap time calculations
+<LI>Add Lap Number
+<LI>Add Lap Section time
+<LI>Add Lap.Reset()</LI></UL>
+<H3>01.03.0005</H3>
+<UL>
+<LI>Start adding release notes</LI></UL>]]>
+ </BuildHelp>
+ <DataTypes>
+  <Type Name="BR2 Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Help>
+<![CDATA[<BODY></BODY>]]>
+   </Help>
+   <Enum Name="OK" ContainerOrder="4">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Configuration Version" ContainerOrder="6" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Configuration CRC" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Hardware" ContainerOrder="8" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Warning" ContainerOrder="5" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="EE Write Failure" ContainerOrder="9" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Output Diagnostic" ContainerOrder="10" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Receiver Noise" ContainerOrder="11" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal Error" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus Timeout" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid CAN Bus" ContainerOrder="0" Tags="Fault"/>
+   <Enum Name="Not in Use" ContainerOrder="3"/>
+  </Type>
+  <Type Name="Lap State Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0"/>
+   <Enum Name="Pit" ContainerOrder="1"/>
+   <Enum Name="Out Lap" ContainerOrder="2"/>
+   <Enum Name="Timed Lap" ContainerOrder="3"/>
+  </Type>
+  <Type Name="Lap Beacon Mode Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[Lap timing is not in use]]>
+    </Help>
+   </Enum>
+   <Enum Name="BR2" ContainerOrder="1">
+    <Help>
+<![CDATA[Use a MoTeC BR2 connected via a CAN bus]]>
+    </Help>
+   </Enum>
+   <Enum Name="Switched Input" ContainerOrder="2">
+    <Help>
+<![CDATA[Use a pulsed beacon output connected to a digital input]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <DependantModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="3" VersionBuild="1"/>
+ </DependantModules>
+ <Modules>
+  <TemplateStream>
+   <List>
+    <TemplateGroup Name="Calculations"/>
+    <TemplateGroup Name="Upcoming"/>
+    <TemplateGroup Name="Upcoming.Calculations"/>
+    <Template Base="BuiltIn.GroupCompound" Name="Calculations.Lap Time">
+     <BuildHelp>
+<![CDATA[<P>This module implements Lap Time calculation using a MoTeC BR2 or switched input.</P>
+<P>The following optional features that can be setup from properties page:</P>
+<UL>
+<LI>Mode: Used to Enable or Disable the beacon input. When disabled this prevents fault reporting. This feature can be exposed as a parameter or changed to a constant.</LI></UL>
+<P>Usage:</P>
+<UL>
+<LI>Add this module as <EM>Lap</EM> at the root level of the project 
+<LI>Add a call to Lap.Reset() in the project</LI></UL>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.BR2.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Input.Main" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Input.Split" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Main.Voltage" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Beacon.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Beacon.Main" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Beacon.Ignore Time" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Main.Pin" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Split.Pin" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Vehicle Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Time">
+        <Props DefaultLogRate="1S" Qty="s" Validation="MinMax" ValMin="0.000000e+000" ValClampMax="false">
+         <Locale>
+          <Default DPS="3" Min="0.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Lap time for the last timed lap]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Running">
+        <Props Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The time the vehicle has been moving:</P>
+<UL>
+<LI>When <EM>State </EM>is <EM>Out Lap </EM>this is the time since <EM>Vehicle Speed </EM>increased from 0 
+<LI>When <EM>State </EM>is <EM>Timed Lap </EM>this is the time since the last Lap beacon 
+<LI>When <EM>Vehicle Speed </EM>drops to 0 the calculation is paused and represents the time for the "In Lap"</LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Split">
+        <Props DefaultLogRate="1S" Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The split time of the current lap. Calculated as follows:</P>
+<UL>
+<LI>time from the lap beacon to the most recent split beacon, or 
+<LI>time from leaving the pit to the most recent split beacon, or 
+<LI>time from leaving the pit to the first lap beacon (Out Lap time)</LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.Lap State Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>The state of the lap timing system:</P>
+<UL>
+<LI><EM>Disabled </EM>when <EM>Enable </EM>is <EM>Disabled </EM>
+<LI><EM>Pit </EM>when <EM>Vehicle Speed </EM>is 0 for 2 seconds 
+<LI><EM>Out Lap </EM>when <EM>Vehicle Speed &gt;</EM> 0 until the first lap beacon 
+<LI><EM>Timed Lap </EM>when performing normal lap timing after the first lap beacon</LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Vehicle Speed">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Used to detect when the vehicle is stopped]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.BR2">
+        <Comment>
+<![CDATA[Information and settings for the MoTeC BR2 beacon receiver]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Battery Voltage">
+        <Props Qty="V"/>
+        <Comment>
+<![CDATA[Battery voltage at the BR2]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Beacon Count">
+        <Props Type="u32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max="255"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Number of unique beacons that have been detected.</P>
+<P>This includes all known types of beacon transmitters.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Beacon Number Main">
+        <Props DefaultLogRate="1S" Type="s32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Beacon"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>The number of the main beacon</P>
+<P>Used to identify the main beacon when calculating lap times from data logging. Required by MoTeC i2 lap calculations.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Beacon Ticks">
+        <Props Type="u32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Beacon"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The system "ticks" at which the most recent beacon was detected.</P>
+<P>Used to calculate lap timing in the ECU and data logging. Required by MoTeC i2 lap calculations.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Beacon Number">
+        <Props Type="s32">
+         <List.UserTags>
+          <Entry Value="Beacon"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>The number of the most recent beacon</P>
+<P>Used to calculate lap and split timing in the ECU and data logging. Required by MoTeC i2 lap calculations.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Bias">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="2.00000000000000000e+000" Max="3.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Detection Time">
+        <Props Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="ms" DPS="0" Min="0.000000e+000" Max="1.000000e-001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The amount of time the beacon signal was received.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Detector Background">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Error Code">
+        <Props Type="u32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Firmware Version">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Internal 10V">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Internal 12V">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Internal Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[Temperature inside BR2]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Latest Detector Peak">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Noise Bits">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Reset Source">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Secondary Threshold">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Diagnostic">
+        <Props Type="::This.BR2 Diagnostic Enumeration"/>
+        <Comment>
+<![CDATA[<P>Diagnostic information for the BR2.</P>
+<P>This is calculated from <EM>Error Code. </EM></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Trigger Threshold">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Valid Receptions">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max="30"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Number of times the beacon pattern was received.</P>
+<P>This is an indication of the quality of the beacon signal</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.BR2.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration" TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Detector Peak">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>BR2 internal voltage for diagnostics</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Distance.Distance">
+        <Props Qty="m" ValMin="0.00000000000000000e+000" ValMax="0.00000000000000000e+000">
+         <Locale>
+          <Default Unit="km"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Distance into current lap]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Beacon.Mode">
+        <Props Type="::This.Lap Beacon Mode Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Selects the mode of operation of the Lap timing system.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Distance.Session">
+        <Props Qty="m" ValMin="0.00000000000000000e+000" ValMax="0.00000000000000000e+000">
+         <Locale>
+          <Default Unit="km"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Total Distance travelled in the session</P>
+<UL>
+<LI>Starts at 0 when ECU starts 
+<LI>Set to 0 when <EM>Lap State </EM><STRONG>is </STRONG><EM>Disabled</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Distance">
+        <Props UseDefValue="true" DefValue="This.Distance"/>
+        <Comment>
+<![CDATA[This group contains the calculated lap distance information.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgc3RvcHBlZCA9IERlbGF5LlJpc2luZyhWZWhpY2xlIFNwZWVkIDw9IDAuMCwgMi4wKTsgLyogbm90IHN0b3BwZWQgd2hlbiBWZWhpY2xlIFNwZWVkIGlzIE5hTiAqLwpzdGF0aWMgbG9jYWwgUHJldkJlYWNvblRpY2tzID0gMHgwOyAvKiB1bnNpZ25lZCAqLwpzdGF0aWMgbG9jYWwgTGFwQmVhY29uVGlja3MgPSAweDA7IC8qIHVuc2lnbmVkICovCnN0YXRpYyBsb2NhbCBMYXBTdGFydERpc3RhbmNlID0gMC4wOwpsb2NhbCBldCA9IFN5c3RlbS5FbGFwc2VkVGltZSgpOwpsb2NhbCBEaXN0YW5jZURlbHRhID0gVmVoaWNsZSBTcGVlZCAqIGV0OwoKd2hlbiAoU3RhdGUpCnsKCWlzIChEaXNhYmxlZCkKCXsKCQlUaW1lID0gMC4wOwoJCVRpbWUuUnVubmluZyA9IDAuMDsKCQlUaW1lLlN0b3BwZWQgPSAwLjA7CgkJVGltZS5TZWN0b3IgPSAwLjA7CgkJVGltZS5TcGxpdCA9IDAuMDsKCQlEaXN0YW5jZSA9IDAuMDsKCQlEaXN0YW5jZS5TZXNzaW9uID0gMC4wOwoJCU51bWJlciA9IDA7CgkJTnVtYmVyLlNlc3Npb24gPSAwOwoJCWlmIChFbmFibGUgZXEgRW5hYmxlLkVuYWJsZWQpCgkJewoJCQlTdGF0ZSA9IFN0YXRlLlBpdDsKCQl9Cgl9CglpcyAoUGl0KQoJewoJCVRpbWUuU3RvcHBlZCArPSBldDsKCQlpZiAoRW5hYmxlIGVxIEVuYWJsZS5EaXNhYmxlZCkKCQl7CgkJCVN0YXRlID0gU3RhdGUuRGlzYWJsZWQ7CgkJfQoJCWVsc2UgaWYgKG5vdCBzdG9wcGVkKQoJCXsKCQkJTnVtYmVyID0gMDsKCQkJTGFwQmVhY29uVGlja3MgPSBTeXN0ZW0uVGlja3MoKTsKCQkJTGFwU3RhcnREaXN0YW5jZSA9IERpc3RhbmNlLlNlc3Npb247CgkJCVN0YXRlID0gU3RhdGUuT3V0IExhcDsKCQl9Cgl9CglpcyAoT3V0IExhcCBvciBUaW1lZCBMYXApCgl7CgkJaWYgKEVuYWJsZSBlcSBFbmFibGUuRGlzYWJsZWQpCgkJewoJCQlTdGF0ZSA9IFN0YXRlLkRpc2FibGVkOwoJCX0KCQllbHNlIGlmIChQcmV2QmVhY29uVGlja3MgbmVxIEJlYWNvbiBUaWNrcykKCQl7CgkJCWxvY2FsIEJlYWNvbkRlbHRhID0gU3lzdGVtLlRpY2tzQmV0d2VlbihQcmV2QmVhY29uVGlja3MsIEJlYWNvbiBUaWNrcykgKiBTeXN0ZW0uVGlja1BlcmlvZCgpOwoJCQlsb2NhbCBMYXBEZWx0YSA9IFN5c3RlbS5UaWNrc0JldHdlZW4oTGFwQmVhY29uVGlja3MsIEJlYWNvbiBUaWNrcykgKiBTeXN0ZW0uVGlja1BlcmlvZCgpOwoJCQlsb2NhbCBMYXBCZWFjb25FdmVudCA9IChCZWFjb24gTnVtYmVyIGVxIEJlYWNvbi5NYWluKQoJCQkJb3IgKEJlYWNvbi5NYWluIGVxIDApOyAvKiB1c2UgYW55IGJlYWNvbiAqLwoKCQkJaWYgKExhcEJlYWNvbkV2ZW50KQoJCQl7CgkJCQlOdW1iZXIgKz0gMTsKCQkJCU51bWJlci5TZXNzaW9uICs9IDE7CgkJCQlpZiAoU3RhdGUgZXEgU3RhdGUuVGltZWQgTGFwKQoJCQkJewoJCQkJCVRpbWUgPSBMYXBEZWx0YTsKCQkJCQlpZiAoQmVhY29uRGVsdGEgPCBMYXBEZWx0YSkKCQkJCQl7CgkJCQkJCVRpbWUuU2VjdG9yID0gQmVhY29uRGVsdGE7CgkJCQkJfQoJCQkJfQoJCQkJZWxzZQoJCQkJewoJCQkJCVRpbWUuU3BsaXQgPSBMYXBEZWx0YTsKCQkJCQlTdGF0ZSA9IFN0YXRlLlRpbWVkIExhcDsKCQkJCX0KCQkJCUxhcEJlYWNvblRpY2tzID0gQmVhY29uIFRpY2tzOwoJCQkJTGFwU3RhcnREaXN0YW5jZSA9IERpc3RhbmNlLlNlc3Npb247CgkJCX0KCQkJZWxzZQoJCQl7CgkJCQlUaW1lLlNlY3RvciA9IChCZWFjb25EZWx0YSA8IExhcERlbHRhKSA/IEJlYWNvbkRlbHRhIDogTGFwRGVsdGE7CgkJCQlUaW1lLlNwbGl0ID0gTGFwRGVsdGE7CgkJCX0KCQl9CgkJZWxzZSBpZiAoc3RvcHBlZCkKCQl7CgkJCVN0YXRlID0gU3RhdGUuUGl0OwoJCX0KCQlsb2NhbCBUaW1lUnVubmluZyA9IFN5c3RlbS5UaWNrc0JldHdlZW4oTGFwQmVhY29uVGlja3MsIFN5c3RlbS5UaWNrcygpKSAqIFN5c3RlbS5UaWNrUGVyaW9kKCk7CgkJaWYgKFZlaGljbGUgU3BlZWQgPiAwKQoJCXsKCQkJVGltZS5SdW5uaW5nID0gVGltZVJ1bm5pbmc7CgkJfQoJCWVsc2UgaWYgKFRpbWVSdW5uaW5nID4gNSkKCQl7CgkJCVRpbWUuU3RvcHBlZCA9IFRpbWVSdW5uaW5nIC0gVGltZS5SdW5uaW5nOwoJCX0KCQlEaXN0YW5jZS5TZXNzaW9uICs9IERpc3RhbmNlRGVsdGE7CgkJRGlzdGFuY2UgPSBEaXN0YW5jZS5TZXNzaW9uIC0gTGFwU3RhcnREaXN0YW5jZTsKCX0KfQpQcmV2QmVhY29uVGlja3MgPSBCZWFjb24gVGlja3M7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.BR2.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.BR2.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoQmVhY29uLk1vZGUpCnsKCWlzIChTd2l0Y2hlZCBJbnB1dCkKCXsKCQlpZiAoQmFzZS5NYWluLkVkZ2UuSXNBY3RpdmUoKSkKCQl7CgkJCVBhcmVudC5CZWFjb24gTnVtYmVyIE1haW4gPSBQYXJlbnQuQmVhY29uLk1haW47CgkJfQoJfQoJaXMgKEJSMikKCXsKCQlsb2NhbCBvayA9IEJSMi5Jbml0KENBTiBCdXMuQXNJbnRlZ2VyKCksIFBhcmVudC5CZWFjb24uTWFpbik7CgkJaWYgKG5vdCBvaykKCQl7CgkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludmFsaWQgQ0FOIEJ1czsKCQl9CgkJZWxzZQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuT0s7CgkJfQkKCgkJUGFyZW50LkJlYWNvbiBOdW1iZXIgTWFpbiA9IFBhcmVudC5CZWFjb24uTWFpbjsKCX0KCWlzIChEaXNhYmxlZCkKCXsKCQkvLyBlbHNlIGhvbGQgTm90IGluIFVzZQoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.BR2.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKEJlYWNvbi5Nb2RlIGVxIEJlYWNvbi5Nb2RlLlN3aXRjaGVkIElucHV0KQp7CglzdGF0aWMgbG9jYWwgbWFpbkVkZ2VQcmV2aW91cyA9IDB4MDsKCXN0YXRpYyBsb2NhbCBzcGxpdEVkZ2VQcmV2aW91cyA9IDB4MDsKCWlmIChCYXNlLk1haW4uRWRnZSBuZXEgbWFpbkVkZ2VQcmV2aW91cykKCXsKCQlsb2NhbCBCZWFjb25EZWx0YSA9IFN5c3RlbS5UaWNrc0JldHdlZW4oUGFyZW50LkJlYWNvbiBUaWNrcywgQmFzZS5NYWluLkVkZ2UpICogU3lzdGVtLlRpY2tQZXJpb2QoKTsKCQlpZiAoKFBhcmVudC5CZWFjb24uTWFpbiBuZXEgUGFyZW50LkJlYWNvbiBOdW1iZXIpIG9yIChCZWFjb25EZWx0YSA+IFBhcmVudC5CZWFjb24uSWdub3JlIFRpbWUpKQoJCXsKCQkJUGFyZW50LkJlYWNvbiBOdW1iZXIgPSBQYXJlbnQuQmVhY29uLk1haW47CgkJCVBhcmVudC5CZWFjb24gVGlja3MgPSBCYXNlLk1haW4uRWRnZTsKCQl9Cgl9CgllbHNlIGlmIChCYXNlLlNwbGl0LkVkZ2UgbmVxIHNwbGl0RWRnZVByZXZpb3VzIGFuZCBQYXJlbnQuQmVhY29uLk1haW4gPiAwKQoJewoJCWxvY2FsIEJlYWNvbkRlbHRhID0gU3lzdGVtLlRpY2tzQmV0d2VlbihQYXJlbnQuQmVhY29uIFRpY2tzLCBCYXNlLlNwbGl0LkVkZ2UpICogU3lzdGVtLlRpY2tQZXJpb2QoKTsKCQlpZiAoKChQYXJlbnQuQmVhY29uLk1haW4gKyAxKSBuZXEgUGFyZW50LkJlYWNvbiBOdW1iZXIpIG9yIChCZWFjb25EZWx0YSA+IFBhcmVudC5CZWFjb24uSWdub3JlIFRpbWUpKQoJCXsKCQkJUGFyZW50LkJlYWNvbiBOdW1iZXIgPSBQYXJlbnQuQmVhY29uLk1haW4gKyAxOwoJCQlQYXJlbnQuQmVhY29uIFRpY2tzID0gQmFzZS5TcGxpdC5FZGdlOwoJCX0KCX0KCW1haW5FZGdlUHJldmlvdXMgPSBCYXNlLk1haW4uRWRnZTsKCXNwbGl0RWRnZVByZXZpb3VzID0gQmFzZS5TcGxpdC5FZGdlOwp9CmVsc2UgaWYgKERpYWdub3N0aWMgZXEgRGlhZ25vc3RpYy5JbnZhbGlkIENBTiBCdXMgb3IgRGlhZ25vc3RpYyBlcSBEaWFnbm9zdGljLk5vdCBpbiBVc2UpCnsKCS8qIEZpcm13YXJlIHJlc3RhcnQgcmVxdWlyZWQgdG8gZml4IHRoaXMgKi8KfQplbHNlIGlmIChCUjIuVGltZW91dCgpKQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gQnVzIFRpbWVvdXQ7CgkvKgoJICogSG9sZCBwcmV2aW91cyB2YWx1ZSBvbiBmYXVsdCwgd2Ugbm8gbG9uZ2VyIHB1c2ggaW52YWxpZCB2YWx1ZXMgaW50byBjaGFubmVscyB0byBpbmRpY2F0ZSBmYXVsdHMsCgkgKiBhbnkgY29kZSB0aGF0IHJlbGllcyBvbiB0aGlzIG1vZHVsZSBzaG91bGQgY2hlY2sgdGhlIFN0YXR1cyBjaGFubmVsCgkgKi8KfQplbHNlCnsKCS8qIFVwZGF0ZSBEaWFnbm9zdGljICovCglFcnJvciBDb2RlID0gQlIyLkVycm9yQ29kZSgpOwoJaWYgKEVycm9yIENvZGUgZXEgMCkgewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJfSBlbHNlIGlmIChFcnJvciBDb2RlIGVxIDEwKSB7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ29uZmlndXJhdGlvbiBWZXJzaW9uOwoJfSBlbHNlIGlmIChFcnJvciBDb2RlIGVxIDExKSB7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ29uZmlndXJhdGlvbiBDUkM7Cgl9IGVsc2UgaWYgKEVycm9yIENvZGUgZXEgMzEpIHsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gSGFyZHdhcmU7Cgl9IGVsc2UgaWYgKEVycm9yIENvZGUgZXEgMzQpIHsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gV2FybmluZzsKCX0gZWxzZSBpZiAoRXJyb3IgQ29kZSBlcSA0MikgewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkVFIFdyaXRlIEZhaWx1cmU7Cgl9IGVsc2UgaWYgKEVycm9yIENvZGUgZXEgMTAwKSB7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuT3V0cHV0IERpYWdub3N0aWM7Cgl9IGVsc2UgaWYgKEVycm9yIENvZGUgZXEgMTAxKSB7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuUmVjZWl2ZXIgTm9pc2U7Cgl9IGVsc2UgewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludGVybmFsIEVycm9yOwoJfQoKCUJhdHRlcnkgVm9sdGFnZSA9IEJSMi5CYXR0ZXJ5Vm9sdGFnZSgpOwoJQmlhcyA9IEJSMi5CaWFzKCk7CglEZXRlY3RvciBCYWNrZ3JvdW5kID0gQlIyLkRldGVjdG9yQmFja2dyb3VuZCgpOwoJRmlybXdhcmUgVmVyc2lvbiA9IEJSMi5GaXJtd2FyZVZlcnNpb24oKTsKCUludGVybmFsIDEwViA9IEJSMi5JbnRlcm5hbDEwVigpOwoJSW50ZXJuYWwgMTJWID0gQlIyLkludGVybmFsMTJWKCk7CglJbnRlcm5hbCBUZW1wZXJhdHVyZSA9IEJSMi5JbnRlcm5hbFRlbXBlcmF0dXJlKCk7CglMYXRlc3QgRGV0ZWN0b3IgUGVhayA9IEJSMi5MYXRlc3REZXRlY3RvclBlYWsoKTsKCU5vaXNlIEJpdHMgPSBCUjIuTm9pc2VCaXRzKCk7CglSZXNldCBTb3VyY2UgPSBCUjIuUmVzZXRTb3VyY2UoKTsKCVNlY29uZGFyeSBUaHJlc2hvbGQgPSBCUjIuU2Vjb25kYXJ5VGhyZXNob2xkKCk7CglUcmlnZ2VyIFRocmVzaG9sZCA9IEJSMi5UcmlnZ2VyVGhyZXNob2xkKCk7CglWYWxpZCBSZWNlcHRpb25zID0gQlIyLlZhbGlkUmVjZXB0aW9ucygpOwoJRGV0ZWN0b3IgUGVhayA9IEJSMi5EZXRlY3RvclBlYWsoKTsKCURldGVjdGlvbiBUaW1lID0gQlIyLkRldGVjdGlvblRpbWUoKTsKCUJlYWNvbiBDb3VudCA9IEJSMi5CZWFjb25Db3VudCgpOwoJCglpZiAoQlIyLkJlYWNvbigpKQoJewoJCWxvY2FsIHQgPSBCUjIuQmVhY29uVGlja3MoKTsKCQlsb2NhbCBuID0gQlIyLkJlYWNvbk51bWJlcigpOwoJCWxvY2FsIEJlYWNvbkRlbHRhID0gU3lzdGVtLlRpY2tzQmV0d2VlbihQYXJlbnQuQmVhY29uIFRpY2tzLCB0KSAqIFN5c3RlbS5UaWNrUGVyaW9kKCk7CgkJaWYgKChuIG5lcSBQYXJlbnQuQmVhY29uIE51bWJlcikKCQkJb3IgKEJlYWNvbkRlbHRhID4gUGFyZW50LkJlYWNvbi5JZ25vcmUgVGltZSkpCgkJewoJCQlQYXJlbnQuQmVhY29uIE51bWJlciA9IG47CgkJCVBhcmVudC5CZWFjb24gVGlja3MgPSB0OwoJCX0KCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Number.Number">
+        <Props DefaultLogRate="1S" Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" ValMax="0">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Number of laps in outing.</P>
+<P>Set to 0 when <EM>State </EM>changes from <EM>Pit </EM>to <EM>Out Lap</EM></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.SetEnable">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Enable" Type="bool" Attrs="0">
+           <Description Encoding="base64">
+<![CDATA[PFA+V2hlbiZuYnNwOzxTVFJPTkc+RW5hYmxlIGlzIGZhbHNlPC9TVFJPTkc+IHRoZSBmb2xsb3dpbmcgdmFsdWVzIGFyZSByZXNldDo8L1A+CjxVTD4KPExJPjxFTT5MYXAgTnVtYmVyPC9FTT4gCjxMST48RU0+T3V0aW5nIERpc3RhbmNlPC9FTT48L0xJPjwvVUw+]]>
+           </Description>
+          </Param>
+         </Params>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[aWYgKGluLkVuYWJsZSBhbmQgQmVhY29uLk1vZGUgbmVxIEJlYWNvbi5Nb2RlLkRpc2FibGVkKQp7CglFbmFibGUgPSBFbmFibGUuRW5hYmxlZDsKfQplbHNlCnsKCUVuYWJsZSA9IEVuYWJsZS5EaXNhYmxlZDsKfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Sector">
+        <Props DefaultLogRate="1S" Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The time for the most recent sector. Calculated as follows when split beacons are detected:</P>
+<UL>
+<LI>time between the lap beacon and first split beacon, or 
+<LI>time between successive split beacons, or 
+<LI>time between the last split beacon and the lap beacon, or 
+<LI>time from leaving the pit to the first split beacon</LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable">
+        <Props Type="MoTeC Types.System Mode">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Indicates if lap timing is currently enabled. Normally only <EM>Disabled </EM>for a short time to reset lap channels.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Number">
+        <Props UseDefValue="true" DefValue="This.Number"/>
+        <Comment>
+<![CDATA[This group contains the calculated lap number information.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Stopped">
+        <Props Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[The time <EM>Vehicle Speed </EM>has been 0]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Time">
+        <Props UseDefValue="true" DefValue="This.Time"/>
+        <Comment>
+<![CDATA[This group contains the calculated lap time information.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Number.Session">
+        <Props DefaultLogRate="1S" Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" ValMax="0">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Number of laps in session </P>
+<UL>
+<LI>Starts at 0 when ECU starts 
+<LI>Set to 0 when <EM>Lap State </EM><STRONG>is </STRONG><EM>Disabled</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Main"/>
+       <Component Classname="_IOMethod.edge" Name="Base.Main.Edge"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Edge.Edge Ticks"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Main.Edge.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Main.Edge.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Edge.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Edge.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Edge.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.BR2.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.UDIG_IO" Name="Base.Main.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Pullup Control">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Active Edge">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Threshold">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Hysteresis">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Debounce">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Main.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Edge.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Update"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Split"/>
+       <Component Classname="_IOMethod.edge" Name="Base.Split.Edge"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Edge.Edge Ticks"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Split.Edge.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Split.Edge.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Edge.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Edge.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Edge.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.BR2.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.UDIG_IO" Name="Base.Split.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Pullup Control">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Active Edge">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Threshold">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Hysteresis">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Debounce">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Split.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Edge.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Update"/>
+       <Component Classname="_IOMethod.udig_adc" Name="Base.Main.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Voltage.Absolute">
+        <Props ValMin="0" ValClampMax="false" ValMax="">
+         <Locale>
+          <Default Min="0" Max=""/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.GetStatistics">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Main.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Edge.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Voltage.Maximum"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Voltage.Minimum"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.Update"/>
+       <Component Classname="_IOMethod.udig_adc" Name="Base.Split.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Voltage.Absolute">
+        <Props ValMin="0" ValClampMax="false" ValMax="">
+         <Locale>
+          <Default Min="0" Max=""/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Voltage.Minimum"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Voltage.Maximum"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Split.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Edge.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Main.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.GetStatistics">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Beacon.Mode.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Beacon.Ignore Time.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Threshold.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Debounce.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Beacon"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Beacon.Main">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValMax="10015" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>The main (Start / Finish) lap beacon number</P>
+<P>When <EM>Mode = BR2</EM>:</P>
+<UL>
+<LI><EM>Main = 0: </EM>any beacon detected by the BR2 is used as the Main beacon 
+<LI><EM>Main </EM>&lt; 100: all beacons are received. Not normally used. 
+<LI><EM>Main </EM>&gt;= 100: only beacons with the same mode are received. For example if Main = 401 then beacons from 400 to 499 can be received and other beacons are rejected</LI></UL>
+<P>When <EM>Mode = Switched Input</EM>:</P>
+<UL>
+<LI>Main = 0: Only the Main input is used 
+<LI>Main &gt; 0: 
+<UL>
+<LI>&nbsp;The Main input will generate a beacon with <EM>Beacon Number = Main</EM> 
+<LI>The Split input will generate a beacon with <EM>Beacon Number = Main + 1</EM></LI></UL></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Beacon.Ignore Time">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[The time to ignore repeated beacons.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Beacon.Main.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Distance">
+         <Component Name="Distance"/>
+         <Component Name="Session"/>
+        </Component>
+        <Component Name="Time">
+         <Component Name="Time"/>
+         <Component Name="Running"/>
+         <Component Name="Stopped"/>
+         <Component Name="Sector"/>
+         <Component Name="Split"/>
+        </Component>
+        <Component Name="Number">
+         <Component Name="Number"/>
+         <Component Name="Session"/>
+        </Component>
+        <Component Name="State"/>
+        <Component Name="Enable"/>
+        <Component Name="Beacon Ticks"/>
+        <Component Name="Beacon Number"/>
+        <Component Name="Beacon Number Main"/>
+        <Component Name="Beacon">
+         <Component Name="Mode">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Main">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Ignore Time">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="BR2">
+         <Component Name="Battery Voltage"/>
+         <Component Name="Beacon Count"/>
+         <Component Name="Bias"/>
+         <Component Name="Detection Time"/>
+         <Component Name="Detector Background"/>
+         <Component Name="Detector Peak"/>
+         <Component Name="Error Code"/>
+         <Component Name="Firmware Version"/>
+         <Component Name="Internal 10V"/>
+         <Component Name="Internal 12V"/>
+         <Component Name="Internal Temperature"/>
+         <Component Name="Latest Detector Peak"/>
+         <Component Name="Noise Bits"/>
+         <Component Name="Reset Source"/>
+         <Component Name="Secondary Threshold"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Trigger Threshold"/>
+         <Component Name="Valid Receptions"/>
+         <Component Name="CAN Bus">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Startup"/>
+         <Component Name="Calculation"/>
+        </Component>
+        <Component Name="Main">
+         <Component Name="Edge">
+          <Component Name="Edge Ticks"/>
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Pin">
+          <Component Name="Diagnostic"/>
+          <Component Name="Pullup Control">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Active Edge">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Threshold">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Hysteresis">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Debounce">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Absolute"/>
+          <Component Name="Minimum"/>
+          <Component Name="Maximum"/>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+          <Component Name="GetStatistics"/>
+         </Component>
+        </Component>
+        <Component Name="Split">
+         <Component Name="Edge">
+          <Component Name="Edge Ticks"/>
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Pin">
+          <Component Name="Diagnostic"/>
+          <Component Name="Pullup Control">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Active Edge">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Threshold">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Hysteresis">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Debounce">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Absolute"/>
+          <Component Name="Minimum"/>
+          <Component Name="Maximum"/>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+          <Component Name="GetStatistics"/>
+         </Component>
+        </Component>
+        <Component Name="Vehicle Speed"/>
+        <Component Name="SetEnable"/>
+        <Component Name="Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Template>
+   </List>
+   <Organisation>
+    <TemplateGroup Name="Calculations">
+     <Template Name="Lap Time"/>
+    </TemplateGroup>
+    <TemplateGroup Name="Upcoming">
+     <TemplateGroup Name="Calculations"/>
+    </TemplateGroup>
+   </Organisation>
+  </TemplateStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

@@ -1,0 +1,412 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC SLM" VersionMajor="1" VersionMinor="4" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0018"/>
+ <DataTypes>
+  <Type Name="SLM Colour Enumeration" Storage="enum" Default="Red">
+   <Help>
+<![CDATA[<BODY></BODY>]]>
+   </Help>
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Red" ContainerOrder="1">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Orange" ContainerOrder="2">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Yellow" ContainerOrder="3">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Blue" ContainerOrder="5">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Green" ContainerOrder="4">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Cyan" ContainerOrder="6">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Magenta" ContainerOrder="7">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="White" ContainerOrder="8">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <DependantModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="3" VersionBuild="1"/>
+ </DependantModules>
+ <Modules>
+  <TemplateStream>
+   <List>
+    <TemplateGroup Name="Comms"/>
+    <Template Base="BuiltIn.GroupCompound" Name="Comms.SLM">
+     <BuildHelp>
+<![CDATA[<P>Control&nbsp;a MoTeC Shift Light Module (SLM)</P>
+<P>Set the colour and Intensity channels to control individual LEDs. To simplify script either the LED will be off if either:</P>
+<UL>
+<LI>Colour = SLM Colour.Off, or
+<LI>Intensity = 0</LI></UL>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Mode Component" Creation="Custom" Visible="1" TargetCpt="This.Mode" TargetRef="Target" DisplayName="Mode Component"/>
+         <Property Name="Mode Source" Creation="Custom" Visible="1" TargetCpt="This.Mode" TargetRef="TargetCreation" DisplayName="Mode Source"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Selected Event" Creation="Custom" Visible="1" TargetCpt="This.Script" TargetRef="SelectedTrigger" DisplayName="Selected Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 0"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 0.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 0.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 1"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 1.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 1.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 2"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 2.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 2.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 3"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 3.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 3.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 4"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 4.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 4.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 5"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 5.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 5.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 6"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 6.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 6.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.LED 7"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 7.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.LED 7.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration" TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Status">
+        <Props Type="MoTeC Types.System Status"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Timeout">
+        <Props Qty="s" Value="1.000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power Level">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Version">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Serial Number">
+        <Props Type="s32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Temperature">
+        <Props Qty="K">
+         <Locale>
+          <Default DPS="0" Min="-4.000000e+001" Max="8.500000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Supply">
+        <Props Qty="V" Validation="MinMax" ValMin="0.000000e+000" ValMax="2.400000e+001">
+         <Locale>
+          <Default DPS="3" Min="0.000000e+000" Max="1.400000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0"/>
+         </Params>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Reset.Countdown">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Reset.Source">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.System Mode" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Mode can be used to disable the&nbsp;SLM if it is not used and prevent warnings and faults from being reported.</P>
+<P>For example this can be used to implement a "Dyno" mode in a project and eliminate faults from disconnected vehicle subsystems.</P>
+<P>Select a constant with value enabled if you do not want to use this feature. This is the default.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Reset"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Script">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBDYW5Db21tcy5SeE9wZW5TdGFuZGFyZChDQU4gQnVzLkFzSW50ZWdlcigpLCAweDAyYSwgMHgwMDAsIHRydWUpOwpsb2NhbCB0eCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCndoZW4gKE1vZGUpCnsKCWlzIChFbmFibGVkKQoJewoJCS8qIFJlY2VpdmUgU0xNIGNhbiBtZXNzYWdlcyAqLwoJCWlmIChDYW5Db21tcy5SeE1lc3NhZ2UocngpKQoJCXsKCQkJbG9jYWwgbXNnID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihyeCwgMCwgOCk7CgkJCWlmIChtc2cgZXEgMSkKCQkJewoJCQkJUG93ZXIgTGV2ZWwgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCA4LCA4KSAqIDAuMDYyNTsKCQkJCVJlc2V0LlNvdXJjZSA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihyeCwgNDgsIDgpOwoJCQkJUmVzZXQuQ291bnRkb3duID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKHJ4LCA1NiwgOCk7CgkJCX0KCQkJZWxzZSBpZiAobXNnIGVxIDApCgkJCXsKCQkJCVRlbXBlcmF0dXJlID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihyeCwgOCwgOCk7CgkJCQlTdXBwbHkgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCAxNiwgMTYpICogMC4wMTsKCQkJCVZlcnNpb24gPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCAzMiwgMTYpICogMC4wMTsKCQkJCVNlcmlhbCBOdW1iZXIgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCA0OCwgMTYpOwoJCQl9CgkJCVRpbWVyLlN0YXJ0KFRpbWVvdXQpOwoJCX0KCgkJLyogVHJhbnNtaXQgU0xNIGNhbiBtZXNzYWdlcyAqLwoJCUNhbkNvbW1zLlR4SW5pdGlhbGlzZSh0eCwgOCk7CgoJCWV4cGFuZCAobiA9IDAgdG8gNykKCQl7CgkJCWlmIChMRUQgJChuKS5Db2xvdXIgbmVxIFNMTSBDb2xvdXIgRW51bWVyYXRpb24uT2ZmIGFuZCBMRUQgJChuKS5JbnRlbnNpdHkgPiAwLjApCgkJCXsKCQkJCWxvY2FsIGludGVuc2l0eSA9IDQgKyBMRUQgJChuKS5JbnRlbnNpdHkgKiAyNzsKCQkJCWxvY2FsIGJpdG9mZiA9ICQobikgKiA4OwoJCQkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKHR4LCBiaXRvZmYsICAzLCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKExFRCAkKG4pLkNvbG91ci5Bc0ludGVnZXIoKSkpOwoJCQkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKHR4LCBiaXRvZmYgKyAzLCAgNSwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihpbnRlbnNpdHkpKTsKCQkJfQoJCX0KCgkJaWYgKENhbkNvbW1zLlR4U3RhbmRhcmQodHgsIENBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MDI5KSBhbmQgVGltZXIuUmVtYWluaW5nKCkgPiAwLjApCgkJewoJCQlTdGF0dXMgPSBTdGF0dXMuT0s7CgkJfQoJCWVsc2UKCQl7CgkJCVN0YXR1cyA9IFN0YXR1cy5GYXVsdDsKCQl9Cgl9CglpcyAoRGlzYWJsZWQpCgl7CgkJU3RhdHVzID0gU3RhdHVzLkRpc2FibGVkOwoJCVBvd2VyIExldmVsID0gMDsKCQlSZXNldC5Tb3VyY2UgPSAwOwoJCVJlc2V0LkNvdW50ZG93biA9IDA7CgkJVGVtcGVyYXR1cmUgPSAwOwoJCVN1cHBseSA9IDA7CgkJVmVyc2lvbiA9IDA7CgkJU2VyaWFsIE51bWJlciA9IDA7Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[VGltZXIuU3RhcnQoVGltZW91dCk7]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Mode.Value">
+        <Props Value="Enabled"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Status"/>
+        <Component Name="Supply"/>
+        <Component Name="Temperature"/>
+        <Component Name="Power Level"/>
+        <Component Name="Serial Number"/>
+        <Component Name="Version"/>
+        <Component Name="Reset">
+         <Component Name="Source"/>
+         <Component Name="Countdown"/>
+        </Component>
+        <Component Name="Timeout"/>
+        <Component Name="LED 0">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="LED 1">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="LED 2">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="LED 3">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="LED 4">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="LED 5">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="LED 6">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="LED 7">
+         <Component Name="Colour"/>
+         <Component Name="Intensity"/>
+        </Component>
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Script"/>
+        <Component Name="Startup"/>
+        <Component Name="Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Template>
+   </List>
+   <Organisation>
+    <TemplateGroup Name="Comms">
+     <Template Name="SLM"/>
+    </TemplateGroup>
+   </Organisation>
+  </TemplateStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

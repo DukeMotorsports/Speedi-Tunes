@@ -1,0 +1,1509 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_United States.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Ignition" VersionMajor="1" VersionMinor="5" BuildNumber="1">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0018"/>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="3" VersionBuild="1"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Ignition Output Mode Enumeration" Storage="enum" Default="Normal">
+   <Enum Name="Normal" ContainerOrder="0"/>
+   <Enum Name="Check Timing" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[The ignition advance is set to a known angle to support testing with a timing light]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Ignition Transient State Enumeration" Storage="enum" Default="Disabled">
+   <Help>
+<![CDATA[<BODY></BODY>]]>
+   </Help>
+   <Enum Name="Off" ContainerOrder="1">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Advance" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Retard" ContainerOrder="3" Tags="Information">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Disabled" ContainerOrder="0"/>
+  </Type>
+  <Type Name="Knock State Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0"/>
+   <Enum Name="Enabled" ContainerOrder="1"/>
+   <Enum Name="Transient" ContainerOrder="2"/>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Ignition"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Ignition.Transient Ignition">
+     <BuildHelp>
+<![CDATA[<P>This module implements transient ignition timing control with the following features:</P>
+<UL>
+<LI>Acceleration advance or retard 
+<LI>Deceleration advance or retard</LI></UL>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Display Max" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.Max" DisplayName="Display Max"/>
+         <Property Name="Display Min" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="Locale.Default.Min" DisplayName="Display Min"/>
+         <Property Name="Mode Input Component" Creation="Custom" Visible="1" TargetCpt="This.Mode" TargetRef="Target" DisplayName="Mode Input Component"/>
+         <Property Name="Mode Input Source" Creation="Custom" Visible="1" TargetCpt="This.Mode" TargetRef="TargetCreation" DisplayName="Mode Input Source"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Selected Event" Creation="Custom" Visible="1" TargetCpt="This.Calculation" TargetRef="SelectedTrigger" DisplayName="Selected Event"/>
+         <Property Name="Source Input Component" Creation="Custom" Visible="1" TargetCpt="This.Source" TargetRef="Target" DisplayName="Source Input Component"/>
+         <Property Name="Table Dimensions" Creation="Custom" Visible="1" TargetCpt="This.Acceleration.Clamp" TargetRef="NumAxes" DisplayName="Table Dimensions"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Validation Max" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="ValMax" DisplayName="Validation Max"/>
+         <Property Name="Validation Min" Creation="Custom" Visible="1" TargetCpt="This.Value" TargetRef="ValMin" DisplayName="Validation Min"/>
+         <Property Name="X Axis Component" Creation="Custom" Visible="1" TargetCpt="This.Acceleration.Clamp" TargetRef="Axis.X.Source" DisplayName="X Axis Component"/>
+         <Property Name="X Max Sites" Creation="Custom" Visible="1" TargetCpt="This.Acceleration.Clamp" TargetRef="Axis.X.MaxSites" DisplayName="X Max Sites"/>
+         <Property Name="Y Axis Component" Creation="Custom" Visible="1" TargetCpt="This.Acceleration.Clamp" TargetRef="Axis.Y.Source" DisplayName="Y Axis Component"/>
+         <Property Name="Y Axis Max Sites" Creation="Custom" Visible="1" TargetCpt="This.Acceleration.Clamp" TargetRef="Axis.Y.MaxSites" DisplayName="Y Axis Max Sites"/>
+         <Property Name="Z Axis Component" Creation="Custom" Visible="1" TargetCpt="This.Acceleration.Clamp" TargetRef="Axis.Z.Source" DisplayName="Z Axis Component"/>
+         <Property Name="Z Axis Max Sites" Creation="Custom" Visible="1" TargetCpt="This.Acceleration.Clamp" TargetRef="Axis.Z.MaxSites" DisplayName="Z Axis Max Sites"/>
+        </PropVisibility>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Source">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Used to derive a measurement of the transient. Typically based on throttle butterfly position.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.System Mode" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Disable or enable the transient ignition calculation</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="-5.00000000000000000e+001" ValMax="5.00000000000000000e+001">
+         <Locale>
+          <Default Unit="dADV" Min="-5.00000000000000000e+001" Max="5.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Ignition timing correction due to transients.</P>
+<P>This value is the sum of Ignition timing correction due to Acceleration and Deceleration.</P>
+<P>The acceleration and deceleration clamps are reapplied when calculating the final value.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.Ignition Transient State Enumeration"/>
+        <Comment>
+<![CDATA[Current status of transient ignition timing.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Derivative">
+        <Props UseDefValue="true" DefValue="This.Value">
+         <List.UserTags>
+          <Entry Value="Primary"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P>The derivative or rate of change of the Throttle Position.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Derivative.Value">
+        <Props Qty="ratio/s">
+         <Locale>
+          <Default Unit="%/s" DPS="0"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Derivative.Source Filtered">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[The filtered value of the source input.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Derivative.Filter Coefficient">
+        <Props Validation="MinMax" ValMin="0" ValMax="0.99">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Coefficient for the smoothing algorithm. 0.0 = no smoothing 0.99 = full smoothing.</P>
+<P>Value Smoothed = Value Smoothed(T-1) + (1-Coefficient)(Value - Value Smoothed(T-1) )</P>
+<P>This is a Classic Infinite Impulse Response filter.</P>
+<P>Typical values are from 0.5 to 0.95 values &lt; 0.5 would not normally be used.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Acceleration">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<P>The transient ignition timing correction due to increase in load.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Acceleration.Threshold">
+        <Props Qty="ratio/s" Validation="MinMax" ValMin="1.00000000000000000e-003" ValMax="1.0">
+         <Locale>
+          <Default Unit="%/s"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Acceleration.Clamp">
+        <Props NumAxes="2">
+         <Axis>
+          <X MaxSites="21"/>
+          <Y MaxSites="21"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<P>The ignition correction is limited to the value of this table. The correction may be either Advance <STRONG>or </STRONG>Retard.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Acceleration.Clamp.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Parent.Value:ValMin)" ValMax="$(Parent.Parent.Parent.Value:ValMax)">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dADV" Min="$(Parent.Parent.Parent.Value:Locale.Default.Min)" Max="$(Parent.Parent.Parent.Value:Locale.Default.Max)"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Acceleration.Clamp.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Acceleration.Clamp.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Acceleration.Decay">
+        <Props>
+         <Axis>
+          <X Source="$(Parent.Clamp:Axis.X.Source)" MaxSites="$(Parent.Clamp:Axis.X.MaxSites)"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<P>The ignition correction is decayed linearly towards 0.0 at this rate.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Acceleration.Decay.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Acceleration.Decay.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Acceleration.Decay.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Acceleration.Sensitivity">
+        <Props NumAxes="$(Parent.Clamp:NumAxes)">
+         <Axis>
+          <X Source="$(Parent.Clamp:Axis.X.Source)" MaxSites="$(Parent.Clamp:Axis.X.MaxSites)"/>
+          <Y Source="$(Parent.Clamp:Axis.Y.Source)" MaxSites="$(Parent.Clamp:Axis.Y.MaxSites)"/>
+          <Z Source="$(Parent.Clamp:Axis.Z.Source)" MaxSites="$(Parent.Clamp:Axis.Z.MaxSites)"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<P>This table value is multiplied by (<EM>Derivative</EM> - <EM>Threshold</EM>) to determine the reduction in injection volume. </P>
+<P>Timing = (Derivative - Threshold) * Sensitivity</P>
+<P>Sensitivity of 10deg will change timing by 10deg when <EM>Derivative</EM> is 100%/sec above the threshold. The change in timing (Advance or Retard) is determined by the polarity of the Clamp table.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Acceleration.Sensitivity.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Acceleration.Sensitivity.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Acceleration.Sensitivity.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Value:ValMin)" ValMax="$(Parent.Parent.Value:ValMax)">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dADV" Min="$(Parent.Parent.Value:Locale.Default.Min)" Max="$(Parent.Parent.Value:Locale.Default.Max)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Ignition timing correction due to acceleration.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Deceleration">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<P>The transient ignition timing correction due to reduction in load.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Deceleration.Threshold">
+        <Props Qty="ratio/s" Validation="MinMax" ValMin="-1.0" ValMax="-1.00000000000000000e-003">
+         <Locale>
+          <Default Unit="%/s"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Deceleration.Clamp">
+        <Props NumAxes="$(Parent.Parent.Acceleration.Clamp:NumAxes)">
+         <Axis>
+          <X Source="$(Parent.Parent.Acceleration.Clamp:Axis.X.Source)" MaxSites="$(Parent.Parent.Acceleration.Clamp:Axis.X.MaxSites)"/>
+          <Y Source="$(Parent.Parent.Acceleration.Clamp:Axis.Y.Source)" MaxSites="$(Parent.Parent.Acceleration.Clamp:Axis.Y.MaxSites)"/>
+          <Z Source="$(Parent.Parent.Acceleration.Clamp:Axis.Z.Source)" MaxSites="$(Parent.Parent.Acceleration.Clamp:Axis.Z.MaxSites)"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<P>The ignition correction is limited to the value of this table. The correction may be either Advance <STRONG>or </STRONG>Retard.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Deceleration.Clamp.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Parent.Value:ValMin)" ValMax="$(Parent.Parent.Parent.Value:ValMax)">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dADV" Min="$(Parent.Parent.Parent.Value:Locale.Default.Min)" Max="$(Parent.Parent.Parent.Value:Locale.Default.Max)"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Deceleration.Clamp.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Deceleration.Clamp.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Deceleration.Decay">
+        <Props>
+         <Axis>
+          <X Source="$(Parent.Parent.Acceleration.Clamp:Axis.X.Source)" MaxSites="$(Parent.Parent.Acceleration.Clamp:Axis.X.MaxSites)"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<P>The ignition correction is decayed linearly towards 0.0 at this rate.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Deceleration.Decay.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Deceleration.Decay.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Deceleration.Decay.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Deceleration.Sensitivity">
+        <Props NumAxes="$(Parent.Parent.Acceleration.Clamp:NumAxes)">
+         <Axis>
+          <X Source="$(Parent.Parent.Acceleration.Clamp:Axis.X.Source)" MaxSites="$(Parent.Parent.Acceleration.Clamp:Axis.X.MaxSites)"/>
+          <Y Source="$(Parent.Parent.Acceleration.Clamp:Axis.Y.Source)" MaxSites="$(Parent.Parent.Acceleration.Clamp:Axis.Y.MaxSites)"/>
+          <Z Source="$(Parent.Parent.Acceleration.Clamp:Axis.Z.Source)" MaxSites="$(Parent.Parent.Acceleration.Clamp:Axis.Z.MaxSites)"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<P>This table value is multiplied by (<EM>Derivative</EM> - <EM>Threshold</EM>) to determine the reduction in injection volume. </P>
+<P>Timing = (Derivative - Threshold) * Sensitivity</P>
+<P>Sensitivity of 10deg will change timing by 10deg when <EM>Derivative</EM> is 100%/sec below the threshold. The change in timing (Advance or Retard) is determined by the polarity of the Clamp table.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Deceleration.Sensitivity.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Deceleration.Sensitivity.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Deceleration.Sensitivity.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Deceleration.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Value:ValMin)" ValMax="$(Parent.Parent.Value:ValMax)">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dADV" Min="$(Parent.Parent.Value:Locale.Default.Min)" Max="$(Parent.Parent.Value:Locale.Default.Max)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Ignition timing correction due to deceleration.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Derivative.Calculation">
+        <Props SelectedTrigger="$(Parent.Parent.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[U291cmNlIEZpbHRlcmVkID0gRmlsdGVyLlNtb290aChTb3VyY2UsIEZpbHRlciBDb2VmZmljaWVudCk7IApUaGlzLlZhbHVlID0gTGlicmFyeS5EZXJpdmF0aXZlLkZpbHRlcmVkKFNvdXJjZSBGaWx0ZXJlZCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Mode.Value">
+        <Props Value="Enabled"/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZWxhcHNlZHRpbWUgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKCndoZW4gKE1vZGUpCnsKCWlzIChFbmFibGVkKQoJewoJCS8qCgkJICogRGVjYXkgcHJldmlvdXMgdHJhbnNpZW50IGZ1ZWxpbmcgcHJpb3IgdG8gdXNlIGluIG5ldyBjYWxjdWxhdGlvbnMKCQkgKiBOT1RFOiBjbGFtcHMgYXJlIG5vdCBhcHBsaWVkIGhlcmUgLSB0aGlzIGlzIGRvbmUgaW4gdGhlIGZpbmFsIHN0YWdlCgkJICogd2hlbiBhc3NpZ25pbmcgYmFjayB0byB0aGUgY2hhbm5lbAoJCSAqLwoJCWxvY2FsIGFjY2VsID0gQ2FsY3VsYXRlLkFic29sdXRlKEFjY2VsZXJhdGlvbikgLSBBY2NlbGVyYXRpb24uRGVjYXkgKiBlbGFwc2VkdGltZTsKCQlsb2NhbCBkZWNlbCA9IENhbGN1bGF0ZS5BYnNvbHV0ZShEZWNlbGVyYXRpb24pIC0gRGVjZWxlcmF0aW9uLkRlY2F5ICogZWxhcHNlZHRpbWU7CgoJCS8qIFVwZGF0ZSBpZiB0cmFuc2llbnQgZXhjZWVkcyBwcmlvciB2YWx1ZSAqLwoJCWlmIChCYXNlLkRlcml2YXRpdmUgPiBBY2NlbGVyYXRpb24uVGhyZXNob2xkKQoJCXsKCQkJbG9jYWwgZCA9IEJhc2UuRGVyaXZhdGl2ZSAtIEFjY2VsZXJhdGlvbi5UaHJlc2hvbGQ7CgkJCWFjY2VsID0gQ2FsY3VsYXRlLk1heChhY2NlbCwgZCAqIEFjY2VsZXJhdGlvbi5TZW5zaXRpdml0eSk7CgkJfQoJCWVsc2UgaWYgKEJhc2UuRGVyaXZhdGl2ZSA8IERlY2VsZXJhdGlvbi5UaHJlc2hvbGQpCgkJewoJCQlsb2NhbCBkID0gRGVjZWxlcmF0aW9uLlRocmVzaG9sZCAtIEJhc2UuRGVyaXZhdGl2ZTsgLyogbm90ZSBzaWduIGZsaXAgKi8KCQkJZGVjZWwgPSBDYWxjdWxhdGUuTWF4KGRlY2VsLCBkICogRGVjZWxlcmF0aW9uLlNlbnNpdGl2aXR5KTsKCQl9CgoJCS8qIEFwcGx5IGFwcHJvcHJpYXRlIGNsYW1wcy4gTWF5IGV2ZW4gbGltaXQgYSBwcmV2aW91c2x5IGNhbGN1bGF0ZWQgdmFsdWUgKi8KCQlhY2NlbCA9IExpbWl0Lk1heChhY2NlbCwgQ2FsY3VsYXRlLkFic29sdXRlKEFjY2VsZXJhdGlvbi5DbGFtcCkpOwoJCWRlY2VsID0gTGltaXQuTWF4KGRlY2VsLCBDYWxjdWxhdGUuQWJzb2x1dGUoRGVjZWxlcmF0aW9uLkNsYW1wKSk7CgoJCS8qIHNwbGl0IHRoZSB0YWJsZSBjbGFtcCBmcm9tIDAgY2xhbXAgdG8gY29wZSB3aXRoIGludmFsaWQgdGFibGUgZGF0YSBmcm9tIHR1bmUgKi8KCQlsb2NhbCBtaW4gPSAwLjA7CgkJbG9jYWwgbWF4ID0gMC4wOwoKCQlhY2NlbCA9IExpbWl0Lk1pbihhY2NlbCwgMC4wKTsKCQlpZiAoQWNjZWxlcmF0aW9uLkNsYW1wID4gMC4wKQoJCXsKCQkJQWNjZWxlcmF0aW9uID0gYWNjZWw7CgkJCW1heCA9IEFjY2VsZXJhdGlvbi5DbGFtcDsKCQl9CgkJZWxzZQoJCXsKCQkJQWNjZWxlcmF0aW9uID0gLWFjY2VsOwoJCQltaW4gPSBBY2NlbGVyYXRpb24uQ2xhbXA7CgkJfQoKCQlkZWNlbCA9IExpbWl0Lk1pbihkZWNlbCwgMC4wKTsKCQlpZiAoRGVjZWxlcmF0aW9uLkNsYW1wID4gMC4wKQoJCXsKCQkJRGVjZWxlcmF0aW9uID0gZGVjZWw7CgkJCW1heCA9IENhbGN1bGF0ZS5NYXgobWF4LCBEZWNlbGVyYXRpb24uQ2xhbXApOwoJCX0KCQllbHNlCgkJewoJCQlEZWNlbGVyYXRpb24gPSAtZGVjZWw7CgkJCW1pbiA9IENhbGN1bGF0ZS5NaW4obWluLCBEZWNlbGVyYXRpb24uQ2xhbXApOwoJCX0KCgkJVmFsdWUgPSBMaW1pdC5SYW5nZShBY2NlbGVyYXRpb24gKyBEZWNlbGVyYXRpb24sIG1pbiwgbWF4KTsKCgkJaWYgKFZhbHVlID4gMC4wKQoJCXsKCQkJU3RhdGUgPSBTdGF0ZS5SZXRhcmQ7CgkJfQoJCWVsc2UgaWYgKFZhbHVlIDwgMC4wKQoJCXsKCQkJU3RhdGUgPSBTdGF0ZS5BZHZhbmNlOwoJCX0KCQllbHNlCgkJewoJCQlTdGF0ZSA9IFN0YXRlLk9mZjsKCQl9Cgl9CglpcyAoRGlzYWJsZWQpCgl7CgkJU3RhdGUgPSBTdGF0ZS5EaXNhYmxlZDsKCQlBY2NlbGVyYXRpb24gPSAwLjA7CgkJRGVjZWxlcmF0aW9uID0gMC4wOwoJCVZhbHVlID0gMC4wOwoJfQp9Cg==]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="State"/>
+        <Component Name="Source"/>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Derivative">
+         <Component Name="Value"/>
+         <Component Name="Calculation"/>
+         <Component Name="Source Filtered"/>
+         <Component Name="Filter Coefficient"/>
+        </Component>
+        <Component Name="Acceleration">
+         <Component Name="Value"/>
+         <Component Name="Clamp">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Decay">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Sensitivity">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Threshold"/>
+        </Component>
+        <Component Name="Deceleration">
+         <Component Name="Value"/>
+         <Component Name="Clamp">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Decay">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Sensitivity">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Threshold"/>
+        </Component>
+        <Component Name="Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Upcoming.Ignition.Single Spark Plug with knock with idle">
+     <BuildHelp>
+<![CDATA[<P>This module implements an individual ignition output with the following features:</P>
+<UL>
+<LI>Individual Cylinder Trim Table 
+<LI>Knock control</LI></UL>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Engine Speed" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed" TargetRef="Target" DisplayName="Engine Speed"/>
+         <Property Name="Idle Control Aim" Creation="Custom" Visible="1" TargetCpt="This.Trim.Idle.Control.Aim" TargetRef="Target" DisplayName="Idle Control Aim"/>
+         <Property Name="Idle Control Feed Forward" Creation="Custom" Visible="1" TargetCpt="This.Trim.Idle.Control.Feed Forward" TargetRef="Target" DisplayName="Idle Control Feed Forward"/>
+         <Property Name="Idle Control Integral Gain" Creation="Custom" Visible="1" TargetCpt="This.Trim.Idle.Control.Integral.Gain" TargetRef="Target" DisplayName="Idle Control Integral Gain"/>
+         <Property Name="Idle Control Proportional Gain" Creation="Custom" Visible="1" TargetCpt="This.Trim.Idle.Control.Proportional.Gain" TargetRef="Target" DisplayName="Idle Control Proportional Gain"/>
+         <Property Name="Idle Mode" Creation="Custom" Visible="1" TargetCpt="This.Trim.Idle.Mode" TargetRef="Target" DisplayName="Idle Mode"/>
+         <Property Name="Idle Ramp" Creation="Custom" Visible="1" TargetCpt="This.Trim.Idle.Ramp" TargetRef="Target" DisplayName="Idle Ramp"/>
+         <Property Name="Ignition Timing" Creation="Custom" Visible="1" TargetCpt="This.Ignition Timing" TargetRef="Target" DisplayName="Ignition Timing"/>
+         <Property Name="Knock Cycle" Creation="Custom" Visible="1" TargetCpt="This.Knock.Cycle" TargetRef="Target" DisplayName="Knock Cycle"/>
+         <Property Name="Knock Level" Creation="Custom" Visible="1" TargetCpt="This.Knock.Level" TargetRef="Target" DisplayName="Knock Level"/>
+         <Property Name="Mode Component" Creation="Custom" Visible="1" TargetCpt="This.Mode" TargetRef="Target" DisplayName="Mode Component"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Output Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Output.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Output Diagnostic Log Rate"/>
+         <Property Name="Output Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Output.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Output Diagnostic Logging"/>
+         <Property Name="Output Enable" Creation="Custom" Visible="1" TargetCpt="This.Output.Enable" TargetRef="Target" DisplayName="Output Enable"/>
+         <Property Name="Restrike Angle" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Angle" TargetRef="Target" DisplayName="Restrike Angle"/>
+         <Property Name="Restrike Count" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Count" TargetRef="Target" DisplayName="Restrike Count"/>
+         <Property Name="Selected Event" Creation="Custom" Visible="1" TargetCpt="This.Calculation" TargetRef="SelectedTrigger" DisplayName="Selected Event"/>
+         <Property Name="Timing Display Max" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="Locale.Default.Max" DisplayName="Timing Display Max"/>
+         <Property Name="Timing Display Min" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="Locale.Default.Min" DisplayName="Timing Display Min"/>
+         <Property Name="Timing Validation Max" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="ValMax" DisplayName="Timing Validation Max"/>
+         <Property Name="Timing Validation Min" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="ValMin" DisplayName="Timing Validation Min"/>
+         <Property Name="Top Dead Centre" Creation="Custom" Visible="1" TargetCpt="This.Output.Top Dead Centre" TargetRef="Target" DisplayName="Top Dead Centre"/>
+         <Property Name="Trim Knock Gain" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Gain" TargetRef="Target" DisplayName="Trim Knock Gain"/>
+         <Property Name="Trim Knock Limit" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Limit" TargetRef="Target" DisplayName="Trim Knock Limit"/>
+         <Property Name="Trim Knock Recovery Rate" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Recovery Rate" TargetRef="Target" DisplayName="Trim Knock Recovery Rate"/>
+         <Property Name="Trim Knock State" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.State" TargetRef="Target" DisplayName="Trim Knock State"/>
+         <Property Name="Trim Knock Threshold" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Threshold" TargetRef="Target" DisplayName="Trim Knock Threshold"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Voltage" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Idle.Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Timing">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.000000e+001" ValMax="9.000000e+001">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC" Min="-6.000000e+001" Max="2.000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Final timing for this cylinder.</P>
+<UL>
+<LI>Calculated from the sum of <EM>Ignition Timing</EM>, <EM>Trim</EM> and <EM>Knock</EM>. 
+<LI>The final timing is constrained to <EM>Ignition Timing Limit.</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Main">
+        <Props Qty="$(Parent.Parent.Timing:Qty)" Validation="$(Parent.Parent.Timing:Validation)" ValMin="$(Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Timing:ValMax)" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="$(Parent.Parent.Timing:Locale.Default.Unit)" DPS="$(Parent.Parent.Timing:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Trim.Main.Value">
+        <Props NumAxes="2"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Trim.Main.Value.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Trim.Main.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Trim.Main.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Timing">
+        <Props Type="$(Parent.Timing:Type)" Qty="$(Parent.Timing:Qty)" Validation="$(Parent.Timing:Validation)" ValClampMin="$(Parent.Timing:ValClampMin)" ValMin="$(Parent.Timing:ValMin)" ValClampMax="$(Parent.Timing:ValClampMax)" ValMax="$(Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="$(Parent.Timing:Locale.Default.Unit)" DPS="$(Parent.Timing:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The desired ignition timing. This value is modified by the per-cylinder trims to compensate for imbalance between cylinders.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="::This.Ignition Output Mode Enumeration"/>
+        <Comment>
+<![CDATA[<P>Used to override ignition timing for checking with a timing light.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim.Knock">
+        <Props UseDefValue="true" DefValue="This.Knock"/>
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding knock measurement and control.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Knock.Knock">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dRTD" Min="0.00000000000000000e+000" Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The offset applied to this cylinder for knock control.</P>
+<UL>
+<LI>This value is decayed at <EM>Recovery Rate</EM> 
+<LI>This value is increased when <EM>Level </EM>exceeds <EM>Threshold</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Gain">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="dRTD"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Limit">
+        <Props Qty="rad" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <Locale>
+          <Default Unit="dRTD"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Threshold">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Recovery Rate">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="1.00000000000000000e-003" ValClampMax="false">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Trim.Knock.Calculation">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZWxhcHNlZHRpbWUgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKCmxvY2FsIFVwZGF0ZWQgPSBDaGFuZ2UuQnkoQmFzZS5Lbm9jay5DeWNsZSwgMSk7Cgp3aGVuIChTdGF0ZSkKewoJaXMgKEVuYWJsZWQpCgl7CgkJLyogZGVjYXkgcHJldmlvdXMgdmFsdWUgcHJpb3IgdG8gY29tcGFyYXNvbiB3aXRoIGN1cnJlbnQga25vY2sgbGV2ZWwgKi8KCQlsb2NhbCBEZWNheWVkIFRyaW0gPSBMaWJyYXJ5LkxpbWl0Lk1pbihUaGlzLktub2NrIC0gKFJlY292ZXJ5IFJhdGUgKiBlbGFwc2VkdGltZSksIDAuMCk7CgkJbG9jYWwgQ3VycmVudCBUcmltID0gMC4wOwoJCWlmIChVcGRhdGVkKQoJCXsKCQkJQ3VycmVudCBUcmltID0gTGlicmFyeS5MaW1pdC5NaW4oKEJhc2UuS25vY2suTGV2ZWwgLSBUaHJlc2hvbGQpICogR2FpbiwgMC4wKTsKCQl9CgkJVGhpcy5Lbm9jayA9IExpYnJhcnkuTGltaXQuTWF4KERlY2F5ZWQgVHJpbSArIEN1cnJlbnQgVHJpbSwgVGhpcy5MaW1pdCk7Cgl9CglpcyAoVHJhbnNpZW50KQoJewoJCS8qIEhvbGQgcHJldmlvdXMgdmFsdWUgKi8KCX0KCWlzIChEaXNhYmxlZCkKCXsKCQlUaGlzLktub2NrID0gMC4wOwoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.State">
+        <Props Type="::This.Knock State Enumeration"/>
+        <Comment>
+<![CDATA[Individual cylinder knock control is managed by a global knock status]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Idle.Limit">
+        <Props Qty="rad" Validation="MinMax" ValClampMin="$(Parent.Parent.Parent.Timing:ValClampMin)" ValMin="$(Parent.Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Idle gnition retard limit.]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.ign" Name="Base.Output">
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding the calculation that generated the output waveform.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Output.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Firing Edge">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Output.Firing Edge.Value">
+        <Props Value="EDGE_FALL"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Top Dead Centre"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Angle"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Count"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameCreation="AutoConst" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceConstant" Name="Base.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetRestrike"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding the connector pin voltage measurement.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered">
+        <Props>
+         <Locale>
+          <Default Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute">
+        <Props>
+         <Locale>
+          <Default Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoTW9kZSkKewoJaXMgKE5vcm1hbCkKCXsKCQlUcmltID0gVHJpbS5NYWluICsgVHJpbS5Lbm9jayArIFRyaW0uSWRsZTsKCQlUaW1pbmcgPSBJZ25pdGlvbiBUaW1pbmcgKyBUcmltOwoJfQoJaXMgKENoZWNrIFRpbWluZykKCXsKCQlUcmltID0gMC4wOwoJCVRpbWluZyA9IElnbml0aW9uIFRpbWluZzsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Enable"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Timing">
+        <Props Target="Parent.Parent.Timing"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetTiming">
+        <Props SelectedTrigger="$(Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim">
+        <Props UseDefValue="true" DefValue="This.Trim"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Trim">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.000000e+001" ValMax="9.000000e+001">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Idle.Control.Error">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Idle.Control.Aim">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Trim.Idle.Script">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZXQgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKCndoZW4gKFRoaXMuTW9kZSkKewoJaXMgKERpc2FibGVkKQoJewoJCS8qCgkJICogQWx3YXlzIHJhbXAgdG93YXJkcyB0aGUgZmVlZCBmb3J3YXJkIHZhbHVlCgkJICovCgkJaWYgKFZhbHVlIDwgQ29udHJvbC5GZWVkIEZvcndhcmQpCgkJewoJCQlWYWx1ZSA9IENhbGN1bGF0ZS5NaW4oVmFsdWUgKyAoUmFtcCAqIGV0KSwgQ29udHJvbC5GZWVkIEZvcndhcmQpOwoJCX0KCQllbHNlCgkJewoJCQlWYWx1ZSA9IENhbGN1bGF0ZS5NYXgoVmFsdWUgLSAoUmFtcCAqIGV0KSwgQ29udHJvbC5GZWVkIEZvcndhcmQpOwoJCX0KCQkKCQlDb250cm9sLkVycm9yID0gQ2FsY3VsYXRlLk5BTigpOwoJCUNvbnRyb2wuUHJvcG9ydGlvbmFsID0gQ2FsY3VsYXRlLk5BTigpOwoJCUNvbnRyb2wuSW50ZWdyYWwgPSBDYWxjdWxhdGUuTkFOKCk7Cgl9CglpcyAoRW5hYmxlZCkKCXsKCQkvKgoJCSAqIE9ubHkgcnVuIGNvbnRyb2wgc3lzdGVtIGlmIHRyaW0gaXMgYWN0dWFsbHkgZ29pbmcgdG8gYXBwbHkuCgkJICogVGhpcyBjb250cm9sIHN5c3RlbSBvbmx5IGV2ZXIgcmV0YXJkcyB0aW1pbmcgKHBvc2l0aXZlIGRlZ3JlZXMpIGZyb20gaWRlYWwuCgkJICovCgkJaWYgKEJhc2UuTW9kZSBlcSBCYXNlLk1vZGUuTm9ybWFsKQoJCXsKCQkJbG9jYWwgZXJyID0gQmFzZS5FbmdpbmUgU3BlZWQgLSBDb250cm9sLkFpbTsKCQkJQ29udHJvbC5Qcm9wb3J0aW9uYWwgPSBlcnIgKiBDb250cm9sLlByb3BvcnRpb25hbC5HYWluOwoJCQlsb2NhbCBwaWQgPSBDb250cm9sLkZlZWQgRm9yd2FyZCArIENvbnRyb2wuUHJvcG9ydGlvbmFsOwoKCQkJQ29udHJvbC5JbnRlZ3JhbC5NYXhpbXVtID0gTGlicmFyeS5DYWxjdWxhdGUuTWF4KFRoaXMuTGltaXQgLSBJZ25pdGlvbiBUaW1pbmcgLSBwaWQsIDAuMCk7CgkJCUNvbnRyb2wuSW50ZWdyYWwuTWluaW11bSA9IExpYnJhcnkuQ2FsY3VsYXRlLk1pbihJZ25pdGlvbiBUaW1pbmcgLSBwaWQsIDAuMCk7CgoJCQlpZiAoKENvbnRyb2wuSW50ZWdyYWwuR2FpbiA+IDApIGFuZAoJCQkJbm90IENhbGN1bGF0ZS5Jc05BTihDb250cm9sLkludGVncmFsKQoJCQkpCgkJCXsKCQkJCUNvbnRyb2wuSW50ZWdyYWwgPSBMaWJyYXJ5LkxpbWl0LlJhbmdlKAoJCQkJCUNvbnRyb2wuSW50ZWdyYWwgKyAoQ29udHJvbC5JbnRlZ3JhbC5HYWluICogZXJyICogZXQpLAoJCQkJCUNvbnRyb2wuSW50ZWdyYWwuTWluaW11bSwKCQkJCQlDb250cm9sLkludGVncmFsLk1heGltdW0KCQkJCSk7CgkJCX0KCQkJZWxzZQoJCQl7CgkJCQlDb250cm9sLkludGVncmFsID0gMC4wOwoJCQl9CgoJCQlDb250cm9sLkVycm9yID0gZXJyOwoJCQlWYWx1ZSA9IExpYnJhcnkuTGltaXQuUmFuZ2UoCgkJCQlDb250cm9sLkludGVncmFsICsgcGlkLAoJCQkJMC4wLAoJCQkJVGhpcy5MaW1pdCAtIElnbml0aW9uIFRpbWluZwoJCQkpOwoJCX0KCX0KfQ==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Idle.Ramp">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Idle.Mode">
+        <Props Type="MoTeC Types.System Mode"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Idle.Value">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC" Min="0.00000000000000000e+000" Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The offset applied to this cylinder for idle control.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim.Idle">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Idle.Control.Integral.Gain">
+        <Props Qty="rad/rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="deg/rev"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Idle.Control.Integral.Maximum">
+        <Props Qty="rad">
+         <Locale>
+          <Default Unit="dBTDC" Min="0.00000000000000000e+000" Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The maximum allowed Integral.</P>
+<P>Calculated from:</P>
+<UL>
+<LI><EM>Control Feed Forward </EM>
+<LI><EM>Control Proportional</EM> 
+<LI><EM>Actuator Maximum</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Idle.Control.Integral.Minimum">
+        <Props Qty="rad">
+         <Locale>
+          <Default Unit="dBTDC" Min="0.00000000000000000e+000" Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The minimum allowed Integral.</P>
+<P>Calculated from:</P>
+<UL>
+<LI><EM>Control Feed Forward </EM>
+<LI><EM>Control Proportional</EM> 
+<LI><EM>Actuator Minimum</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Idle.Control.Proportional.Proportional">
+        <Props Qty="rad">
+         <Locale>
+          <Default Unit="dBTDC" Min="0.00000000000000000e+000" Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The contribution of the proportional term</P>
+<P>Calculated from:</P>
+<UL>
+<LI><EM>Control Proportional Gain</EM> 
+<LI><EM>Control Error</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Idle.Control.Integral.Integral">
+        <Props Qty="rad">
+         <Locale>
+          <Default Unit="dBTDC" Min="0.00000000000000000e+000" Max="1.50000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The contribution of the integral term</P>
+<P>Calculated from:</P>
+<UL>
+<LI><EM>Control Integral Gain</EM> 
+<LI><EM>Control Error</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim.Idle.Control.Integral">
+        <Props UseDefValue="true" DefValue="This.Integral"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Idle.Control.Proportional.Gain">
+        <Props Qty="rad/(rad/s)" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="deg/rpm"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim.Idle.Control.Proportional">
+        <Props UseDefValue="true" DefValue="This.Proportional"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Idle.Control.Feed Forward">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim.Idle.Control"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Knock"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Knock.Level">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Connect to <EM>Engine Cylinder x Knock Level</EM>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Knock.Cycle">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Connect to <EM>Engine Cylinder x Knock Cycle</EM>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Timing"/>
+        <Component Name="Trim">
+         <Component Name="Trim"/>
+         <Component Name="Main">
+          <Component Name="Value">
+           <Component Name="Value"/>
+           <Component Name="Init"/>
+           <Component Name="Update"/>
+          </Component>
+         </Component>
+         <Component Name="Knock">
+          <Component Name="Knock"/>
+          <Component Name="State"/>
+          <Component Name="Gain"/>
+          <Component Name="Limit"/>
+          <Component Name="Threshold"/>
+          <Component Name="Recovery Rate"/>
+          <Component Name="Calculation"/>
+         </Component>
+         <Component Name="Idle">
+          <Component Name="Value"/>
+          <Component Name="Mode"/>
+          <Component Name="Ramp"/>
+          <Component Name="Limit"/>
+          <Component Name="Control">
+           <Component Name="Aim"/>
+           <Component Name="Error"/>
+           <Component Name="Feed Forward"/>
+           <Component Name="Proportional">
+            <Component Name="Proportional"/>
+            <Component Name="Gain"/>
+           </Component>
+           <Component Name="Integral">
+            <Component Name="Integral"/>
+            <Component Name="Minimum"/>
+            <Component Name="Maximum"/>
+            <Component Name="Gain"/>
+           </Component>
+          </Component>
+          <Component Name="Script"/>
+         </Component>
+        </Component>
+        <Component Name="Ignition Timing"/>
+        <Component Name="Engine Speed"/>
+        <Component Name="Mode"/>
+        <Component Name="Knock">
+         <Component Name="Level"/>
+         <Component Name="Cycle"/>
+        </Component>
+        <Component Name="Output">
+         <Component Name="Diagnostic"/>
+         <Component Name="Firing Edge">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Enable"/>
+         <Component Name="Top Dead Centre"/>
+         <Component Name="Timing"/>
+         <Component Name="Restrike Angle"/>
+         <Component Name="Restrike Count"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="SetTiming"/>
+         <Component Name="SetRestrike"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Ignition.Single Spark Plug">
+     <BuildHelp>
+<![CDATA[<P>This module implements an individual ignition output with the following features:</P>
+<UL>
+<LI>Individual Cylinder Trim Table 
+<LI>Knock control</LI></UL>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Output Enable Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Enable" TargetRef="Target" DisplayName="Output Enable Component"/>
+         <Property Name="Restrike Angle Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Angle" TargetRef="Target" DisplayName="Restrike Angle Component"/>
+         <Property Name="Restrike Count Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Count" TargetRef="Target" DisplayName="Restrike Count Component"/>
+         <Property Name="Timing Target Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Timing" TargetRef="Target" DisplayName="Timing Target Component"/>
+         <Property Name="Timing Validation Maximum" Creation="Custom" Visible="1" TargetCpt="This.Output.Timing" TargetRef="ValMax" DisplayName="Timing Validation Maximum"/>
+         <Property Name="Timing Validation Minimum" Creation="Custom" Visible="1" TargetCpt="This.Output.Timing" TargetRef="ValMin" DisplayName="Timing Validation Minimum"/>
+         <Property Name="Top Dead Centre Component" Creation="Custom" Visible="1" TargetCpt="This.Output.Top Dead Centre" TargetRef="Target" DisplayName="Top Dead Centre Component"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Voltage" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Timing" MatchPropType="Prop" MatchPropTarget="Locale.Default.Max"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Timing" MatchPropType="Prop" MatchPropTarget="Locale.Default.Min"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Firing Edge" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="_IOMethod.ign" Name="Base.Output">
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding the calculation that generated the output waveform.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Output.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Firing Edge">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Output.Firing Edge.Value">
+        <Props Value="EDGE_FALL"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Top Dead Centre"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Angle"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Count"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameCreation="AutoConst" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceConstant" Name="Base.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetRestrike"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding the connector pin voltage measurement.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered">
+        <Props>
+         <Locale>
+          <Default Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute">
+        <Props>
+         <Locale>
+          <Default Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Enable"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Timing"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetTiming"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Output">
+         <Component Name="Diagnostic"/>
+         <Component Name="Firing Edge">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Enable"/>
+         <Component Name="Top Dead Centre"/>
+         <Component Name="Timing"/>
+         <Component Name="Restrike Angle"/>
+         <Component Name="Restrike Count"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="SetTiming"/>
+         <Component Name="SetRestrike"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Old"/>
+    <ModuleGroup Name="Old.Ignition"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Ignition.Single Spark Plug with knock">
+     <BuildHelp>
+<![CDATA[<P>This module implements an individual ignition output with the following features:</P>
+<UL>
+<LI>Individual Cylinder Trim Table 
+<LI>Knock control</LI></UL>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Ignition Timing" Creation="Custom" Visible="1" TargetCpt="This.Ignition Timing" TargetRef="Target" DisplayName="Ignition Timing"/>
+         <Property Name="Knock Cycle" Creation="Custom" Visible="1" TargetCpt="This.Knock.Cycle" TargetRef="Target" DisplayName="Knock Cycle"/>
+         <Property Name="Knock Level" Creation="Custom" Visible="1" TargetCpt="This.Knock.Level" TargetRef="Target" DisplayName="Knock Level"/>
+         <Property Name="Limit Advance" Creation="Custom" Visible="1" TargetCpt="This.Limit.Advance" TargetRef="Target" DisplayName="Limit Advance"/>
+         <Property Name="Limit Retard" Creation="Custom" Visible="1" TargetCpt="This.Limit.Retard" TargetRef="Target" DisplayName="Limit Retard"/>
+         <Property Name="Mode Component" Creation="Custom" Visible="1" TargetCpt="This.Mode" TargetRef="Target" DisplayName="Mode Component"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Output Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Output.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Output Diagnostic Log Rate"/>
+         <Property Name="Output Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Output.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Output Diagnostic Logging"/>
+         <Property Name="Output Enable" Creation="Custom" Visible="1" TargetCpt="This.Output.Enable" TargetRef="Target" DisplayName="Output Enable"/>
+         <Property Name="Restrike Angle" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Angle" TargetRef="Target" DisplayName="Restrike Angle"/>
+         <Property Name="Restrike Count" Creation="Custom" Visible="1" TargetCpt="This.Output.Restrike Count" TargetRef="Target" DisplayName="Restrike Count"/>
+         <Property Name="Selected Event" Creation="Custom" Visible="1" TargetCpt="This.Calculation" TargetRef="SelectedTrigger" DisplayName="Selected Event"/>
+         <Property Name="Timing Display Max" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="Locale.Default.Max" DisplayName="Timing Display Max"/>
+         <Property Name="Timing Display Min" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="Locale.Default.Min" DisplayName="Timing Display Min"/>
+         <Property Name="Timing Validation Max" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="ValMax" DisplayName="Timing Validation Max"/>
+         <Property Name="Timing Validation Min" Creation="Custom" Visible="1" TargetCpt="This.Timing" TargetRef="ValMin" DisplayName="Timing Validation Min"/>
+         <Property Name="Top Dead Centre" Creation="Custom" Visible="1" TargetCpt="This.Output.Top Dead Centre" TargetRef="Target" DisplayName="Top Dead Centre"/>
+         <Property Name="Trim Knock Gain" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Gain" TargetRef="Target" DisplayName="Trim Knock Gain"/>
+         <Property Name="Trim Knock Limit" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Limit" TargetRef="Target" DisplayName="Trim Knock Limit"/>
+         <Property Name="Trim Knock Recovery Rate" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Recovery Rate" TargetRef="Target" DisplayName="Trim Knock Recovery Rate"/>
+         <Property Name="Trim Knock State" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.State" TargetRef="Target" DisplayName="Trim Knock State"/>
+         <Property Name="Trim Knock Threshold" Creation="Custom" Visible="1" TargetCpt="This.Trim.Knock.Threshold" TargetRef="Target" DisplayName="Trim Knock Threshold"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Voltage" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Trim.Main" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Output.Firing Edge" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Timing">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.000000e+001" ValMax="9.000000e+001">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC" Min="-6.000000e+001" Max="2.000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Final timing for this cylinder.</P>
+<UL>
+<LI>Calculated from the sum of <EM>Ignition Timing</EM>, <EM>Trim</EM> and <EM>Knock</EM>. 
+<LI>The final timing is constrained to <EM>Ignition Timing Limit.</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim">
+        <Props UseDefValue="true" DefValue="This.Trim"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Trim">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.000000e+001" ValMax="9.000000e+001">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Main">
+        <Props Qty="$(Parent.Parent.Timing:Qty)" Validation="$(Parent.Parent.Timing:Validation)" ValMin="$(Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Timing:ValMax)" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="$(Parent.Parent.Timing:Locale.Default.Unit)" DPS="$(Parent.Parent.Timing:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Trim.Main.Value">
+        <Props NumAxes="2"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Trim.Main.Value.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Trim.Main.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Trim.Main.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Trim.Knock">
+        <Props UseDefValue="true" DefValue="This.Knock"/>
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding knock measurement and control.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Trim.Knock.Knock">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Individual"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dRTD" Min="0.00000000000000000e+000" Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The offset applied to this cylinder for knock control.</P>
+<UL>
+<LI>This value is decayed at <EM>Recovery Rate</EM> 
+<LI>This value is increased when <EM>Level </EM>exceeds <EM>Threshold</EM></LI></UL>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.State">
+        <Props Type="::This.Knock State Enumeration"/>
+        <Comment>
+<![CDATA[Individual cylinder knock control is managed by a global knock status]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Gain">
+        <Props Qty="rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="dRTD"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Limit">
+        <Props Qty="rad" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <Locale>
+          <Default Unit="dRTD"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Threshold">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Trim.Knock.Recovery Rate">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="1.00000000000000000e-003" ValClampMax="false">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Trim.Knock.Calculation">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZWxhcHNlZHRpbWUgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKCmxvY2FsIFVwZGF0ZWQgPSBDaGFuZ2UuQnkoQmFzZS5Lbm9jay5DeWNsZSwgMSk7Cgp3aGVuIChTdGF0ZSkKewoJaXMgKEVuYWJsZWQpCgl7CgkJLyogZGVjYXkgcHJldmlvdXMgdmFsdWUgcHJpb3IgdG8gY29tcGFyYXNvbiB3aXRoIGN1cnJlbnQga25vY2sgbGV2ZWwgKi8KCQlsb2NhbCBEZWNheWVkIFRyaW0gPSBMaWJyYXJ5LkxpbWl0Lk1pbihUaGlzLktub2NrIC0gKFJlY292ZXJ5IFJhdGUgKiBlbGFwc2VkdGltZSksIDAuMCk7CgkJbG9jYWwgQ3VycmVudCBUcmltID0gMC4wOwoJCWlmIChVcGRhdGVkKQoJCXsKCQkJQ3VycmVudCBUcmltID0gTGlicmFyeS5MaW1pdC5NaW4oKEJhc2UuS25vY2suTGV2ZWwgLSBUaHJlc2hvbGQpICogR2FpbiwgMC4wKTsKCQl9CgkJVGhpcy5Lbm9jayA9IExpYnJhcnkuTGltaXQuTWF4KERlY2F5ZWQgVHJpbSArIEN1cnJlbnQgVHJpbSwgVGhpcy5MaW1pdCk7Cgl9CglpcyAoVHJhbnNpZW50KQoJewoJCS8qIEhvbGQgcHJldmlvdXMgdmFsdWUgKi8KCX0KCWlzIChEaXNhYmxlZCkKCXsKCQlUaGlzLktub2NrID0gMC4wOwoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Timing">
+        <Props Type="$(Parent.Timing:Type)" Qty="$(Parent.Timing:Qty)" Validation="$(Parent.Timing:Validation)" ValClampMin="$(Parent.Timing:ValClampMin)" ValMin="$(Parent.Timing:ValMin)" ValClampMax="$(Parent.Timing:ValClampMax)" ValMax="$(Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="$(Parent.Timing:Locale.Default.Unit)" DPS="$(Parent.Timing:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>The desired ignition timing. This value is modified by the per-cylinder trims to compensate for imbalance between cylinders.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="::This.Ignition Output Mode Enumeration"/>
+        <Comment>
+<![CDATA[<P>Used to override ignition timing for checking with a timing light.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Knock"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Knock.Level">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Connect to <EM>Engine Cylinder x Knock Level</EM>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Knock.Cycle">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Connect to <EM>Engine Cylinder x Knock Cycle</EM>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Limit">
+        <Comment>
+<![CDATA[Ignition timing constraints]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Limit.Advance">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Ignition advance limit.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Limit.Retard">
+        <Props Qty="rad" Validation="MinMax" ValMin="$(Parent.Parent.Timing:ValMin)" ValMax="$(Parent.Parent.Timing:ValMax)">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Ignition retard limit.]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.ign" Name="Base.Output">
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding the calculation that generated the output waveform.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Output.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Firing Edge">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Output.Firing Edge.Value">
+        <Props Value="EDGE_FALL"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Enable"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Top Dead Centre"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Timing">
+        <Props Target="Parent.Parent.Timing"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Angle"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Output.Restrike Count"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Output.Resource">
+        <Props NameCreation="AutoConst" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceConstant" Name="Base.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetTiming">
+        <Props SelectedTrigger="$(Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Output.SetRestrike"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Voltage">
+        <Comment>
+<![CDATA[<P>This subsystem contain information regarding the connector pin voltage measurement.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute Filtered">
+        <Props>
+         <Locale>
+          <Default Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Voltage.Absolute">
+        <Props>
+         <Locale>
+          <Default Max="5.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Voltage.Update"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoTW9kZSkKewoJaXMgKE5vcm1hbCkKCXsKCQlUcmltID0gVHJpbS5NYWluICsgVHJpbS5Lbm9jazsKCQlUaW1pbmcgPSBsaWJyYXJ5LkxpbWl0LlJhbmdlKElnbml0aW9uIFRpbWluZyArIFRyaW0sIFRoaXMuTGltaXQuQWR2YW5jZSwgVGhpcy5MaW1pdC5SZXRhcmQpOwoJfQoJaXMgKENoZWNrIFRpbWluZykKCXsKCQlUcmltID0gMC4wOwoJCVRpbWluZyA9IElnbml0aW9uIFRpbWluZzsKCX0KfQo=]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Timing"/>
+        <Component Name="Trim">
+         <Component Name="Trim"/>
+         <Component Name="Main">
+          <Component Name="Value">
+           <Component Name="Value"/>
+           <Component Name="Init"/>
+           <Component Name="Update"/>
+          </Component>
+         </Component>
+         <Component Name="Knock">
+          <Component Name="Knock"/>
+          <Component Name="State"/>
+          <Component Name="Gain"/>
+          <Component Name="Limit"/>
+          <Component Name="Threshold"/>
+          <Component Name="Recovery Rate"/>
+          <Component Name="Calculation"/>
+         </Component>
+        </Component>
+        <Component Name="Ignition Timing"/>
+        <Component Name="Mode"/>
+        <Component Name="Knock">
+         <Component Name="Level"/>
+         <Component Name="Cycle"/>
+        </Component>
+        <Component Name="Limit">
+         <Component Name="Advance"/>
+         <Component Name="Retard"/>
+        </Component>
+        <Component Name="Output">
+         <Component Name="Diagnostic"/>
+         <Component Name="Firing Edge">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Enable"/>
+         <Component Name="Top Dead Centre"/>
+         <Component Name="Timing"/>
+         <Component Name="Restrike Angle"/>
+         <Component Name="Restrike Count"/>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="SetTiming"/>
+         <Component Name="SetRestrike"/>
+        </Component>
+        <Component Name="Voltage">
+         <Component Name="Absolute Filtered"/>
+         <Component Name="Absolute"/>
+         <Component Name="Filter">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource"/>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Upcoming"/>
+    <ModuleGroup Name="Upcoming.Ignition"/>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Ignition">
+     <Module Name="Transient Ignition"/>
+     <Module Name="Single Spark Plug with knock"/>
+     <Module Name="Single Spark Plug"/>
+    </ModuleGroup>
+    <ModuleGroup Name="Upcoming">
+     <ModuleGroup Name="Ignition">
+      <Module Name="Single Spark Plug with knock with idle"/>
+     </ModuleGroup>
+    </ModuleGroup>
+    <ModuleGroup Name="Old">
+     <ModuleGroup Name="Ignition"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

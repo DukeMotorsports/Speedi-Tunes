@@ -1,0 +1,720 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC OE Ford Fiesta ST 2013" VersionMajor="1" VersionMinor="0" BuildNumber="4">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0084"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="5"/>
+  <File Name="MoTeC Output" VersionMajor="1" VersionMinor="5" VersionBuild="8"/>
+  <File Name="MoTeC Input" VersionMajor="1" VersionMinor="6" VersionBuild="52"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="CAN Switch State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Invalid" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Off" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Gear OE Enumeration" Storage="enum" Default="Neutral">
+   <Enum Name="Default" ContainerOrder="0">
+    <Help>
+<![CDATA[The current gear cannot be determined.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Reverse" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Neutral" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="First" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Second" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Third" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fourth" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fifth" ContainerOrder="7">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sixth" ContainerOrder="8">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Ford Fiesta ST 2013 Integration"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Ford Fiesta ST 2013 Integration.Ford Fiesta ST 2013">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements OE Integration for Ford Fiesta ST 2013 vehicle platforms.</p>
+            <p class="device_help">Components include CAN messaging for OE dash, Power Steering, and ABS using
+              original naming.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Coolant Temperature, Engine Load, Engine Load Normalised,
+              Engine Speed, Engine State, Fuel Used, Gear, Gear Ratio Overall, Inlet Manifold Pressure,
+              Inlet Manifold Temperature, Throttle Pedal, Vehicle Speed, Wheel Speed Front Drive Final Ratio,
+              Warning Light State
+            </h3>
+            <p class="device_help">Connect to the respectively named channels in the project.</p>
+            <p class="device_help">
+            <h2 class="device_help">Data Types</h2>
+            <h3 class="device_help">Gear Data Type</h3>
+            <p class="device_help">Connect to the respectively named data types in the project.</p>
+            <p class="device_help">
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Coolant Bypass Solenoid Output Update Event, Coolant Bypass Solenoid Voltage Update Event,
+              Coolant Update Event,</h3>
+            <p class="device_help">Typically 10Hz.</p>
+            <h3 class="device_help">Voltage Event</h3>
+            <p class="device_help">Typically 100Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Pedal">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Manifold Pressure">
+        <Props Qty="Pa">
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Manifold Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Load">
+        <Props Qty="kg" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="4.00000000000000010e-003">
+         <Locale>
+          <Default Unit="mg"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used for all Ford Fiesta ST 2013 OE CAN messaging. Normally set to CAN Bus 2.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Wheel Circumference">
+        <Props Qty="m">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The wheel circumference used for all Ford Fiesta ST 2013 OE CAN messaging. Normally set to match the OE
+                    circumference of 1.871m.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Coolant Update Event" Creation="Custom" Visible="1" TargetCpt="This.Coolant.Update" TargetRef="SelectedTrigger" DisplayName="Coolant Update Event"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Gear Data Type" Creation="Custom" Visible="1" TargetCpt="This.Gear" TargetRef="Type" DisplayName="Gear Data Type"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Load" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Gear" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Gear Ratio Overall" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Wheel Speed Front Drive Final Ratio" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Manifold Pressure" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Vehicle Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Pedal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Manifold Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Used" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Warning Light State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Load Normalised" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Driver Throttle Pedal Translation Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant.Bypass.Solenoid" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to Original Equipment components unique to the Ford Fiesta ST 2013
+                    vehicle platform.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fuel Used">
+        <Props Qty="m3">
+         <Locale>
+          <Default Unit="l" DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Gear">
+        <Props Type="::This.Gear OE Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Gear Ratio Overall">
+        <Props Qty="ratio">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Vehicle Speed">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Wheel Speed Front Drive Final Ratio">
+        <Props Qty="ratio">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Warning Light State">
+        <Props Type="MoTeC Types.Output State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Brake Switch">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S" Type="::This.CAN Switch State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Ford Fiesta ST systems use ABS CAN messages for brake switch calculations. If CAN messages fail
+                    or time out, Brake Switch is set to <em class="device_item">Invalid</em> and associated systems will not operate.</p>
+                  <p class="device_help">Refer to the Brake main group for detailed help.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Clutch Switch">
+        <Props DiagnosticLog="true" DiagnosticLogRate="1S" Type="::This.CAN Switch State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Ford Fiesta ST systems use ABS CAN messages for clutch switch calculations. If CAN messages fail
+                    or time out, Clutch Switch is set to <em class="device_item">Invalid</em> and associated systems will not operate.</p>
+                  <p class="device_help">Refer to the Clutch main group for detailed help.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Maximum Torque Estimate">
+        <Props>
+         <Axis>
+          <X Source="Parent.Engine Speed" MaxSites="13"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Approximate Maximum Engine Torque versus Engine Speed. Used in Ford Fiesta CAN Messaging.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Maximum Torque Estimate.Value">
+        <Props Qty="N.m">
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="6.00000000000000000e+002"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Maximum Torque Estimate.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Maximum Torque Estimate.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Communications.Transmit 100Hz:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Communications">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKbG9jYWwgb2sgPSB0cnVlOwpzdGF0aWMgbG9jYWwgdGhyb3R0bGVQZWRhbERlbHRhID0gMC4wOwpzdGF0aWMgbG9jYWwgZW5naW5lU3BlZWREZWx0YSA9IDAuMDsKbG9jYWwgemxlID0gMC4wOwp3aGVuIChHZWFyKQp7CglpcyAoRGVmYXVsdCBvciBSZXZlcnNlKQoJewoJCXpsZSA9IDAuMDsKCX0KCWlzIChOZXV0cmFsIG9yIEZpcnN0IG9yIEZpZnRoIG9yIFNpeHRoKQoJewoJCXpsZSA9IDgwLjA7Cgl9CglpcyAoU2Vjb25kIG9yIFRoaXJkKQoJewoJCXpsZSA9IDExMC4wOwoJfQoJaXMgKEZvdXJ0aCkKCXsKCQl6bGUgPSAxNDAuMDsKCX0KfQovKiBGb3JkIEZpZXN0YSAweDIwMCAqLwpsb2NhbCB2ZWhpY2xlRHJpdmVSYXRpbyA9IDEuMDsKaWYgKENhbGN1bGF0ZS5Jc05BTihHZWFyIFJhdGlvIE92ZXJhbGwpKQp7Cgl2ZWhpY2xlRHJpdmVSYXRpbyA9IDEwLjA7Cn0KZWxzZQp7Cgl2ZWhpY2xlRHJpdmVSYXRpbyA9IEdlYXIgUmF0aW8gT3ZlcmFsbCAqIFdoZWVsIFNwZWVkIEZyb250IERyaXZlIEZpbmFsIFJhdGlvOwp9CmxvY2FsIHdoZWVsVG9ycXVlRXN0aW1hdGUgPSAoRW5naW5lIExvYWQgLSB6bGUpICogdmVoaWNsZURyaXZlUmF0aW8gKiA4NTAwMDsKbG9jYWwgd2hlZWxUb3JxdWVNaW5Fc3RpbWF0ZSA9ICgoRW5naW5lIExvYWQgKiAoMzAwMDAuMC9JbmxldCBNYW5pZm9sZCBQcmVzc3VyZSkpIC0gemxlKSAqIHZlaGljbGVEcml2ZVJhdGlvICogODUwMDA7CmxvY2FsIHdoZWVsVG9ycXVlTWF4RXN0aW1hdGUgPSB3aGVlbFRvcnF1ZUVzdGltYXRlICogMS4wNjsKbG9jYWwgd2hlZWxUb3JxdWUgPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKHdoZWVsVG9ycXVlRXN0aW1hdGUgKyAweDI3MTApOwpsb2NhbCB3aGVlbFRvcnF1ZU1pbiA9IENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIod2hlZWxUb3JxdWVNaW5Fc3RpbWF0ZSArIDB4MjcxMCk7CmxvY2FsIHdoZWVsVG9ycXVlTWF4ID0gQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcih3aGVlbFRvcnF1ZU1heEVzdGltYXRlICsgMHgyNzEwKTsKCkNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsICAwLCAxNiwgd2hlZWxUb3JxdWUpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMTYsIDE2LCB3aGVlbFRvcnF1ZU1pbik7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYsIHdoZWVsVG9ycXVlTWF4KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQ4LCAxNiwgMHg4MDAwKTsKb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpLCAweDIwMCk7CgoKLyogRm9yZCBGaWVzdGEgMHgyMDEgKi8KCmxvY2FsIHZzcCA9IDAuMDsKaWYgKCBub3QgQ2FsY3VsYXRlLklzTkFOKFZlaGljbGUgU3BlZWQpKQp7Cgl2c3AgPSBWZWhpY2xlIFNwZWVkOwp9CgpzdGF0aWMgbG9jYWwgbGFzdFJQTSA9IDEuMDsKbG9jYWwgcnBtRGVsdGEgPSBFbmdpbmUgU3BlZWQgLSBsYXN0UlBNOwplbmdpbmVTcGVlZERlbHRhID0gKGVuZ2luZVNwZWVkRGVsdGEgKiAwLjkpICsgKHJwbURlbHRhICogMTEpOwpsYXN0UlBNID0gRW5naW5lIFNwZWVkOwoKc3RhdGljIGxvY2FsIGxhc3RUcCA9IDEuMDsKbG9jYWwgdHBEZWx0YSA9IFRocm90dGxlIFBlZGFsIC0gbGFzdFRwOwp0aHJvdHRsZVBlZGFsRGVsdGEgPSAodGhyb3R0bGVQZWRhbERlbHRhICogMC42KSArICh0cERlbHRhICogOS41KTsKbGFzdFRwID0gVGhyb3R0bGUgUGVkYWw7CgpDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAgMCwgMTYsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoRW5naW5lIFNwZWVkIC8gNi4wKSk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAxNiwgMTYsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoKGVuZ2luZVNwZWVkRGVsdGEgLyA2LjApICsgMHg0MDAwKSk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIodnNwICogMzYwLjApKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQ4LCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihUaHJvdHRsZSBQZWRhbCAqIDIwMCkpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgNTYsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKCh0aHJvdHRsZVBlZGFsRGVsdGEgKiAyMDApICsgMTI4KSk7Cm9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCxQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSwgMHgyMDEpOwoKLyogRm9yZCBGaWVzdGEgMHgyMDUgKi8KbG9jYWwgZ2VhclRvcnF1ZSA9IENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoKHdoZWVsVG9ycXVlRXN0aW1hdGUgLyBHZWFyIFJhdGlvIE92ZXJhbGwpKzUxMik7CmxvY2FsIGdlYXJUb3JxdWVNaW4gPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKCh3aGVlbFRvcnF1ZU1pbkVzdGltYXRlIC8gR2VhciBSYXRpbyBPdmVyYWxsKSs1MTIpOwpsb2NhbCBnZWFyVG9ycXVlTWF4ID0gQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihQYXJlbnQuTWF4aW11bSBUb3JxdWUgRXN0aW1hdGUgKyA1MTIpOwpDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAgMCwgMTYsIGdlYXJUb3JxdWUpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMTYsIDE2LCBnZWFyVG9ycXVlTWluKTsKQ2FuQ29tbXMuU2V0Qml0KGgsIDE3LCAoUGFyZW50LkJyYWtlIFN3aXRjaCBlcSBQYXJlbnQuQnJha2UgU3dpdGNoLk9uKSk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYsIGdlYXJUb3JxdWVNYXgpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgNDgsIDE2LCBnZWFyVG9ycXVlKTsKb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpLCAweDIwNSk7CgoKLyogRm9yZCBGaWVzdGEgMHgyMzEgKi8KbG9jYWwgYnl0ZTEgPSAweDAwOwpzdGF0aWMgbG9jYWwgbGFzdEJ5dGUxID0gMHgwMDsKd2hlbiAoR2VhcikKewoJaXMgKE5ldXRyYWwgb3IgRmlyc3Qgb3IgUmV2ZXJzZSBvciBEZWZhdWx0KQoJewoJCWJ5dGUxID0gMHg2NTsKCX0KCWlzIChTZWNvbmQpCgl7CgkJYnl0ZTEgPSAweDM3OwoJfQoJaXMgKFRoaXJkKQoJewoJCWJ5dGUxID0gMHgyNTsKCX0KCWlzIChGb3VydGgpCgl7CgkJYnl0ZTEgPSAweDFjOwoJfQoJaXMgKEZpZnRoKQoJewoJCWJ5dGUxID0gMHgxNjsKCX0KCWlzIChTaXh0aCkKCXsKCQlieXRlMSA9IDB4MTI7Cgl9Cn0KQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwpDYW5Db21tcy5TZXRJbnRlZ2VyICAgICAgICAoaCwgIDAsICA0LCBQYXJlbnQuQ2x1dGNoIFN3aXRjaCBlcSBQYXJlbnQuQ2x1dGNoIFN3aXRjaC5PbiA/IDAgOiBHZWFyLkFzSW50ZWdlcigpKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsICA4LCAgOCwgYnl0ZTEpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgNDgsICA4LCBsYXN0Qnl0ZTEgZXEgYnl0ZTEgPyAweDAwIDogMHg0MCApOwpvayA9IG9rIGFuZCBDYW5Db21tcy5UeFN0YW5kYXJkKGgsUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MjMxKTsKbGFzdEJ5dGUxID0gYnl0ZTE7CgovKgogKiBTaHV0IHVwIGJ1aWxkCiAqLwpvayA9IG9rOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 50Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKbG9jYWwgb2sgPSB0cnVlOwoKLyogRm9yZCBGaWVzdGEgMHgwRkQgKi8KbG9jYWwgYnl0ZTAgPSAweDAwOwpsb2NhbCBieXRlMSA9IDB4MDA7CndoZW4gKEVuZ2luZSBTdGF0ZSkKewoJaXMgKFN0YXJ0dXApCgl7CgkJYnl0ZTAgPSAweDIyOwoJCWJ5dGUxID0gMHhDQTsKCX0KCWlzIChDcmFuaykKCXsKCQlieXRlMCA9IDB4NDI7CgkJYnl0ZTEgPSAweEQyOwoJfQoJaXMgKFJ1bikKCXsKCQlieXRlMCA9IDB4NjI7CgkJYnl0ZTEgPSAweEQ2OwoJfQoJaXMgKFN0b3ApCgl7CgkJYnl0ZTAgPSAweEEyOwoJCWJ5dGUxID0gMHhFNjsKCX0KfQpDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAgMCwgIDgsIGJ5dGUwKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsICA4LCAgOCwgYnl0ZTEpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMTYsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKElubGV0IE1hbmlmb2xkIFRlbXBlcmF0dXJlICsgNDAuMCkpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMjQsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKFRocm90dGxlIFBlZGFsICogMTIyKSsxNik7Cm9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCxQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSwgMHgwRkQpOwoKCi8qCiAqIFNodXQgdXAgYnVpbGQKICovCm9rID0gb2s7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 20Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.50MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKbG9jYWwgb2sgPSB0cnVlOwoKLyogRm9yZCBGaWVzdGEgMHgyODAgKi8KbG9jYWwgY3J1aXNlRW5hYmxlID0gZmFsc2U7IC8vbmVlZHMgdG8gYmUgdXBkYXRlZCB0byByZWFsIGNydWlzZSBlbmFibGUgd2hlbiBjcnVpc2UgY29udHJvbCBpcyBpbnRlZ3JhdGVkCgpsb2NhbCBmdWVsVXNlZCA9IENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoRnVlbCBVc2VkKiA4MDAwLjApOwpmdWVsVXNlZCA9IGZ1ZWxVc2VkICYgMHhmZjsKCkNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsICA4LCAgOCwgY3J1aXNlRW5hYmxlID8gMHgwOCA6IDB4MTAgKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDE2LCAgOCwgZnVlbFVzZWQpOyAvL2Z1ZWwgdXNlZCBlc3RpbWF0ZQpvayA9IG9rIGFuZCBDYW5Db21tcy5UeFN0YW5kYXJkKGgsUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MjgwKTsKCgovKgogKiBTaHV0IHVwIGJ1aWxkCiAqLwpvayA9IG9rOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 10Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKbG9jYWwgb2sgPSB0cnVlOwpzdGF0aWMgbG9jYWwgb2RvbWV0ZXJDb3VudCA9IDAuMDsKCmxvY2FsIHZzcGQgPSAwLjA7CmlmICggbm90IENhbGN1bGF0ZS5Jc05BTihWZWhpY2xlIFNwZWVkKSkKewoJdnNwZCA9IFZlaGljbGUgU3BlZWQ7Cn0Kb2RvbWV0ZXJDb3VudCArPSAodnNwZCAvMTAuMCk7Ly9hY3R1YWwgbWV0cmVzCmxvY2FsIG9kbzhiaXQgPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKG9kb21ldGVyQ291bnQpICogNTsKb2RvOGJpdCA9IG9kbzhiaXQgJiAweGZmOwoKbG9jYWwgZnVlbFVzZWQgPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKEZ1ZWwgVXNlZCogMTAwMC4wKTsKZnVlbFVzZWQgPSBmdWVsVXNlZCAmIDB4ZmY7CgovKgogKiBjaGVjayBsaWdodCBpcyBhbHdheXMgb24gd2hlbiBlbmdpbmUgc3RvcHBlZCAoYml0IDUgY2xlYXIpCiAqIHR1cm5zIG9mZiBpbW1lZGlhdGVseSB1cG9uIGNyYW5raW5nIChiaXQgNSBzZXQpCiAqIGNhbiBiZSB0dXJuZWQgb24gaWYgV2FybmluZy5MaWdodC5TdGF0ZSA9IDEKICovCmxvY2FsIGNoZWNrbGlnaHQgPQoJRW5naW5lIFN0YXRlLkFzSW50ZWdlcigpIDwgMiBvcgoJV2FybmluZyBMaWdodCBTdGF0ZSBlcSBXYXJuaW5nIExpZ2h0IFN0YXRlLk9uOwoKLyogRm9yZCBGaWVzdGEgMHg0MjAgKi8KCkNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsICAwLCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihDb29sYW50IFRlbXBlcmF0dXJlICsgNDAuMCkpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgIDgsICA4LCBvZG84Yml0KTsgLy9maXZlIGJpdHMgPSAxLjAgbWV0cmVzIHJvbGxlZApDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMTYsICA4LCBmdWVsVXNlZCk7IC8vZnVlbCB1c2VkIGVzdGltYXRlCkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAyNCwgIDgsIDB4MzMpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMzIsICA4LCBUaHJvdHRsZSBQZWRhbCA8PSAyLjAgPyAweDAxIDogMHgwMCk7CkNhbkNvbW1zLlNldEJpdCAgICAgICAgICAgIChoLCA0MywgICAgIG5vdCBjaGVja2xpZ2h0KTsKb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpLCAweDQyMCk7CgoKLyoKICogU2h1dCB1cCBidWlsZAogKi8Kb2sgPSBvazsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Receive 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHg0QjAgLSBBQlMgV2hlZWwgc3BlZWRzIC0gMTAwSHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpLCAweDRCMCwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7Ci8qCiAqIENhbGN1bGF0ZSBodWIgc3BlZWQgZnJvbSBBQlMgd2hlZWwgc3BlZWQ6IG9yaWdpbmFsIHN5c3RlbSBjYW5ub3QgZmFjdG9yIGRpZmZlcmVudCB3aGVlbCBzaXplcywKICogdGhpcyBPRSBjaXJjdW1mZXJlbmNlIHZhbHVlIGlzIGNhbGN1bGF0ZWQgZnJvbSBhY3R1YWwgT0Ugcm9hZCBkYXRhLgogKiBPRSB3aGVlbHMgYXJlIDIwNS80MCBSMTcsIGNpcmMgaXMgMS44NzFtCiAqLwoKaWYgKHJ4KQp7Ci8qCiAqIG5vdyB1c2luZyBPRSBDQU4gc2xvdHMgYW5kIG9yaWdpbmFsIER1YWwgRHJpdmVuIFdoZWVsIFNwZWVkIHdpdGggQ0FOIGNsYXNzCiAqLwogCi8vc2V0IFNsb3QgT0UxICg5MykgdG8gZnJvbnQgbGVmdCBzcGVlZCBpbiBtL3Mgd2l0aCAyRFAKLy9zZXQgU2xvdCBPRTIgKDk0KSB0byBmcm9udCByaWdodCBzcGVlZCBpbiBtL3Mgd2l0aCAyRFAKLy9zZXQgU2xvdCBPRTMgKDk1KSB0byByZWFyIGxlZnQgc3BlZWQgaW4gbS9zIHdpdGggMkRQCi8vc2V0IFNsb3QgT0U0ICg5NikgdG8gZnJvbnQgcmlnaHQgc3BlZWQgaW4gbS9zIHdpdGggMkRQCglDYW5CbG9jay5TZXQxNihDYW5CbG9jayBHZXQxNiBTbG90IEVudW1lcmF0aW9uLk9FIDEuQXNJbnRlZ2VyKCkgLSAxLCBDb252ZXJ0LlRvSW50ZWdlcigoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDAsIDE2KSAtIDEwMDAwLjApIC8gUGFyZW50LldoZWVsIENpcmN1bWZlcmVuY2UpKTsKCUNhbkJsb2NrLlNldDE2KENhbkJsb2NrIEdldDE2IFNsb3QgRW51bWVyYXRpb24uT0UgMi5Bc0ludGVnZXIoKSAtIDEsIENvbnZlcnQuVG9JbnRlZ2VyKChDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwxNiwgMTYpIC0gMTAwMDAuMCkgLyBQYXJlbnQuV2hlZWwgQ2lyY3VtZmVyZW5jZSkpOwoJQ2FuQmxvY2suU2V0MTYoQ2FuQmxvY2sgR2V0MTYgU2xvdCBFbnVtZXJhdGlvbi5PRSAzLkFzSW50ZWdlcigpIC0gMSwgQ29udmVydC5Ub0ludGVnZXIoKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLDMyLCAxNikgLSAxMDAwMC4wKSAvIFBhcmVudC5XaGVlbCBDaXJjdW1mZXJlbmNlKSk7CglDYW5CbG9jay5TZXQxNihDYW5CbG9jayBHZXQxNiBTbG90IEVudW1lcmF0aW9uLk9FIDQuQXNJbnRlZ2VyKCkgLSAxLCBDb252ZXJ0LlRvSW50ZWdlcigoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsNDgsIDE2KSAtIDEwMDAwLjApIC8gUGFyZW50LldoZWVsIENpcmN1bWZlcmVuY2UpKTsKfQoKLyoKICogMHgwODAgLSBTdGVlcmluZyBXaGVlbCBBbmdsZSAtIDYwaHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpLCAweDA4MCwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCkgb3Igcng7CmlmIChyeCkKewovL3NldCBTbG90IE9FNSAoOTcpIHRvIHN0ZWVyaW5nIGFuZ2xlCglDYW5CbG9jay5TZXQxNihDYW5CbG9jayBHZXQxNiBTbG90IEVudW1lcmF0aW9uLk9FIDUuQXNJbnRlZ2VyKCkgLSAxLChDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDAsIDE2KSAtIDEwMDAwKSk7Cn0KCi8qCiAqIDB4MjEyIC0gQUJTIEJyYWtlIFBlZGFsIFByZXNzdXJlIC0gMTBIeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MjEyLCAweDAwMCwgdHJ1ZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwppZiAocngpCnsKLy9zZXQgU2xvdCBPRTkgKDEwMSkgdG8gYnJha2UgcGVkYWwgcHJlc3N1cmUKCUNhbkJsb2NrLlNldDE2KENhbkJsb2NrIEdldDE2IFNsb3QgRW51bWVyYXRpb24uT0UgOS5Bc0ludGVnZXIoKSAtIDEsIENhbkNvbW1zLkdldEludGVnZXIoaCw0OCwgMTYpKTsKfQoKLyoKICogMHgxOTAgLSBJUEMgQnJha2UgU3dpdGNoIC0gNTBIeiByZWNlaXZlCiAqLwpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MTkwLCAweDAwMCwgdHJ1ZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwpsb2NhbCByeDE5MHRpbWVvdXQgPSBEZWxheS5SaXNpbmcobm90IHJ4LCAwLjEwKTsKaWYgKHJ4KQp7CglQYXJlbnQuQnJha2UgU3dpdGNoID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDE3KSA/ICBDQU4gU3dpdGNoIFN0YXRlIEVudW1lcmF0aW9uLk9uIDogIENBTiBTd2l0Y2ggU3RhdGUgRW51bWVyYXRpb24uT2ZmOwoJUGFyZW50LkNsdXRjaCBTd2l0Y2ggPSBDYW5Db21tcy5HZXRCaXQoaCwgMTkpID8gIENBTiBTd2l0Y2ggU3RhdGUgRW51bWVyYXRpb24uT24gOiAgQ0FOIFN3aXRjaCBTdGF0ZSBFbnVtZXJhdGlvbi5PZmY7Ci8vc2V0IFNsb3QgT0UxMyAoMTA1KSB0byBicmFrZSBzd2l0Y2gKLy9zZXQgU2xvdCBPRTE0ICgxMDYpIHRvIGNsdXRjaCBzd2l0Y2gKCUNhbkJsb2NrLlNldDE2KENhbkJsb2NrIEdldDE2IFNsb3QgRW51bWVyYXRpb24uT0UgMTMuQXNJbnRlZ2VyKCkgLSAxLCAoQ2FuQ29tbXMuR2V0Qml0KGgsIDE3KT8gMSA6IDApKTsKCUNhbkJsb2NrLlNldDE2KENhbkJsb2NrIEdldDE2IFNsb3QgRW51bWVyYXRpb24uT0UgMTQuQXNJbnRlZ2VyKCkgLSAxLCAoQ2FuQ29tbXMuR2V0Qml0KGgsIDE5KT8gMSA6IDApKTsKfQplbHNlIGlmIChyeDE5MHRpbWVvdXQpCnsKCVBhcmVudC5CcmFrZSBTd2l0Y2ggPSBDQU4gU3dpdGNoIFN0YXRlIEVudW1lcmF0aW9uLkludmFsaWQ7CglQYXJlbnQuQ2x1dGNoIFN3aXRjaCA9IENBTiBTd2l0Y2ggU3RhdGUgRW51bWVyYXRpb24uSW52YWxpZDsKfQoK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Coolant">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information specific to the Ford Fiesta ST Coolant Shutoff and Bypass systems.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Coolant.Shutoff">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information specific to the Ford Fiesta ST Coolant Shutoff system.</p>
+                  <p class="device_help">The Coolant Shutoff Solenoid will open when Coolant Temperature is above Ford Fiesta ST
+                    Coolant Shutoff Coolant Temperature.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Shutoff.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[<p class="device_help">Coolant Temperature at which the Coolant Shutoff Solenoid opens.</p>
+                  <p class="device_help">Typically 60°C.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Coolant.Shutoff.Solenoid">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Coolant.Shutoff.Solenoid.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant.Shutoff.Solenoid.Drive">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Coolant.Shutoff.Solenoid.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant.Shutoff.Solenoid.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Coolant.Shutoff.Solenoid.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Output.Resource">
+        <Props NameCreation="AutoParam"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Coolant.Shutoff.Solenoid.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Coolant.Shutoff.Solenoid.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Bypass.Solenoid.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Coolant.Shutoff.Solenoid.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Diagnostic">
+        <Props DiagnosticLog="false"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant.Shutoff.Solenoid.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Shutoff.Solenoid.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Shutoff.Solenoid.Pin.Hold Current.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Shutoff.Solenoid.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Coolant.Shutoff.Solenoid.SetState"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Coolant.Bypass">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information specific to the Ford Fiesta ST Coolant Bypass system.</p>
+                  <p class="device_help">The Coolant Bypass Solenoid will open when:
+                    <ul class="device_help">
+                      <li class="device_help">Coolant Temperature is above Ford Fiesta ST Coolant Bypass Coolant Temperature, AND
+                        <ul class="device_help">
+                          <li class="device_help">Engine Load Normalised is above Ford Fiesta ST Coolant Bypass Engine Load Normalised, OR</li>
+                          <li class="device_help">Engine Speed is above Ford Fiesta ST Coolant Bypass Engine Speed.</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Bypass.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[<p class="device_help">Coolant Temperature at which the Coolant Bypass Solenoid may open.</p>
+                  <p class="device_help">Typically 70°C.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Bypass.Engine Speed">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine Speed above which the Coolant Bypass Solenoid may open.</p>
+                  <p class="device_help">Typically 4000 RPM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Bypass.Engine Load Normalised">
+        <Props Qty="ratio" Validation="MinMax" ValMin="1.00000000000000010e-001" ValMax="3.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine Load Normalised  above which the Coolant Bypass Solenoid may open.</p>
+                  <p class="device_help">Typically 70%.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Coolant.Bypass.Solenoid">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Coolant.Bypass.Solenoid.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant.Bypass.Solenoid.Drive">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Bypass.Solenoid.Drive.Value"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Coolant.Bypass.Solenoid.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant.Bypass.Solenoid.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Coolant.Bypass.Solenoid.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Output.Resource">
+        <Props NameCreation="AutoParam"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Coolant.Bypass.Solenoid.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Coolant.Bypass.Solenoid.Voltage"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant.Bypass.Solenoid.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Voltage.Update"/>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Coolant.Bypass.Solenoid.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Diagnostic">
+        <Props DiagnosticLog="false"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant.Bypass.Solenoid.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Bypass.Solenoid.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant.Bypass.Solenoid.Pin.Hold Current.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant.Bypass.Solenoid.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Coolant.Bypass.Solenoid.SetState"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Load Normalised">
+        <Props Qty="ratio" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Coolant.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[VGhpcy5CeXBhc3MuU29sZW5vaWQuU2V0U3RhdGUoCgkoQ29vbGFudCBUZW1wZXJhdHVyZSA+PSBCeXBhc3MuQ29vbGFudCBUZW1wZXJhdHVyZSBhbmQgRW5naW5lIExvYWQgTm9ybWFsaXNlZCA+PSBCeXBhc3MuRW5naW5lIExvYWQgTm9ybWFsaXNlZCkKCW9yIEVuZ2luZSBTcGVlZCA+PSBCeXBhc3MuRW5naW5lIFNwZWVkCgk/IE91dHB1dCBTdGF0ZSBFbnVtZXJhdGlvbi5PbgoJOiBPdXRwdXQgU3RhdGUgRW51bWVyYXRpb24uT2ZmCik7ClRoaXMuU2h1dG9mZi5Tb2xlbm9pZC5TZXRTdGF0ZShDb29sYW50IFRlbXBlcmF0dXJlID49IFNodXRvZmYuQ29vbGFudCBUZW1wZXJhdHVyZQoJPyBPdXRwdXQgU3RhdGUgRW51bWVyYXRpb24uT24KCTogT3V0cHV0IFN0YXRlIEVudW1lcmF0aW9uLk9mZgopOwoK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant.Shutoff.Solenoid.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Coolant Temperature"/>
+        <Component Name="Engine Load"/>
+        <Component Name="Engine Load Normalised"/>
+        <Component Name="Engine Speed"/>
+        <Component Name="Engine State"/>
+        <Component Name="Fuel Used"/>
+        <Component Name="Gear"/>
+        <Component Name="Gear Ratio Overall"/>
+        <Component Name="Inlet Manifold Pressure"/>
+        <Component Name="Inlet Manifold Temperature"/>
+        <Component Name="Throttle Pedal"/>
+        <Component Name="Vehicle Speed"/>
+        <Component Name="Wheel Speed Front Drive Final Ratio"/>
+        <Component Name="Warning Light State"/>
+        <Component Name="Brake Switch"/>
+        <Component Name="Clutch Switch"/>
+        <Component Name="CAN Bus"/>
+        <Component Name="Wheel Circumference"/>
+        <Component Name="Maximum Torque Estimate">
+         <Component Name="Value"/>
+         <Component Name="Init"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Communications">
+         <Component Name="Transmit 100Hz"/>
+         <Component Name="Transmit 50Hz"/>
+         <Component Name="Transmit 20Hz"/>
+         <Component Name="Transmit 10Hz"/>
+         <Component Name="Receive 100Hz"/>
+        </Component>
+        <Component Name="Coolant">
+         <Component Name="Shutoff">
+          <Component Name="Coolant Temperature"/>
+          <Component Name="Solenoid">
+           <Component Name="State"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Output">
+            <Component Name="Frequency">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Duty Cycle">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Resource">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Voltage">
+            <Component Name="Absolute Filtered"/>
+            <Component Name="Absolute"/>
+            <Component Name="Filter">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Resource"/>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Pin">
+            <Component Name="Diagnostic"/>
+            <Component Name="Drive">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Peak Current">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Hold Current">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Resource"/>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="SetState"/>
+          </Component>
+         </Component>
+         <Component Name="Bypass">
+          <Component Name="Coolant Temperature"/>
+          <Component Name="Engine Speed"/>
+          <Component Name="Engine Load Normalised"/>
+          <Component Name="Solenoid">
+           <Component Name="State"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Output">
+            <Component Name="Frequency">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Duty Cycle">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Resource">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Voltage">
+            <Component Name="Absolute Filtered"/>
+            <Component Name="Absolute"/>
+            <Component Name="Filter">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Resource"/>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Pin">
+            <Component Name="Diagnostic"/>
+            <Component Name="Drive">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Peak Current">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Hold Current">
+             <Component Name="Value"/>
+            </Component>
+            <Component Name="Resource"/>
+            <Component Name="Reserve"/>
+            <Component Name="Release"/>
+            <Component Name="Initialise"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="SetState"/>
+          </Component>
+         </Component>
+         <Component Name="Update"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Ford Fiesta ST 2013 Integration">
+     <Module Name="Ford Fiesta ST 2013"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

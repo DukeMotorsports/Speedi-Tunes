@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Comms" VersionMajor="1" VersionMinor="5" BuildNumber="1">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0020"/>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="3" VersionBuild="1"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="CAN Bus Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Help>
+<![CDATA[<BODY></BODY>]]>
+   </Help>
+   <Enum Name="OK" ContainerOrder="6">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Timed Out" ContainerOrder="4" Tags="Fault">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Bus Off" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Receive Warning" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Receive Error Passive" ContainerOrder="3" Tags="Fault">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Transmit Warning" ContainerOrder="8" Tags="Warning">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Transmit Error Passive" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid CAN Bus" ContainerOrder="0" Tags="Fault"/>
+   <Enum Name="Wrong Speed" ContainerOrder="9" Tags="Warning">
+    <Help>
+<![CDATA[The CAN bus speed has been overridden by PC communications. Messages from the ECU firmware will not be transmitted.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="5"/>
+   <Enum Name="Transmit Overrun" ContainerOrder="10" Tags="Warning">
+    <Help>
+<![CDATA[<P>Some CAN messages could not be transmitted</P>
+<P>&nbsp;</P>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="CAN Bus Speed Enumeration" Storage="enum" Default="1Mbit">
+   <Help>
+<![CDATA[<BODY></BODY>]]>
+   </Help>
+   <Enum Name="1Mbit" ContainerOrder="0">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="250kbit" ContainerOrder="2">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="500kbit" ContainerOrder="1">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+   <Enum Name="125kbit" ContainerOrder="3">
+    <Help>
+<![CDATA[<BODY></BODY>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="RS232 Port Baud Rate Enumeration" Storage="enum" Default="19200 Baud">
+   <Enum Name="1200 Baud" ContainerOrder="0"/>
+   <Enum Name="1800 Baud" ContainerOrder="1"/>
+   <Enum Name="2400 Baud" ContainerOrder="2"/>
+   <Enum Name="4800 Baud" ContainerOrder="3"/>
+   <Enum Name="9600 Baud" ContainerOrder="4"/>
+   <Enum Name="19200 Baud" ContainerOrder="5"/>
+   <Enum Name="38400 Baud" ContainerOrder="6"/>
+   <Enum Name="57600 Baud" ContainerOrder="7"/>
+   <Enum Name="115200 Baud" ContainerOrder="8"/>
+  </Type>
+  <Type Name="E8XX Output Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Timeout" ContainerOrder="0">
+    <Help>
+<![CDATA[No CAN data received for 500mS.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Fault" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<P>Output fault.</P>
+<P>Can be due to an output overheat or overcurrent condition.</P>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[No resource allocated.]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help>
+<![CDATA[Normal operation.]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="E8XX Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Timeout" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[No CAN data received for 500mS.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[No resource allocated.]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help>
+<![CDATA[Normal operation.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Initialisation Error" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<P><EM>CAN Bus</EM> is invalid.</P>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="RS232 Port Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="1"/>
+   <Enum Name="Framing Error" ContainerOrder="3" Tags="Warning"/>
+   <Enum Name="Configuration Error" ContainerOrder="0" Tags="Fault"/>
+   <Enum Name="Parity Error" ContainerOrder="4" Tags="Warning"/>
+   <Enum Name="Noise" ContainerOrder="6" Tags="Warning"/>
+   <Enum Name="Overrun" ContainerOrder="5" Tags="Warning"/>
+   <Enum Name="OK" ContainerOrder="2"/>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.CAN Bus">
+     <BuildHelp>
+<![CDATA[<P>This module&nbsp;manages a CAN Bus.</P>
+<P>This module is mandatory for any modules that transmit or receive on a CAN Bus.</P>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="Bus" Creation="Custom" Visible="1" TargetCpt="This.Bus" TargetRef="Value" DisplayName="Bus"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Diagnostic Log Rate"/>
+         <Property Name="Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Diagnostic Logging"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Selected Event" Creation="Custom" Visible="1" TargetCpt="This.Calculation" TargetRef="SelectedTrigger" DisplayName="Selected Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.CAN Bus Diagnostic Enumeration"/>
+        <Comment>
+<![CDATA[The overall status of the CAN bus. These <EM>Warnings</EM> and <EM>Faults</EM> typically indicate problems with can bus wiring or incompatable settings for some devices on&nbsp;the bus.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Speed">
+        <Props Type="::This.CAN Bus Speed Enumeration" TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Speed.Value">
+        <Props Value="1Mbit"/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKERpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuTm90IGluIFVzZSBhbmQKCURpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuSW52YWxpZCBDQU4gQnVzKQp7Cglsb2NhbCBzID0gQ2FuQ29tbXMuQnVzU3RhdHVzKEJ1cy5Bc0ludGVnZXIoKSk7CgoJaWYgKHMgZXEgMCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKCX0KCWVsc2UgaWYgKChzICYgMHgwNCkgbmVxIDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQnVzIE9mZjsKCX0KCWVsc2UgaWYgKChzICYgMHgwOCkgbmVxIDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuVHJhbnNtaXQgRXJyb3IgUGFzc2l2ZTsKCX0KCWVsc2UgaWYgKChzICYgMHgyMCkgbmVxIDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuVHJhbnNtaXQgV2FybmluZzsKCX0KCWVsc2UgaWYgKChzICYgMHgxMCkgbmVxIDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuUmVjZWl2ZSBFcnJvciBQYXNzaXZlOwoJfQoJZWxzZSBpZiAoKHMgJiAweDQwKSBuZXEgMCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5SZWNlaXZlIFdhcm5pbmc7Cgl9CgllbHNlIGlmICgocyAmIDB4MTAwKSBuZXEgMCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5UaW1lZCBPdXQ7Cgl9CgllbHNlIGlmICgocyAmIDB4MjAwKSBuZXEgMCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5Xcm9uZyBTcGVlZDsKCX0KCWVsc2UgaWYgKChzICYgMHg0MDApIG5lcSAwKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLlRyYW5zbWl0IE92ZXJydW47Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoTW9kZSkKewoJaXMgKEVuYWJsZWQpCgl7CgkJbG9jYWwga2JhdWQgPSAwOwoKCQl3aGVuIChTcGVlZCkKCQl7CgkJCWlzICgxTWJpdCkKCQkJewoJCQkJa2JhdWQgPSAxMDAwOwoJCQl9CgkJCWlzICg1MDBrYml0KQoJCQl7CgkJCQlrYmF1ZCA9IDUwMDsKCQkJfQoJCQlpcyAoMjUwa2JpdCkKCQkJewoJCQkJa2JhdWQgPSAyNTA7CgkJCX0KCQkJaXMgKDEyNWtiaXQpCgkJCXsKCQkJCWtiYXVkID0gMTI1OwoJCQl9CgkJfQoKCQlsb2NhbCBvayA9IENhbkNvbW1zLkluaXQoQnVzLkFzSW50ZWdlcigpLCBrYmF1ZCk7CgkJaWYgKG5vdCBvaykKCQl7CgkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludmFsaWQgQ0FOIEJ1czsKCQl9CgkJZWxzZQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuT0s7CgkJfQoJfQoJaXMgKERpc2FibGVkKQoJewoJCS8qIExlYXZlIGRpYWdub3N0aWMgYXQgTm90IGluIFVzZSAqLwoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.System Mode" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Set to <EM>Enabled</EM> if&nbsp;this CAN bus&nbsp;is in use.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Mode.Value">
+        <Props Value="Enabled"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Diagnostic"/>
+        <Component Name="Bus"/>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Speed">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Calculation"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.RS232 Port">
+     <BuildHelp>
+<![CDATA[<P>This module&nbsp;manages the RS232 port.</P>
+<P>This module is mandatory for any other modules that transmit or receive RS232 data.</P>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLogRate" DisplayName="Diagnostic Log Rate"/>
+         <Property Name="Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Diagnostic" TargetRef="DiagnosticLog" DisplayName="Diagnostic Logging"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Baud Rate" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.RS232 Port Diagnostic Enumeration"/>
+        <Comment>
+<![CDATA[<P>RS232 port status.</P>
+<P>Fault is reported if the port could not be initialised.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Baud Rate">
+        <Props Type="::This.RS232 Port Baud Rate Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[Specifies the RS232 baud rate]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Baud Rate.Value"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGJhdWQgPSAwOwoKd2hlbiAoQmF1ZCBSYXRlKQp7CglpcyAoMTIwMCBCYXVkKQoJewoJCWJhdWQgPSAxMjAwOwoJfQoJaXMgKDE4MDAgQmF1ZCkKCXsKCQliYXVkID0gMTgwMDsKCX0KCWlzICgyNDAwIEJhdWQpCgl7CgkJYmF1ZCA9IDI0MDA7Cgl9CglpcyAoNDgwMCBCYXVkKQoJewoJCWJhdWQgPSA0ODAwOwoJfQoJaXMgKDk2MDAgQmF1ZCkKCXsKCQliYXVkID0gOTYwMDsKCX0KCWlzICgxOTIwMCBCYXVkKQoJewoJCWJhdWQgPSAxOTIwMDsKCX0KCWlzICgzODQwMCBCYXVkKQoJewoJCWJhdWQgPSAzODQwMDsKCX0KCWlzICg1NzYwMCBCYXVkKQoJewoJCWJhdWQgPSA1NzYwMDsKCX0KCWlzICgxMTUyMDAgQmF1ZCkKCXsKCQliYXVkID0gMTE1MjAwOwoJfQp9CgppZiAoUlMyMzJDb21tcy5Jbml0KGJhdWQpKQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKfQplbHNlCnsKCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkNvbmZpZ3VyYXRpb24gRXJyb3I7Cn0=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKERpYWdub3N0aWMuQXNJbnRlZ2VyKCkgPiAwKQp7Cglsb2NhbCBkaWFnID0gUlMyMzJDb21tcy5EaWFnbm9zdGljKCk7CglpZiAoZGlhZyBlcSAwKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJfQoJZWxzZSBpZiAoKGRpYWcgJiAweDEwKSBuZXEgMCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5Ob2lzZTsKCX0KCWVsc2UgaWYgKChkaWFnICYgMHgwMikgbmVxIDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuRnJhbWluZyBFcnJvcjsKCX0KCWVsc2UgaWYgKChkaWFnICYgMHgwNCkgbmVxIDApCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuUGFyaXR5IEVycm9yOwoJfQoJZWxzZSBpZiAoKGRpYWcgJiAweDA4KSBuZXEgMCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PdmVycnVuOwoJfQoJLy8gaWdub3JlIEJyZWFrIGRpYWdub3N0aWMKfQ==]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Diagnostic"/>
+        <Component Name="Baud Rate">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Startup"/>
+        <Component Name="Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.CAN Block Receive">
+     <BuildHelp>
+<![CDATA[<P>This module&nbsp;manages the CAN Block receive sybsystem.</P>
+<P>This module is mandatory for any modules that transmit or receive on a CAN Bus.</P>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.ID base" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKE1vZGUgZXEgTW9kZS5FbmFibGVkKQp7Cglsb2NhbCBvayA9IENhbkJsb2NrLlJ4SW5pdChDQU4gQnVzLkFzSW50ZWdlcigpLCBJRCBCYXNlKTsKCWlmIChub3Qgb2spCgl7CgkJU3lzdGVtLkRlYnVnKCJDYW4gQmxvY2sgUmVjZWl2ZTogaW52YWxpZCBiYXNlIElEIik7Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.System Mode" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Mode can be used to disable can bus reception.</P>
+<P>Select a constant with value enabled if you do not want to use this feature. This is the default.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Mode.Value">
+        <Props Value="Enabled"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[The can bus on which to receive data for sensor <EM>CAN Slots.</EM>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.ID Base">
+        <Props Type="u32" Validation="MinMax" ValMin="16" ValMax="2032"/>
+        <Comment>
+<![CDATA[<P>The CAN ID base address.</P>
+<P>This value must be a multiple of 16. CAN IDs from ID base to ID base + 15 are received.</P>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="ID Base"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.E8XX">
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[The can bus on which to receive data for sensor <EM>CAN Slots.</EM>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Script" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.E8XX Diagnostic Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Script">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[UmVjZWl2ZSBUaW1lID0gRThYWC5SeFRpY2tzU2luY2UoKSAqIFN5c3RlbS5UaWNrUGVyaW9kKCk7CgppZiAoRGlhZ25vc3RpYyBlcSBEaWFnbm9zdGljLkluaXRpYWxpc2F0aW9uIEVycm9yIG9yCglEaWFnbm9zdGljIGVxIERpYWdub3N0aWMuTm90IGluIFVzZSkKewoJLyogRXZlcnl0aGluZyBpcyBkZWFkICovCn0KZWxzZSBpZiAoUmVjZWl2ZSBUaW1lIDwgMC41KQp7CglDb2xkIEp1bmN0aW9uIENvbXBlbnNhdGlvbiAxID0gRThYWC5Db2xkSnVuY3Rpb24oMCk7CglDb2xkIEp1bmN0aW9uIENvbXBlbnNhdGlvbiAyID0gRThYWC5Db2xkSnVuY3Rpb24oMSk7CglJbnRlcm5hbCBUZW1wZXJhdHVyZSA9IEU4WFguQ29sZEp1bmN0aW9uKDIpOwoKCWV4cGFuZCAobiA9IDEgdG8gNCkKCXsKCQlPdXRwdXQgJChuKSBEaWFnbm9zdGljID0gRThYWC5PdXRwdXRGYXVsdCgwKSA/CgkJCU91dHB1dCAkKG4pIERpYWdub3N0aWMuRmF1bHQgOgoJCQlPdXRwdXQgJChuKSBEaWFnbm9zdGljLk9LOwoJfQoKCUludGVybmFsIDVWIEF1eCA9IEU4WFguUmFpbDV2QXV4KCk7CglJbnRlcm5hbCA4ViBBdXggPSBFOFhYLlJhaWw4dkF1eCgpOwoJSW50ZXJuYWwgTmVnYXRpdmUgNVYgPSBFOFhYLlJhaWxNaW51czV2KCk7CglJbnRlcm5hbCA0VjUgPSBFOFhYLlJhaWx2NDUoKTsKCUJhdHRlcnkgVm9sdGFnZSA9IEU4WFguUmFpbHZCYXQoKTsKCQoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuT0s7Cn0KZWxzZQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gVGltZW91dDsKCglDb2xkIEp1bmN0aW9uIENvbXBlbnNhdGlvbiAxID0gQ2FsY3VsYXRlLk5BTigpOwoJQ29sZCBKdW5jdGlvbiBDb21wZW5zYXRpb24gMiA9IENhbGN1bGF0ZS5OQU4oKTsKCUludGVybmFsIFRlbXBlcmF0dXJlID0gQ2FsY3VsYXRlLk5BTigpOwoJCglleHBhbmQgKG4gPSAxIHRvIDQpCgl7CgkJT3V0cHV0ICQobikgRGlhZ25vc3RpYyA9IE91dHB1dCAkKG4pIERpYWdub3N0aWMuQ0FOIFRpbWVvdXQ7Cgl9CgkKCUludGVybmFsIDVWIEF1eCA9IENhbGN1bGF0ZS5OQU4oKTsKCUludGVybmFsIDhWIEF1eCA9IENhbGN1bGF0ZS5OQU4oKTsKCUludGVybmFsIE5lZ2F0aXZlIDVWID0gQ2FsY3VsYXRlLk5BTigpOwoJSW50ZXJuYWwgNFY1ID0gQ2FsY3VsYXRlLk5BTigpOwoJQmF0dGVyeSBWb2x0YWdlID0gQ2FsY3VsYXRlLk5BTigpOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Receive Time">
+        <Props Qty="s">
+         <Locale>
+          <Default Unit="ms" DPS="0" Min="0.00000000000000000e+000" Max="5.00000000000000000e-001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>Time since last CAN message was received.</P>
+<P>This value&nbsp;can be&nbsp;useful for diagnosing CAN reception problems.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Temperature">
+        <Props Qty="K">
+         <Locale>
+          <Default Min="-3.00000000000000000e+001" Max="1.50000000000000000e+002"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Cold Junction Compensation 1">
+        <Props Qty="K">
+         <Locale>
+          <Default Min="-3.00000000000000000e+001" Max="1.50000000000000000e+002"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Cold Junction Compensation 2">
+        <Props Qty="K">
+         <Locale>
+          <Default Min="-3.00000000000000000e+001" Max="1.50000000000000000e+002"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 1 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 2 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 3 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Output 4 Diagnostic">
+        <Props Type="::This.E8XX Output Diagnostic Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Battery Voltage">
+        <Props Qty="V">
+         <Locale>
+          <Default Min="8.00000000000000000e+000" Max="1.60000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal 5V Aux">
+        <Props Qty="V">
+         <Locale>
+          <Default Min="4.00000000000000000e+000" Max="6.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal 8V Aux">
+        <Props Qty="V">
+         <Locale>
+          <Default Min="7.00000000000000000e+000" Max="9.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal 4V5">
+        <Props Qty="V">
+         <Locale>
+          <Default Min="3.50000000000000000e+000" Max="5.50000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Negative 5V">
+        <Props Qty="V">
+         <Locale>
+          <Default Min="-6.00000000000000000e+000" Max="-4.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoTW9kZSkKewoJaXMgKEVuYWJsZWQpCgl7CgkJaWYgKG5vdCBFOFhYLkluaXQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSkpCgkJewoJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5Jbml0aWFsaXNhdGlvbiBFcnJvcjsKCQl9CgkJZWxzZQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ0FOIFRpbWVvdXQ7CgkJfQoJfQoJaXMgKERpc2FibGVkKQoJewoJCS8qIExlYXZlIGRpYWdub3N0aWMgYXQgJ05vdCBpbiBVc2UnICovCgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.System Mode" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Set to <EM>Enabled</EM> if this E8XX is in use.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Diagnostic"/>
+        <Component Name="Receive Time"/>
+        <Component Name="Internal Temperature"/>
+        <Component Name="Cold Junction Compensation 1"/>
+        <Component Name="Cold Junction Compensation 2"/>
+        <Component Name="Output 1 Diagnostic"/>
+        <Component Name="Output 2 Diagnostic"/>
+        <Component Name="Output 3 Diagnostic"/>
+        <Component Name="Output 4 Diagnostic"/>
+        <Component Name="Battery Voltage"/>
+        <Component Name="Internal 5V Aux"/>
+        <Component Name="Internal 8V Aux"/>
+        <Component Name="Internal 4V5"/>
+        <Component Name="Internal Negative 5V"/>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Script"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="CAN Bus"/>
+     <Module Name="CAN Block Receive"/>
+     <Module Name="RS232 Port"/>
+     <Module Name="E8XX"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

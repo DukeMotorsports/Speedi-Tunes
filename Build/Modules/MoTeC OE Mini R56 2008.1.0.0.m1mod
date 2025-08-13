@@ -1,0 +1,885 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC OE Mini R56 2008" VersionMajor="1" VersionMinor="0" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0082"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="5"/>
+  <File Name="MoTeC Output" VersionMajor="1" VersionMinor="5" VersionBuild="8"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Mini R56 Throttle Aim State Enumeration" Storage="enum" Default="Idle">
+   <Enum Name="Idle" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Mini R56 2008 Integration"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Mini R56 2008 Integration.Mini R56 2008">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements OE Integration for Mini R56 2008 vehicle platforms.</p>
+            <p class="device_help">Components include CAN messaging for OE dash, Power Steering, and ABS, and control of OE relays using
+              original naming.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Engine State, Engine Speed, Throttle Pedal, Throttle Aim State, Inlet Manifold Pressure, Ambient
+              Pressure, Inlet Mass Flow, Clutch Switch, Engine Run Switch, Engine Run Threshold, Coolant Temperature,
+              Inlet Manifold Temperature, Engine Load Average, and Engine Overrun State</h3>
+            <p class="device_help">Connect to the respectively named channels in the project.</p>
+            <p class="device_help">
+            <h2 class="device_help">Data Types</h2>
+            <h3 class="device_help">Throttle Aim State Data Type, Engine Overrun State Data Type</h3>
+            <p class="device_help">Connect to the respectively named data types in the project.</p>
+            <p class="device_help">
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Power Event, Fuel Purge Event, Coolant Thermostat Event</h3>
+            <p class="device_help">Typically 10Hz.</p>
+            <h3 class="device_help">Voltage Event</h3>
+            <p class="device_help">Typically 100Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Mass Flow">
+        <Props Qty="kg/s">
+         <Locale>
+          <Default Unit="g/s"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Aim State">
+        <Props Type="::This.Mini R56 Throttle Aim State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Pedal">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Run Threshold">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Run Switch">
+        <Props Type="::Hardware.switch.state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ambient Pressure">
+        <Props Qty="Pa">
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Manifold Pressure">
+        <Props Qty="Pa">
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Clutch Switch">
+        <Props Type="::Hardware.av_switch.sw_state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Coolant Thermostat Event" Creation="Custom" Visible="1" TargetCpt="This.Coolant Thermostat.Update" TargetRef="SelectedTrigger" DisplayName="Coolant Thermostat Event"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Engine Overrun State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Engine Overrun State" TargetRef="Type" DisplayName="Engine Overrun State Data Type"/>
+         <Property Name="Fuel Purge Event" Creation="Custom" Visible="1" TargetCpt="This.Fuel Purge.Update" TargetRef="SelectedTrigger" DisplayName="Fuel Purge Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Power Event" Creation="Custom" Visible="1" TargetCpt="This.Power.Update" TargetRef="SelectedTrigger" DisplayName="Power Event"/>
+         <Property Name="Throttle Aim State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Throttle Aim State" TargetRef="Type" DisplayName="Throttle Aim State Data Type"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Coolant Thermostat.Voltage.Update" TargetRef="SelectedTrigger" DisplayName="Voltage Event"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Overrun State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Pedal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Manifold Pressure" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ambient Pressure" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Mass Flow" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Clutch Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Run Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Run Threshold" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Manifold Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Load Average" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to Original Equipment components unique to the Mini R56 2008
+                    vehicle platform.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Manifold Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Load Average">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Overrun State">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used for all Mini R56 OE CAN messaging. Normally set to CAN Bus 2.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Wheel Circumference">
+        <Props Qty="m">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The wheel circumference used for all Mini R56 OE CAN messaging. Normally set to match the OE
+                    circumference of 1.936m.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Communications">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 10Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKbG9jYWwgb2sgPSB0cnVlOwoKLyogTWluaSBQb3dlciBTdGVlcmluZyAweDFEMCAqLwoKQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwpDYW5Db21tcy5TZXRCaXQoaCwxOCxFbmdpbmUgU3RhdGUgZXEgRW5naW5lIFN0YXRlLlJ1bik7Cm9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCxQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSwgMHgxRDApOwoKLyoKICogU2h1dCB1cCBidWlsZAogKi8Kb2sgPSBvazsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3BlbihmYWxzZSk7CmxvY2FsIG9rID0gdHJ1ZTsKCi8qIE1pbmkgRW5naW5lIHNwZWVkIDB4MEFBKi8KbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGNoZWNrc3VtID0gMHgwMDAwOwpzdGF0aWMgbG9jYWwgcm9sbCA9IDB4MDA7CnJvbGwgKz0xOwppZiAocm9sbCBlcSAxNSkKewoJcm9sbCA9IDA7Cn0KLy9yb2xsIGFsc28gaGFzIGEgaGlnaCBuaWJibGUgb2YgaW5kZXRlcm1pbmF0ZSBzb3VyY2UgdmFsdWUKbG9jYWwgbWFwZXN0aW1hdGUgPSBDb252ZXJ0LlRvSW50ZWdlcigoSW5sZXQgTWFuaWZvbGQgUHJlc3N1cmUgLSAzMjAwMCkvNDUwMCk7CmxvY2FsIHBlZGFsZXN0aW1hdGUgPSBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKFRocm90dGxlIFBlZGFsICogMjU1KTsKbG9jYWwgcnBtID0gQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihFbmdpbmUgU3BlZWQgKiAwLjY2NjYpOwpsb2NhbCBycG1oaSA9IHJwbSAvIDB4MTAwOwpsb2NhbCBycG1sbyA9IHJwbSAmIDB4MGZmOwpsb2NhbCBpZGxlc3RhdGUgPSBUaHJvdHRsZSBBaW0gU3RhdGUgZXEgVGhyb3R0bGUgQWltIFN0YXRlLklkbGUgPyAweDgwIDoweDk0OwovKgogKiBDaGVja3N1bSBpcyBkb25lIGFzIGZvbGxvd3M6CiAqIFN1bSBieXRlcyAxIHRvIDcgYW5kIDE2IGJpdCBjYW4gSUQKICogQWRkIGhpIGJ5dGUgb2YgcmVzdWx0IHRvIGxvdyBieXRlCiAqIHVzZSBsb3cgYnl0ZSByZXN1bHQgYXMgY2hlY2tzdW0gV1RGICEhISEhISEhIQogKi8KbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGNhbklEID0gMHhBQTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGJ5dGUxID0gcm9sbDsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGJ5dGUyID0gbWFwZXN0aW1hdGU7CmxvY2FsIDxVbnNpZ25lZCBJbnRlZ2VyPiBieXRlMyA9IHBlZGFsZXN0aW1hdGU7CmxvY2FsIDxVbnNpZ25lZCBJbnRlZ2VyPiBieXRlNCA9IHJwbWxvOwpsb2NhbCA8VW5zaWduZWQgSW50ZWdlcj4gYnl0ZTUgPSBycG1oaTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGJ5dGU2ID0gaWRsZXN0YXRlOwpsb2NhbCA8VW5zaWduZWQgSW50ZWdlcj4gYnl0ZTcgPSAweEZFOwpjaGVja3N1bSA9IAlieXRlMSArIGJ5dGUyICsgYnl0ZTMgKyBieXRlNCArIGJ5dGU1ICsgYnl0ZTYgKyBieXRlNyArIGNhbklEOwpjaGVja3N1bSA9IChjaGVja3N1bSAvIDB4MTAwKSArIChjaGVja3N1bSAmIDB4ZmYpOwpjaGVja3N1bSA9IGNoZWNrc3VtICYgMHhmZjsKCkNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsNTYsIDgsY2hlY2tzdW0pOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCw0OCwgOCxieXRlMSk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLDQwLCA4LGJ5dGUyKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsMzIsIDgsYnl0ZTMpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwyNCwgOCxieXRlNCk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLDE2LCA4LGJ5dGU1KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDgsIDgsYnl0ZTYpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMCwgOCxieXRlNyk7Cm9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCxQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSwgY2FuSUQpOwoKLyogTWluaSAweDBBOCovCkNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKY2FuSUQgPSAweEE4OwpieXRlMSA9IHJvbGw7CmJ5dGUyID0gMHgwMDsKYnl0ZTMgPSAweDAwOwpieXRlNCA9IDB4MDA7CmJ5dGU1ID0gQ2x1dGNoIFN3aXRjaCBlcSBDbHV0Y2ggU3dpdGNoLk9uID8gMHg1RCA6IDB4NUM7CmJ5dGU2ID0gMHhDRjsKYnl0ZTcgPSBFbmdpbmUgU3RhdGUgZXEgRW5naW5lIFN0YXRlLlJ1biA/IDB4MDIgOiAweDAwOwpjaGVja3N1bSA9IAlieXRlMSArIGJ5dGUyICsgYnl0ZTMgKyBieXRlNCArIGJ5dGU1ICsgYnl0ZTYgKyBieXRlNyArIGNhbklEOwpjaGVja3N1bSA9IChjaGVja3N1bSAvIDB4MTAwKSArIChjaGVja3N1bSAmIDB4ZmYpOwpjaGVja3N1bSA9IGNoZWNrc3VtICYgMHhmZjsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsNTYsIDgsY2hlY2tzdW0pOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCw0OCwgOCxieXRlMSk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLDQwLCA4LGJ5dGUyKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsMzIsIDgsYnl0ZTMpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwyNCwgOCxieXRlNCk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLDE2LCA4LGJ5dGU1KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsIDgsIDgsYnl0ZTYpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgMCwgOCxieXRlNyk7Cm9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCxQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSwgY2FuSUQpOwoKLyogTWluaSAweDBBOSovCkNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKY2FuSUQgPSAweEE5OwpieXRlMSA9IHJvbGw7CmJ5dGUyID0gMHgwMDsKYnl0ZTMgPSAweDAwOwpieXRlNCA9IDB4MDA7CmJ5dGU1ID0gMHgwMDsKYnl0ZTYgPSAweDAwOwpieXRlNyA9IDB4MDA7CmNoZWNrc3VtID0gCWJ5dGUxICsgYnl0ZTIgKyBieXRlMyArIGJ5dGU0ICsgYnl0ZTUgKyBieXRlNiArIGJ5dGU3ICsgY2FuSUQ7CmNoZWNrc3VtID0gKGNoZWNrc3VtIC8gMHgxMDApICsgKGNoZWNrc3VtICYgMHhmZik7CmNoZWNrc3VtID0gY2hlY2tzdW0gJiAweGZmOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCw1NiwgOCxjaGVja3N1bSk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLDQ4LCA4LGJ5dGUxKTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsNDAsIDgsYnl0ZTIpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwzMiwgOCxieXRlMyk7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLDI0LCA4LGJ5dGU0KTsKQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyKGgsMTYsIDgsYnl0ZTUpOwpDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIoaCwgOCwgOCxieXRlNik7CkNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcihoLCAwLCA4LGJ5dGU3KTsKb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpLCBjYW5JRCk7CgoKLyoKICogU2h1dCB1cCBidWlsZAogKi8Kb2sgPSBvazsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Receive 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHgwQ0UgLSBBQlMgV2hlZWwgc3BlZWRzIC0gMTAwSHogcmVjZWl2ZQogKi8KaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpLCAweDBDRSwgMHgwMDAsIGZhbHNlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpIG9yIHJ4OwoKaWYgKHJ4KQp7Ci8qCiAqIG5vdyB1c2luZyBPRSBDQU4gc2xvdHMgYW5kIG9yaWdpbmFsIER1YWwgRHJpdmVuIFdoZWVsIFNwZWVkIHdpdGggQ0FOIGNsYXNzCiAqLwogCi8vc2V0IFNsb3QgT0UxICg5MykgdG8gZnJvbnQgbGVmdCBodWIgc3BlZWQgaW4gZGVncmVlL3NlYwovL3NldCBTbG90IE9FMiAoOTQpIHRvIGZyb250IHJpZ2h0IGh1YiBzcGVlZCBpbiBkZWdyZWUvc2VjCi8vc2V0IFNsb3QgT0UzICg5NSkgdG8gcmVhciBsZWZ0IGh1YiBzcGVlZCBpbiBkZWdyZWUvc2VjCi8vc2V0IFNsb3QgT0U0ICg5NikgdG8gZnJvbnQgcmlnaHQgaHViIHNwZWVkIGluIGRlZ3JlZS9zZWMKCUNhbkJsb2NrLlNldDE2KENhbkJsb2NrIEdldDE2IFNsb3QgRW51bWVyYXRpb24uT0UgMS5Bc0ludGVnZXIoKSAtIDEsIENvbnZlcnQuVG9JbnRlZ2VyKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLDQ4LCAxNikgLyBQYXJlbnQuV2hlZWwgQ2lyY3VtZmVyZW5jZSkpOwoJQ2FuQmxvY2suU2V0MTYoQ2FuQmxvY2sgR2V0MTYgU2xvdCBFbnVtZXJhdGlvbi5PRSAyLkFzSW50ZWdlcigpIC0gMSwgQ29udmVydC5Ub0ludGVnZXIoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsMzIsIDE2KSAvIFBhcmVudC5XaGVlbCBDaXJjdW1mZXJlbmNlKSk7CglDYW5CbG9jay5TZXQxNihDYW5CbG9jayBHZXQxNiBTbG90IEVudW1lcmF0aW9uLk9FIDMuQXNJbnRlZ2VyKCkgLSAxLCBDb252ZXJ0LlRvSW50ZWdlcihDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwxNiwgMTYpIC8gUGFyZW50LldoZWVsIENpcmN1bWZlcmVuY2UpKTsKCUNhbkJsb2NrLlNldDE2KENhbkJsb2NrIEdldDE2IFNsb3QgRW51bWVyYXRpb24uT0UgNC5Bc0ludGVnZXIoKSAtIDEsIENvbnZlcnQuVG9JbnRlZ2VyKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAwLCAxNikgLyBQYXJlbnQuV2hlZWwgQ2lyY3VtZmVyZW5jZSkpOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Power">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding Mini R56 OE system relays.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Power.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[LyogdHVybiBvbiB0aGlzIHJlbGF5IHdpdGggaWduaXRpb24gc3dpdGNoICovCmlmIChFbmdpbmUgUnVuIFN3aXRjaCBlcSBFbmdpbmUgUnVuIFN3aXRjaC5PbikKewoJRE1FIFJlbGF5LlNldFN0YXRlKE91dHB1dCBTdGF0ZSBFbnVtZXJhdGlvbi5Pbik7Cn0KZWxzZQp7CglETUUgUmVsYXkuU2V0U3RhdGUoT3V0cHV0IFN0YXRlIEVudW1lcmF0aW9uLk9mZik7Cn0KCi8qIFNUYXJ0IHJlbGF5IChUQkMpICovCmlmICgoRW5naW5lIFNwZWVkIDw9IEVuZ2luZSBSdW4gVGhyZXNob2xkKSBhbmQgKEVuZ2luZSBSdW4gU3dpdGNoIGVxIEVuZ2luZSBSdW4gU3dpdGNoLk9uKSBhbmQgKENsdXRjaCBTd2l0Y2ggZXEgQ2x1dGNoIFN3aXRjaC5PbikpCnsKCVN0YXJ0IFJlbGF5LlNldFN0YXRlKE91dHB1dCBTdGF0ZSBFbnVtZXJhdGlvbi5Pbik7Cn0KZWxzZQp7CglTdGFydCBSZWxheS5TZXRTdGF0ZShPdXRwdXQgU3RhdGUgRW51bWVyYXRpb24uT2ZmKTsKfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Coolant Thermostat">
+        <Comment>
+<![CDATA[<p class="device_help">This system controls coolant temperature by means of a pulse width modulated thermostat.</p>
+                  <p class="device_help">For this system to operate the following requirements must be met:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Coolant Thermostat Output Resource</em> must be configured.</li>
+                      <li class="device_help"><em class="device_param">Coolant Thermostat Output Frequency</em> must be non-zero for pulse width modulated
+                        control, or zero for switched control.</li>
+                      <li class="device_help">The <em class="device_chan">Coolant Thermostat Duty Cycle</em> table must be populated.</li>
+                      <li class="device_help"><em class="device_ref">Engine State</em> must be <em class="device_enum">Run</em>.</li>
+                    </ul>
+                  <p></p>
+                  <p class="device_help">Thermostat operation can be sustained after <em class="device_ref">Engine State</em> is not <em class="device_enum">Run</em> by setting
+                    <em class="device_param">Coolant Thermostat Hold</em> to a non-zero value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Coolant Thermostat.Duty Cycle">
+        <Props NumAxes="2">
+         <Axis>
+          <X Source="Parent.Parent.Coolant Temperature" MaxSites="5"/>
+          <Y Source="Parent.Parent.Engine Load Average" MaxSites="5"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the pulse width modulated duty cycle for the <em class="device_group">Coolant Thermostat</em>.</p>
+                  <p class="device_help">Typically the table is set to 50% at 80°C, 90% at 85°C, and 100% from 90°C and higher.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant Thermostat.Duty Cycle.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="-1.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Coolant Thermostat.Duty Cycle.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Coolant Thermostat.Duty Cycle.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant Thermostat.Hold">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+        <Comment>
+<![CDATA[<p class="device_help">Coolant Thermostat operation can be sustained after <em class="device_ref">Engine State</em> is not <em class="device_enum">Run</em> by
+                    setting <em class="device_param">Coolant Thermostat Hold</em> to a non-zero value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Coolant Thermostat.Output">
+        <Comment>
+<![CDATA[<p class="device_help">Settings for PWM control of coolant thermostat:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Coolant Thermostat Output Frequency</em> to 100Hz</li>
+                    </ul>
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Thermostat.Output.Frequency">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant Thermostat.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Thermostat.Output.Duty Cycle">
+        <Props TargetCreation="AutoChannel" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Coolant Thermostat.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant Thermostat.Output.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Coolant Thermostat.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Thermostat.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Thermostat.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Thermostat.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Coolant Thermostat.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnVubmluZyA9IEVuZ2luZSBTdGF0ZSBlcSBFbmdpbmUgU3RhdGUuUnVuOwpsb2NhbCBvbiA9IERlbGF5LkZhbGxpbmcocnVubmluZywgSG9sZCk7CgpPdXRwdXQuRHV0eSBDeWNsZSA9IG9uCgk/IER1dHkgQ3ljbGUKCTogMC4wOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fuel Purge">
+        <Comment>
+<![CDATA[<p class="device_help">Charcoal canister purge control system.</p>
+                  <p class="device_help">This system controls the purge solenoid duty cycle such that mass flow through it is at maximum
+                    <em class="device_help">Fuel Purge Flow Ratio</em> percent of the total mass flow into the engine.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fuel Purge.State">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of the fuel purge system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fuel Purge.Coolant Temperature Threshold">
+        <Props Qty="K" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="2.50000000000000000e+002"/>
+        <Comment>
+<![CDATA[<p class="device_help">Purge will be disabled if <em class="device_help">Coolant Temperature</em> is less than this value.</p>
+                  <p class="device_help">Typically 60°C.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fuel Purge.Pressure Ratio">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current pressure ratio across the purge valve.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fuel Purge.Pressure Ratio.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fuel Purge.Pressure Ratio.Threshold">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000"/>
+        <Comment>
+<![CDATA[<p class="device_help">Purging will be disabled if <em class="device_help">Fuel Purge Pressure Ratio</em> is greater than this value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fuel Purge.Flow">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current purge solenoid mass flow.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fuel Purge.Flow.Value">
+        <Props Qty="kg/s">
+         <Locale>
+          <Default Unit="g/s" Min="0.00000000000000000e+000" Max="5.00000000000000010e-003"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fuel Purge.Flow.Request">
+        <Props Qty="kg/s">
+         <Locale>
+          <Default Unit="g/s" Min="0.00000000000000000e+000" Max="5.00000000000000010e-003"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Requested purge solenoid mass flow.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fuel Purge.Flow.Ratio">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000010e-001">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Ratio of Throttle Mass Flow that is available for purging.</p>
+                  <p class="device_help">Typically 2%.</p>
+                  <p class="device_help">Set to 0 to disable the purge system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fuel Purge.Solenoid">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the <em class="device_help">Fuel Purge Solenoid</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fuel Purge.Solenoid.Flow">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Fuel Purge.Solenoid.Flow.Value">
+        <Props NumAxes="2">
+         <Axis>
+          <X Source="Parent.Parent.Parent.Pressure Ratio" MaxSites="21"/>
+          <Y Source="Parent.Parent.Output.Duty Cycle" MaxSites="21"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">This table represents the flow characteristic of the purge solenoid.</p>
+                  <p class="device_help">This value is scaled by <em class="device_help">Ambient Pressure</em> and <em class="device_help">Ambient Temperature</em> to calculate
+                    <em class="device_help">Fuel Purge Flow</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Flow.Value.Value">
+        <Props Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default DPS="2" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Flow.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Flow.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fuel Purge.Solenoid.Flow.Factor">
+        <Props>
+         <Locale>
+          <Default DPS="2" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The flow factor required to achieve <em class="device_help">Fuel Purge Flow Request</em> under the current operating
+                    conditions.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Fuel Purge.Solenoid.Flow.Inverse">
+        <Props NumAxes="2">
+         <Axis>
+          <X Source="Parent.Parent.Parent.Pressure Ratio" MaxSites="21"/>
+          <Y Source="Parent.Factor" MaxSites="21"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">This table must be the inverse of <em class="device_help">Fuel Purge Solenoid Flow</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Flow.Inverse.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" DPS="2" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Flow.Inverse.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Flow.Inverse.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Fuel Purge.Solenoid.Output">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the <em class="device_help">Fuel Purge Solenoid Output</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Output.Frequency">
+        <Props TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fuel Purge.Solenoid.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Output.Duty Cycle">
+        <Props TargetCreation="AutoChannel" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fuel Purge.Solenoid.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Output.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Fuel Purge.Solenoid.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Fuel Purge.Solenoid.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Fuel Purge.Solenoid.Script">
+        <Props SelectedTrigger="$(Parent.Parent.Update:SelectedTrigger)"/>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoUGFyZW50LlN0YXRlKQp7CglpcyAoRW5hYmxlZCkKCXsKCQlPdXRwdXQuRHV0eSBDeWNsZSA9IEZsb3cuSW52ZXJzZTsKCX0KCWlzIChEaXNhYmxlZCkKCXsKCQlPdXRwdXQuRHV0eSBDeWNsZSA9IDAuMDsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Fuel Purge.Update">
+        <Code Encoding="base64">
+<![CDATA[UHJlc3N1cmUgUmF0aW8gPSBJbmxldCBNYW5pZm9sZCBQcmVzc3VyZSAvIEFtYmllbnQgUHJlc3N1cmU7Cgpsb2NhbCBwcnVuZGVyID0gUHJlc3N1cmUgUmF0aW8gPCBQcmVzc3VyZSBSYXRpby5UaHJlc2hvbGQ7CmxvY2FsIG92ZXJydW4gPSBFbmdpbmUgT3ZlcnJ1biBTdGF0ZSBlcSBFbmdpbmUgT3ZlcnJ1biBTdGF0ZS5FbmFibGVkOwpsb2NhbCB0b3ZlciA9IENvb2xhbnQgVGVtcGVyYXR1cmUgPiBDb29sYW50IFRlbXBlcmF0dXJlIFRocmVzaG9sZDsKCmxvY2FsIHNjYWxlID0gMC4wMDAwMDAwMSAqIChBbWJpZW50IFByZXNzdXJlIC8gQ2FsY3VsYXRlLkZhc3RTcXVhcmVSb290KElubGV0IE1hbmlmb2xkIFRlbXBlcmF0dXJlICsgMjczLjE1KSk7CgppZiAocHJ1bmRlciBhbmQgdG92ZXIgYW5kIG5vdCBvdmVycnVuKQp7CglGbG93LlJlcXVlc3QgPSBJbmxldCBNYXNzIEZsb3cgKiBGbG93LlJhdGlvOwoJU29sZW5vaWQuRmxvdy5GYWN0b3IgPSBGbG93LlJlcXVlc3QgLyBzY2FsZTsKCVN0YXRlID0gU3RhdGUuRW5hYmxlZDsKfQplbHNlCnsKCUZsb3cuUmVxdWVzdCA9IDAuMDsKCVNvbGVub2lkLkZsb3cuRmFjdG9yID0gMC4wOwoJU3RhdGUgPSBTdGF0ZS5EaXNhYmxlZDsKfQoKRmxvdyA9IHNjYWxlICogU29sZW5vaWQuRmxvdzsK]]>
+        </Code>
+       </Component>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.DME Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Mini R56 OE system relay.</p>
+                  <p class="device_help"><em class="device_help">As the DME relay may provide a parasitic power feed to the ECU it is recommended that a Low
+                    Side Injector resource is used.</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.DME Relay.State"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.DME Relay.Drive">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.DME Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.DME Relay.Output"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.DME Relay.Output.Frequency"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.DME Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Coolant Thermostat.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.Start Relay.Pin"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Diagnostic"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.Start Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.Start Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.Start Relay.Pin.Hold Current.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.Start Relay.SetState"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.Start Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.Start Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.Start Relay.Voltage"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.Start Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.Start Relay.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.Start Relay.Output.Resource">
+        <Props NameCreation="AutoParam"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.Start Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.Start Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.Start Relay.Output.Frequency.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.Start Relay.Output.Frequency"/>
+       <Component Classname="_IOMethod.pwm" Name="Base.Power.Start Relay.Output"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.Start Relay.Drive.Value">
+        <Props Value="Low Side"/>
+       </Component>
+       <Component Classname="_IOMethod.abs" Name="Base.Coolant Thermostat.Voltage">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Absolute Filtered"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Coolant Thermostat.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Power.Start Relay.Drive">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Update"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.Start Relay.State"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Power.DME Relay.SetState"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Reserve"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Resource"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.DME Relay.Pin.Hold Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Hold Current"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Power.DME Relay.Pin.Peak Current.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Peak Current"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.DME Relay.Pin.Drive.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Drive"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.DME Relay.Pin.Diagnostic"/>
+       <Component Classname="MoTeC Output.Switched Output" Name="Base.Power.Start Relay">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information regarding this Mini R56 OE system relay.</p>
+                  <p class="device_help"><em class="device_help">As the Start relay may provide a parasitic power feed to the ECU it is recommended that a Low
+                    Side Injector resource is used.</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.INJ_PH_IO" Name="Base.Power.DME Relay.Pin"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Coolant Thermostat.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Resource"/>
+       <Component Classname="BuiltIn.Constant" Name="Base.Power.DME Relay.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Filter"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Power.DME Relay.Voltage.Absolute Filtered"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Power.DME Relay.Voltage"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Power.DME Relay.Output.Reserve"/>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Power.DME Relay.Output.Resource.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Power.DME Relay.Output.Resource">
+        <Props NameCreation="AutoParam"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power.DME Relay.Output.Duty Cycle.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Power.DME Relay.Output.Duty Cycle"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant Thermostat.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Engine State"/>
+        <Component Name="Engine Speed"/>
+        <Component Name="Throttle Pedal"/>
+        <Component Name="Throttle Aim State"/>
+        <Component Name="Inlet Manifold Pressure"/>
+        <Component Name="Ambient Pressure"/>
+        <Component Name="Inlet Mass Flow"/>
+        <Component Name="Clutch Switch"/>
+        <Component Name="Engine Run Switch"/>
+        <Component Name="Engine Run Threshold"/>
+        <Component Name="Coolant Temperature"/>
+        <Component Name="Inlet Manifold Temperature"/>
+        <Component Name="Engine Load Average"/>
+        <Component Name="Engine Overrun State"/>
+        <Component Name="CAN Bus"/>
+        <Component Name="Wheel Circumference"/>
+        <Component Name="Communications">
+         <Component Name="Transmit 10Hz"/>
+         <Component Name="Transmit 100Hz"/>
+         <Component Name="Receive 100Hz"/>
+        </Component>
+        <Component Name="Power">
+         <Component Name="DME Relay">
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="Start Relay">
+          <Component Name="State"/>
+          <Component Name="Drive">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Pin">
+           <Component Name="Diagnostic"/>
+           <Component Name="Drive">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Peak Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Hold Current">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="SetState"/>
+         </Component>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Coolant Thermostat">
+         <Component Name="Duty Cycle">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Hold"/>
+         <Component Name="Output">
+          <Component Name="Frequency">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Duty Cycle">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Absolute Filtered"/>
+          <Component Name="Absolute"/>
+          <Component Name="Filter">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Fuel Purge">
+         <Component Name="State"/>
+         <Component Name="Coolant Temperature Threshold"/>
+         <Component Name="Pressure Ratio">
+          <Component Name="Value"/>
+          <Component Name="Threshold"/>
+         </Component>
+         <Component Name="Flow">
+          <Component Name="Value"/>
+          <Component Name="Request"/>
+          <Component Name="Ratio"/>
+         </Component>
+         <Component Name="Solenoid">
+          <Component Name="Flow">
+           <Component Name="Value">
+            <Component Name="Value"/>
+            <Component Name="Init"/>
+            <Component Name="Update"/>
+           </Component>
+           <Component Name="Factor"/>
+           <Component Name="Inverse">
+            <Component Name="Value"/>
+            <Component Name="Init"/>
+            <Component Name="Update"/>
+           </Component>
+          </Component>
+          <Component Name="Output">
+           <Component Name="Frequency">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Script"/>
+         </Component>
+         <Component Name="Update"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Mini R56 2008 Integration">
+     <Module Name="Mini R56 2008"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

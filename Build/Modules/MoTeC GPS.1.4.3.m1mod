@@ -1,0 +1,585 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC GPS" VersionMajor="1" VersionMinor="4" BuildNumber="3">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0034"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+<ul>
+<li>Repair 32 bit Block receive errors</li><li>Define timed out data as NAN</li></ul><h4 class="device_help">Ver 1.4.0002</h4><ul><li>Initial release.</li></ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="3" VersionBuild="9"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="GPS Diagnostic" Storage="enum" Default="Not in Use">
+   <Enum Name="OK" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPGGA Timeout" ContainerOrder="5" Tags="Fault">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid Interface" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPRMC Timeout" ContainerOrder="6" Tags="Fault">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Timeout" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Wait for GPS Fix" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="GPS Interface Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="RS232 Port" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 1 via STC" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 2 via STC" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus 3 via STC" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Block Receive" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="GPS Fix Quality Enumeration" Storage="enum" Default="Invalid">
+   <Enum Name="Manual" ContainerOrder="8">
+    <Help>
+<![CDATA[<p class="device_help">The reported location has been manually entered into the GPS receiver.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Estimated" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using dead reckoning to determine position.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Float RTK" ContainerOrder="6">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a real time kinematic base station to provide increased accuracy.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="RTK" ContainerOrder="5">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a real time kinematic base station to provide increased accuracy.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="PPS" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using the encrypted Precise Positioning System to determine its position.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Differential GPS" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a differential GPS base station to provide increased accuracy.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPS" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is using a standard GPS signal to determine its position.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid" ContainerOrder="1" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver cannot measure enough satellite signal for accurate location determination.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting an unknown fix quality value.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Simulation" ContainerOrder="9">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is in simulation mode.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="GPS Valid Enumeration" Storage="enum" Default="Unknown">
+   <Enum Name="Warning" ContainerOrder="0" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting that position data may be invalid.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Valid" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting that position data is valid.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The GPS receiver is reporting an unknown data valid value.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.GPS">
+     <BuildHelp>
+<![CDATA[<p>This module implements communications for NMEA 0183 GPS receivers.</p>
+<p>Data can be received via either:</p>
+<ul>
+<li>direct RS232 connection (on ECUs equipped with an RS232 port) 
+<li>via a CAN Bus using a STC module</li></ul>
+<p>NOTE:</p>
+<ol>
+<li>An "RS232 Port" module must be added to the Project before RS232 reception is supported 
+<li>A "CAN Bus" Module&nbsp;must be added to the Project before CAN Bus reception from an STC is supported 
+<li>The GPS must transmit both the GGA and RMC sentences for correct operation</li></ol>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Selected Event" Creation="Custom" Visible="1" TargetCpt="This.Script" TargetRef="SelectedTrigger" DisplayName="Selected Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Latitude.CAN Slot" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Longitude.CAN Slot" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Speed.CAN Slot" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.True Course.CAN Slot" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Date.CAN Slot" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Time.CAN Slot" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fault.Delay" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Interface" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p>A GPS receiver can be connected to the RS232 port of the ECU or to an STC on a CAN bus.</p><p>Data format must be NMEA 0183. The GPRMC and GPGGA messages are decoded. All other messages are ignored.</p><p>The serial port baud rate is set in the RS232 group.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.DGPS Update Time">
+        <Props ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Differential GPS update time as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.DGPS Station ID">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Differential GPS station ID as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Altitude">
+        <Props Qty="m">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Altitude as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Fix Quality">
+        <Props Type="::This.GPS Fix Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Fix quality as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.HDOP">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Horizontal dilution of precision as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Satellites">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Satellite count as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.WGS84 Height">
+        <Props Qty="m">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Height above the WGS84 geoid as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Magnetic Variation">
+        <Props Qty="rad">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Magnetic variation as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Valid">
+        <Props Type="::This.GPS Valid Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.000000e+000" Max="0.000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[Data valid value as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.GPS Diagnostic"/>
+        <Comment>
+<![CDATA[<p>Diagnostic information about the GPS receiver.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.FAA Mode">
+        <Props Type="::This.GPS Fix Quality Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p>A subset of the information reported in Fix Quality.</p>
+<p>This values was added to the RMC sentence in NMEA 2.3.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Interface">
+        <Props Type="::This.GPS Interface Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[Selects the interface used to receive GPS messages.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Script">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKEludGVyZmFjZSBlcSBJbnRlcmZhY2UuQ0FOIEJsb2NrIFJlY2VpdmUpCnsKCWxvY2FsIG9rID0gZmFsc2U7CglpZiAoTG9uZ2l0dWRlLkNBTiBTbG90IG5lcSBMb25naXR1ZGUuQ0FOIFNsb3QuTm90IGluIFVzZQoJCWFuZCBDYW5CbG9jay5SeFRpY2tzU2luY2UoKExvbmdpdHVkZS5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpICogMiAvKiAzMmJpdCB0byAxNmJpdCBzbG90IG5lZWRzICoyICovKSAqIFN5c3RlbS5UaWNrUGVyaW9kKCkgPD0gRmF1bHQuRGVsYXkpCgl7CgkJTG9uZ2l0dWRlID0gQ2FuQmxvY2suR2V0MzIoTG9uZ2l0dWRlLkNBTiBTbG90LkFzSW50ZWdlcigpIC0gMSkgKiAwLjAwMDAwMDE7CgkJb2sgPSB0cnVlOwoJfQoJZWxzZQoJewoJCUxvbmdpdHVkZSA9IENhbGN1bGF0ZS5OQU4oKTsKCX0KCglpZiAoTGF0aXR1ZGUuQ0FOIFNsb3QgbmVxIExhdGl0dWRlLkNBTiBTbG90Lk5vdCBpbiBVc2UKCQlhbmQgQ2FuQmxvY2suUnhUaWNrc1NpbmNlKChMYXRpdHVkZS5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpICogMiAvKiAzMmJpdCBzbG90Ki8pICogU3lzdGVtLlRpY2tQZXJpb2QoKSA8PSBGYXVsdC5EZWxheSkKCXsKCQlMYXRpdHVkZSA9IENhbkJsb2NrLkdldDMyKExhdGl0dWRlLkNBTiBTbG90LkFzSW50ZWdlcigpIC0gMSkgKiAwLjAwMDAwMDE7CgkJb2sgPSB0cnVlOwoJfQoJZWxzZQoJewoJCUxhdGl0dWRlID0gQ2FsY3VsYXRlLk5BTigpOwoJfQoKCWlmIChTcGVlZC5DQU4gU2xvdCBuZXEgU3BlZWQuQ0FOIFNsb3QuTm90IGluIFVzZQoJCWFuZCBDYW5CbG9jay5SeFRpY2tzU2luY2UoU3BlZWQuQ0FOIFNsb3QuQXNJbnRlZ2VyKCkgLSAxKSAqIFN5c3RlbS5UaWNrUGVyaW9kKCkgPD0gRmF1bHQuRGVsYXkpCgl7CgkJU3BlZWQgPSBDYW5CbG9jay5HZXQxNihTcGVlZC5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpICogMC4wMTsKCQlvayA9IHRydWU7Cgl9CgllbHNlCgl7CgkJU3BlZWQgPSBDYWxjdWxhdGUuTkFOKCk7Cgl9CgoJaWYgKERhdGUuQ0FOIFNsb3QgbmVxIERhdGUuQ0FOIFNsb3QuTm90IGluIFVzZQoJCWFuZCBDYW5CbG9jay5SeFRpY2tzU2luY2UoRGF0ZS5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpICogU3lzdGVtLlRpY2tQZXJpb2QoKSA8PSBGYXVsdC5EZWxheSkKCXsKCQlEYXRlID0gQ2FuQmxvY2suR2V0MTYoRGF0ZS5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpOwoJCW9rID0gdHJ1ZTsKCX0KCS8vIGhvbGQgY3VycmVudCBkYXRlIGlmIHRpbWVvdXQKCglpZiAoVGltZS5DQU4gU2xvdCBuZXEgVGltZS5DQU4gU2xvdC5Ob3QgaW4gVXNlCgkJYW5kIENhbkJsb2NrLlJ4VGlja3NTaW5jZSgoVGltZS5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpICogMiAvKiAzMmJpdCBzbG90Ki8pICogU3lzdGVtLlRpY2tQZXJpb2QoKSA8PSBGYXVsdC5EZWxheSkKCXsKCQlUaW1lID0gQ2FuQmxvY2suR2V0MzIoVGltZS5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpICogMC4wMDE7CgkJb2sgPSB0cnVlOwoJfQoJZWxzZQoJewoJCVRpbWUgPSBDYWxjdWxhdGUuTkFOKCk7Cgl9CgoJaWYgKFRydWUgQ291cnNlLkNBTiBTbG90IG5lcSBUcnVlIENvdXJzZS5DQU4gU2xvdC5Ob3QgaW4gVXNlCgkJYW5kIENhbkJsb2NrLlJ4VGlja3NTaW5jZShUcnVlIENvdXJzZS5DQU4gU2xvdC5Bc0ludGVnZXIoKSAtIDEpICogU3lzdGVtLlRpY2tQZXJpb2QoKSA8PSBGYXVsdC5EZWxheSkKCXsKCQlUcnVlIENvdXJzZSA9IENhbkJsb2NrLkdldDE2KFRydWUgQ291cnNlLkNBTiBTbG90LkFzSW50ZWdlcigpIC0gMSkgKiAwLjE7CgkJb2sgPSB0cnVlOwoJfQoJZWxzZQoJewoJCVRydWUgQ291cnNlID0gQ2FsY3VsYXRlLk5BTigpOwoJfQoKCWlmIChvaykKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKCX0KCWVsc2UKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5UaW1lb3V0OwoJfQp9CmVsc2UgaWYgKERpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuSW52YWxpZCBJbnRlcmZhY2UgYW5kIERpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuTm90IGluIFVzZSkgLyogRmlybXdhcmUgcmVzdGFydCByZXF1aXJlZCB0byBmaXggaW50ZXJmYWNlICovCnsKCUdQUy5Qcm9jZXNzKCk7CgoJbG9jYWwgZ2dhdG8gPSBHUFMuVGltZW91dEdQR0dBKEZhdWx0LkRlbGF5KTsKCWxvY2FsIHJtY3RvID0gR1BTLlRpbWVvdXRHUFJNQyhGYXVsdC5EZWxheSk7CgoJbG9jYWwgZCA9IEdQUyBEaWFnbm9zdGljLk9LOwoKCWlmIChnZ2F0bykgewoJCWQgPSBkLkdQR0dBIFRpbWVvdXQ7CgkJRml4IFF1YWxpdHkgPSBGaXggUXVhbGl0eS5Vbmtub3duOwoJCVNhdGVsbGl0ZXMgPSBER1BTIFN0YXRpb24gSUQgPSAwOwoJCUhET1AgPSBBbHRpdHVkZSA9IFdHUzg0IEhlaWdodCA9IERHUFMgVXBkYXRlIFRpbWUgPSBDYWxjdWxhdGUuTkFOKCk7Cgl9IGVsc2UgewoJCUZpeCBRdWFsaXR5LlNldChHUFMuRml4UXVhbGl0eSgpKTsKCQlTYXRlbGxpdGVzID0gR1BTLk51bVNhdGVsbGl0ZXMoKTsKCQlIRE9QID0gR1BTLkhET1AoKTsKCQlBbHRpdHVkZSA9IEdQUy5BbHRpdHVkZSgpOwoJCVdHUzg0IEhlaWdodCA9IEdQUy5XR1M4NEhlaWdodCgpOwoJCURHUFMgVXBkYXRlIFRpbWUgPSBHUFMuREdQU1VwZGF0ZVRpbWUoKTsKCQlER1BTIFN0YXRpb24gSUQgPSBHUFMuREdQU1N0YXRpb25JZCgpOwoJfQoKCWlmIChybWN0bykgewoJCWQgPSBkLkdQUk1DIFRpbWVvdXQ7CgkJVmFsaWQgPSBWYWxpZC5Vbmtub3duOwoJCUZBQSBNb2RlID0gRkFBIE1vZGUuVW5rbm93bjsKCQlTcGVlZCA9IFRydWUgQ291cnNlID0gTWFnbmV0aWMgVmFyaWF0aW9uID0gQ2FsY3VsYXRlLk5BTigpOwoJCS8vIGhvbGQgY3VycmVudCBkYXRlIGlmIHRpbWVvdXQKCX0gZWxzZSB7CgkJVmFsaWQgPSAoR1BTLlZhbGlkKCkpID8gVmFsaWQuVmFsaWQgOiBWYWxpZC5XYXJuaW5nOwoJCVNwZWVkID0gR1BTLlNwZWVkKCk7CgkJVHJ1ZSBDb3Vyc2UgPSBHUFMuVHJ1ZUNvdXJzZSgpOwoJCURhdGUgPSBHUFMuRGF0ZSgpOwoJCU1hZ25ldGljIFZhcmlhdGlvbiA9IEdQUy5NYWduZXRpY1ZhcmlhdGlvbigpOwoJCUZBQSBNb2RlLlNldChHUFMuTW9kZSgpKTsKCX0KCglpZiAoZ2dhdG8gYW5kIHJtY3RvKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLlRpbWVvdXQ7CgkJVGltZSA9IExhdGl0dWRlID0gTG9uZ2l0dWRlID0gQ2FsY3VsYXRlLk5BTigpOwoJfQoJZWxzZQoJewoJCVRpbWUgPSBHUFMuVGltZSgpOwoJCUxhdGl0dWRlID0gR1BTLkxhdGl0dWRlKCk7CgkJTG9uZ2l0dWRlID0gR1BTLkxvbmdpdHVkZSgpOwoKCQlpZiAoKEZpeCBRdWFsaXR5IGVxIEZpeCBRdWFsaXR5LkludmFsaWQpCgkJCW9yIChGaXggUXVhbGl0eSBlcSBGaXggUXVhbGl0eS5Fc3RpbWF0ZWQpCgkJCW9yIChWYWxpZCBlcSBWYWxpZC5XYXJuaW5nKQoJCQlvciAoRkFBIE1vZGUgZXEgRkFBIE1vZGUuSW52YWxpZCkKCQkJb3IgKEZBQSBNb2RlIGVxIEZBQSBNb2RlLkVzdGltYXRlZCkKCQkpCgkJewoJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5XYWl0IGZvciBHUFMgRml4OwoJCX0KCQllbHNlCgkJewoJCQlEaWFnbm9zdGljID0gZDsKCQl9Cgl9Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[d2hlbiAoSW50ZXJmYWNlKQp7CglpcyAoTm90IGluIFVzZSkKCXsKCQkvLyBEaXNnbm9zdGljIGlzIGFscmVhZHkgTm90IGluIFVzZQoJfQoJaXMgKENBTiBCbG9jayBSZWNlaXZlKQoJewoJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLldhaXQgZm9yIEdQUyBGaXg7Cgl9CglpcyAoUlMyMzIgUG9ydCkKCXsKCQlpZiAoR1BTLkluaXRSUzIzMigpKQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuV2FpdCBmb3IgR1BTIEZpeDsKCQl9CgkJZWxzZQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuSW52YWxpZCBJbnRlcmZhY2U7CgkJfQoJfQoJaXMgKENBTiBCdXMgMSB2aWEgU1RDIG9yIENBTiBCdXMgMiB2aWEgU1RDIG9yIENBTiBCdXMgMyB2aWEgU1RDKQoJewoJCWlmIChHUFMuSW5pdFNUQyhJbnRlcmZhY2UuQXNJbnRlZ2VyKCkgLSAxKSkKCQl7CgkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLldhaXQgZm9yIEdQUyBGaXg7CgkJfQoJCWVsc2UKCQl7CgkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludmFsaWQgSW50ZXJmYWNlOwoJCX0KCX0KfQpMYXRpdHVkZSA9IExvbmdpdHVkZSA9IFNwZWVkID0gVHJ1ZSBDb3Vyc2UgPSBUaW1lID0gQWx0aXR1ZGUgPSBXR1M4NCBIZWlnaHQgPSBNYWduZXRpYyBWYXJpYXRpb24gPSBIRE9QID0gREdQUyBVcGRhdGUgVGltZSA9IENhbGN1bGF0ZS5OQU4oKTsKRml4IFF1YWxpdHkgPSBGaXggUXVhbGl0eS5Vbmtub3duOwpGQUEgTW9kZSA9IEZBQSBNb2RlLlVua25vd247Ci8vIFZhbGlkIGlzIGFscmVhZHkgVW5rbm93bg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Longitude">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[Longitude&nbsp;as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Longitude.Value">
+        <Props Qty="rad">
+         <Locale>
+          <Default DPS="9"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>&nbsp;</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Speed.Value">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h" DPS="3" Min="0.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>&nbsp;</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Date">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[Date as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Date.Value">
+        <Props Type="u32"/>
+        <Comment>
+<![CDATA[<P>&nbsp;</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.True Course">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[True course as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.True Course.Value">
+        <Props Qty="rad">
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>&nbsp;</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Value">
+        <Props>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<P>&nbsp;</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Time">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[Time as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Fault">
+        <Comment>
+<![CDATA[<p>Settings related to fault detection.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fault.Delay">
+        <Props Qty="s" Validation="MinMax" ValMin="1.00000000000000000e-003" ValMax="2.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <Locale>
+          <Default Unit="ms" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>The amount of time since a valid message has been received before reporting a fault.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Latitude.Value">
+        <Props Qty="rad">
+         <Locale>
+          <Default DPS="9"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p>&nbsp;</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Latitude">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[Latitude as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Speed">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[Speed as received from the GPS receiver.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Latitude.CAN Slot">
+        <Props Type="MoTeC Types.CanBlock Get32 Slot Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<p>Selects the CAN Slot used to receive the data.</p>
+<p>Only used when <em>Interface</em> is <em>CAN Block Receive</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Time.CAN Slot">
+        <Props Type="MoTeC Types.CanBlock Get32 Slot Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Selects the CAN Slot used to receive the data.</P>
+<P>Only used when <EM>Interface</EM> is <EM>CAN Block Receive</EM></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Date.CAN Slot">
+        <Props Type="MoTeC Types.CanBlock Get16 Slot Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Selects the CAN Slot used to receive the data.</P>
+<P>Only used when <EM>Interface</EM> is <EM>CAN Block Receive</EM></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.True Course.CAN Slot">
+        <Props Type="MoTeC Types.CanBlock Get16 Slot Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Selects the CAN Slot used to receive the data.</P>
+<P>Only used when <EM>Interface</EM> is <EM>CAN Block Receive</EM></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Speed.CAN Slot">
+        <Props Type="MoTeC Types.CanBlock Get16 Slot Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Selects the CAN Slot used to receive the data.</P>
+<P>Only used when <EM>Interface</EM> is <EM>CAN Block Receive</EM></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Longitude.CAN Slot">
+        <Props Type="MoTeC Types.CanBlock Get32 Slot Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<P>Selects the CAN Slot used to receive the data.</P>
+<P>Only used when <EM>Interface</EM> is <EM>CAN Block Receive</EM></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Latitude.CAN Slot.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Longitude.CAN Slot.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.True Course.CAN Slot.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Time.CAN Slot.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Fault.Delay.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Date.CAN Slot.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Interface.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Speed.CAN Slot.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Diagnostic"/>
+        <Component Name="Latitude">
+         <Component Name="Value"/>
+         <Component Name="CAN Slot">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Longitude">
+         <Component Name="Value"/>
+         <Component Name="CAN Slot">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Speed">
+         <Component Name="Value"/>
+         <Component Name="CAN Slot">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="True Course">
+         <Component Name="Value"/>
+         <Component Name="CAN Slot">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Date">
+         <Component Name="Value"/>
+         <Component Name="CAN Slot">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Time">
+         <Component Name="Value"/>
+         <Component Name="CAN Slot">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Altitude"/>
+        <Component Name="WGS84 Height"/>
+        <Component Name="Magnetic Variation"/>
+        <Component Name="Satellites"/>
+        <Component Name="HDOP"/>
+        <Component Name="DGPS Station ID"/>
+        <Component Name="DGPS Update Time"/>
+        <Component Name="Fix Quality"/>
+        <Component Name="FAA Mode"/>
+        <Component Name="Valid"/>
+        <Component Name="Fault">
+         <Component Name="Delay">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Interface">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Script"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="GPS"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

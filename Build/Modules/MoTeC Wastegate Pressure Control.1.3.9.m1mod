@@ -1,0 +1,1100 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Wastegate Pressure Control" VersionMajor="1" VersionMinor="3" BuildNumber="9">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0016"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC Input" VersionMajor="1" VersionMinor="10" VersionBuild="6"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Wastegate Pressure Control Actuator Test Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure control system test is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enabled" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure control system will operate even if the enable conditions are not met.</p>
+            <p class="device_help">Use this mode to calibrate the system with the engine stopped.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Wastegate Pressure Control Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Sensor Fault" ContainerOrder="0" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure sensor is reporting a fault. Both actuators are disabled to maintain the current
+              wastegate pressure.</p>
+            <p class="device_help">If the fault condition persists for more than one second wastegate pressure will be released.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Deflate" ContainerOrder="1" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure sensor has been reporting a fault for more than 1 second. Pressure in the
+              wastegate is being released to prevent engine damage.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure control system is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure control system is operational.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Minimum" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure aim and current wastegate pressure are below the minimum value required to start
+              control.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Test" ContainerOrder="5" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The wastegate pressure control system test is enabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Control"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Control.Wastegate Pressure Control">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class contains a control system which can control the pressure in a wastegate actuator.</p>
+            <p class="device_help">It is recommended to name this 'Wastegate.Pressure' when added to a project.</p>
+            <p class="device_help">Features:
+              <ul class="device_help">
+                <li class="device_help"><em class="device_chan">Sensor</em>: dedicated wastegate pressure sensor.</li>
+                <li class="device_help"><em class="device_chan">Aim</em>: target wastegate pressure. Derived from <em class="device_ref">Boost Aim</em> and <em class="device_param">Offset</em>.</li>
+                <li class="device_help"><em class="device_chan">Control</em>: PI controller.</li>
+                <li class="device_help"><em class="device_group">Actuator</em>: outputs for solenoids to increase and decrease wastegate pressure.</li>
+                <li class="device_help"><em class="device_item">SetEnable</em>: method which sets when the control system is enabled.</li>
+              </ul>
+            </p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Offset</h3>
+            <p class="device_help">Normally a parameter, optionally a table for advanced control.</p>
+            <h3 class="device_help">Boost Aim</h3>
+            <p class="device_help">Normally connected to the <em class="device_ref">Boost Aim</em> channel in the project.</p>
+            <h3 class="device_help">Ambient Pressure</h3>
+            <p class="device_help">Normally connected to the <em class="device_ref">Ambient Pressure</em> channel in the project.</p>
+            <h3 class="device_help">Control Dead Band</h3>
+            <p class="device_help">Normally a parameter</p>
+            <h3 class="device_help">Control Minimum</h3>
+            <p class="device_help">Normally a parameter</p>
+            <h3 class="device_help">Control Proportional Gain</h3>
+            <p class="device_help">Normally a parameter</p>
+            <h3 class="device_help">Control Integral Minimum</h3>
+            <p class="device_help">Normally a parameter</p>
+            <h3 class="device_help">Control Integral Maximum</h3>
+            <p class="device_help">Normally a parameter</p>
+            <h3 class="device_help">Actuator Minimum</h3>
+            <p class="device_help">Normally a parameter</p>
+            <h3 class="device_help">Actuator Test</h3>
+            <p class="device_help">Normally a parameter</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Sensor Voltage Event</h3>
+            <p class="device_help">The rate at which the sensor voltage is updated. Must be greater than or equal to 'Sensor Event'. Higher
+              rates allow faster logging of the sensor voltage for diagnostic purposes.</p>
+            <h3 class="device_help">Sensor Event</h3>
+            <p class="device_help">The rate at which the sensor voltage is calibrated to a sensor value. Must be greater than or equal to
+              'Event'.</p>
+            <h3 class="device_help">Event</h3>
+            <p class="device_help">The rate at which the internal control system runs. Low rates will limit the bandwidth of the controller.
+              Suggest 100Hz.</p>
+            <h3 class="device_help">Actuator Voltage Event</h3>
+            <p class="device_help">The rate at which the actuator diagnostic voltages are updated. For diagostic purposes only. Suggest
+              100Hz.</p>
+            <h2 class="device_help">Methods</h2>
+            <h3 class="device_help">SetEnable</h3>
+            <p class="device_help">Call this function with a 'true' argument when the control system should be enabled.</p>
+            <p class="device_help">Usually the control system is disabled when the engine is stopped.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Requested operation of the wastegate pressure control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.Control.Dead Band Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.Control.Dead Band Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.Control.Dead Band Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.InUse">
+        <Signature Name="" ReturnType="bool">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[b3V0ID0gQWN0dWF0b3IuSW5jcmVhc2UuT3V0cHV0LklzQWN0aXZlKCkgYW5kCglBY3R1YXRvci5EZWNyZWFzZS5PdXRwdXQuSXNBY3RpdmUoKSBhbmQKCVNlbnNvci5Wb2x0YWdlLklzQWN0aXZlKCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.SetEnable">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="enable" Type="bool" Attrs="0">
+           <Description>
+<![CDATA['true' to enable wastegate pressure control.]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[<p>This method controls operation of the wastegate pressure control system.</p>]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[aWYgKG5vdCBJblVzZSgpKQp7CglFbmFibGUgPSBFbmFibGUuRGlzYWJsZWQ7Cn0KZWxzZQp7CglpZiAoQWN0dWF0b3IuVGVzdCBlcSBBY3R1YXRvci5UZXN0LkVuYWJsZWQgb3IgaW4uZW5hYmxlKQoJewoJCUVuYWJsZSA9IEVuYWJsZS5FbmFibGVkOwoJfQoJZWxzZQoJewoJCUVuYWJsZSA9IEVuYWJsZS5EaXNhYmxlZDsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Aim">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The target wastegate pressure.</p>
+                  <p class="device_help">This value is the sum of <em class="device_ref">Boost Aim</em> and <em class="device_param">Offset</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Aim.Value">
+        <Props Qty="dPa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dkPa" Min="0.00000000000000000e+000" Max="3.00000000000000000e+005"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Aim.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Update:SelectedTrigger)"/>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgY29udCA9IENhbGN1bGF0ZS5Jc05BTihCb29zdCBDb250cm9sKSA/IDAuMCA6IExpbWl0LlJhbmdlKEJvb3N0IENvbnRyb2wsIDAuMCwgMS4wKTsKVGhpcy5WYWx1ZSA9IEJvb3N0IEFpbSArIE9mZnNldCArIChjb250ICogU2NhbGUpOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Offset">
+        <Props Qty="Pa" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Wastegate pressure offset added to&nbsp;<em class="device_ref">Boost Aim</em>. Scale may also add to the Wastegate Pressure Aim. This should be taken into consideration when setting the Offset so that an approprite range of pressures can be targeted for closed loop boost control.</p>
+                  <p class="device_help">If Scale is set to 0 (open loop control), this value should be set to correct for the effect of the wastegate spring and exhaust back pressure.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Boost Aim">
+        <Props Qty="dPa" Validation="Positive Gain">
+         <Locale>
+          <Default Unit="dkPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ambient Pressure">
+        <Props Qty="Pa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" ValMax="1.10000000000000000e+005">
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The final output from the control system. This value is used to calculate the actuator output duty
+                    cycles.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Value">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="-1.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Error">
+        <Props Qty="dPa">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dkPa" Min="-1.00000000000000000e+005" Max="1.00000000000000000e+005"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The difference between the target wastegate pressure and the measured wastegate pressure.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Control.Dead Band">
+        <Props Qty="Pa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The amount of pressure fluctuation in either direction required before PI control of the wastegate
+                    pressure will resume after a period of stable operation.</p>
+                  <p class="device_help">A value greater than zero is recommended to prevent constant small control corrections.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control.Proportional">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The contribution of the proportional term of the control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Proportional.Value">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="-1.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Control.Proportional.Gain">
+        <Props Qty="ratio/Pa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%/kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The gain for the proportional term of the control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control.Integral">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The contricution of the integral term of the control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Integral.Value">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="-1.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Control.Integral.Gain">
+        <Props Qty="ratio/(Pa.s)" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%/(kPa.s)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The gain for the integral term of the control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <PropVisibility>
+         <Property Name="Actuator Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Actuator.Increase.Voltage.Update" TargetRef="SelectedTrigger" DisplayName="Actuator Voltage Event"/>
+         <Property Name="Ambient Pressure Input Object" Creation="Custom" Visible="1" TargetCpt="This.Ambient Pressure" TargetRef="Target" DisplayName="Ambient Pressure Input Object"/>
+         <Property Name="Boost Aim Input Object" Creation="Custom" Visible="1" TargetCpt="This.Boost Aim" TargetRef="Target" DisplayName="Boost Aim Input Object"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Offset Tags" Creation="Custom" Visible="1" TargetCpt="This.Offset" TargetRef="UserTags" DisplayName="Offset Tags"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Sensor Diagnostic Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Diagnostic Diagnostic Log Rate" DisplayName="Sensor Diagnostic Diagnostic Log Rate"/>
+         <Property Name="Sensor Diagnostic Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Diagnostic Diagnostic Logging" DisplayName="Sensor Diagnostic Diagnostic Logging"/>
+         <Property Name="Sensor Event" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Event" DisplayName="Sensor Event"/>
+         <Property Name="Sensor Value Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Value Diagnostic Log Rate" DisplayName="Sensor Value Diagnostic Log Rate"/>
+         <Property Name="Sensor Value Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Value Diagnostic Logging" DisplayName="Sensor Value Diagnostic Logging"/>
+         <Property Name="Sensor Voltage Event" Creation="Custom" Visible="1" TargetCpt="This.Sensor" TargetRef="Voltage Event" DisplayName="Sensor Voltage Event"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Offset" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Offset" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Offset" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Offset" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Offset" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Offset" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Control.Dead Band" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Control.Proportional.Gain" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Control.Integral.Gain" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Control.Minimum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Control.Integral.Minimum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Control.Integral.Maximum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Actuator.Test" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Actuator.Minimum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Scale" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Control" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<h2 class="device_help">Wastegate Pressure Control</h2>
+                  <p class="device_help">This system controls the pressure in a wastegate actuator by means of two solenoids. One solenoid
+                    must be connected to a regulated pressure source such as an air compressor, and the other must vent
+                    pressure from the wastegate.</p>
+                  <p class="device_help">The target wastegate pressure is the sum of <em class="device_ref">Boost Aim</em> and <em class="device_param">Offset</em>.</p>
+                  <p class="device_help">The following conditions must be met for wastegate pressure control to activate:
+                    <ul class="device_help">
+                      <li class="device_help">The measured wastegate pressure must be greater than <em class="device_param">Control Minimum</em>.</li>
+                      <li class="device_help"><em class="device_chan">Aim</em> must be greater than <em class="device_param">Control Minimum</em>.</li>
+                      <li class="device_help"><em class="device_param">Actuator Minimum</em> must be set.</li>
+                      <li class="device_help"><em class="device_param">Actuator Frequency</em> must be set.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props DiagnosticLogRate="1S" Qty="dPa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dkPa" Min="0.00000000000000000e+000" Max="3.00000000000000000e+005"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Actuator">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains settings and the outputs for the solenoids.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Actuator.Minimum">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The duty cycle required for a solenoid to start opening.</p>
+                  <p class="device_help">Set this to the duty cycle at which the solenoid just opens.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Actuator.Increase.Output">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Actuator.Increase.Output.Frequency">
+        <Props Target="Parent.Parent.Parent.Frequency">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Actuator.Increase.Output.Duty Cycle">
+        <Props TargetCreation="AutoChannel" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Actuator.Increase.Output.Duty Cycle.Value">
+        <Props>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Actuator.Increase.Output.Resource">
+        <Props NameTarget="Parent.Parent.Parent.Parent.Actuator Increase Output Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Increase.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Increase.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Increase.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="_IOMethod.pwm" Name="Base.Actuator.Decrease.Output">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Actuator.Decrease.Output.Frequency">
+        <Props Target="Parent.Parent.Parent.Frequency">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Actuator.Decrease.Output.Duty Cycle">
+        <Props TargetCreation="AutoChannel" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Actuator.Decrease.Output.Duty Cycle.Value">
+        <Props>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Actuator.Decrease.Output.Resource">
+        <Props NameTarget="Parent.Parent.Parent.Parent.Actuator Decrease Output Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Decrease.Output.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Decrease.Output.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Decrease.Output.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Update">
+        <Code Encoding="base64">
+<![CDATA[VmFsdWUgPSBTZW5zb3IgLSBBbWJpZW50IFByZXNzdXJlOwoKbG9jYWwgZXQgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKbG9jYWwgZW5hYmxlZCA9IEVuYWJsZSBlcSBFbmFibGUuRW5hYmxlZDsKbG9jYWwgdGVzdCA9IEFjdHVhdG9yLlRlc3QgZXEgQWN0dWF0b3IuVGVzdC5FbmFibGVkOwpsb2NhbCBzZW5zb3JmYXVsdCA9IFNlbnNvci5EaWFnbm9zdGljLkFzSW50ZWdlcigpIDwgMDsKCnN0YXRpYyBsb2NhbCBkZWFkYmFuZEFpbSA9IDAuMDsKbG9jYWwgZGVhZGJhbmRFeGNlZWRlZCA9IENhbGN1bGF0ZS5BYnNvbHV0ZShDb250cm9sLkVycm9yKSA+IENvbnRyb2wuRGVhZCBCYW5kOwpsb2NhbCBhaW1DaGFuZ2VkID0gQ2FsY3VsYXRlLkFic29sdXRlKEFpbSAtIGRlYWRiYW5kQWltKSA+IENvbnRyb2wuRGVhZCBCYW5kOwppZiAoZGVhZGJhbmRFeGNlZWRlZCBvciBhaW1DaGFuZ2VkKQp7IAoJQ29udHJvbC5EZWFkIEJhbmQgVGltZXIuU3RhcnQoMS4wKTsKCWRlYWRiYW5kQWltID0gQWltOwp9IApsb2NhbCBpbkRlYWRiYW5kID0gQ29udHJvbC5EZWFkIEJhbmQgVGltZXIuUmVtYWluaW5nKCkgPD0gMC4wOwoKbG9jYWwgZGVmbGF0ZSA9IG5vdCBEZWxheS5SaXNpbmcoc2Vuc29yZmF1bHQsIDEuMCk7CmxvY2FsIGRpc2FibGVtaW4gPSBEZWxheS5SaXNpbmcoQWltIDw9IENvbnRyb2wuTWluaW11bSBhbmQgVmFsdWUgPD0gQ29udHJvbC5NaW5pbXVtLCAxLjApOwoKaWYgKG5vdCBlbmFibGVkKQp7CglDb250cm9sLkRpYWdub3N0aWMgPSBDb250cm9sLkRpYWdub3N0aWMuTm90IGluIFVzZTsKCUNvbnRyb2wuRXJyb3IgPSBDYWxjdWxhdGUuTkFOKCk7CglDb250cm9sLlByb3BvcnRpb25hbCA9IENhbGN1bGF0ZS5OQU4oKTsKCUNvbnRyb2wuSW50ZWdyYWwgPSBDYWxjdWxhdGUuTkFOKCk7CglBY3R1YXRvci5JbmNyZWFzZS5PdXRwdXQuRHV0eSBDeWNsZSA9IDAuMDsKCUFjdHVhdG9yLkRlY3JlYXNlLk91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwp9CmVsc2UgaWYgKHNlbnNvcmZhdWx0KQp7CglDb250cm9sLkVycm9yID0gQ2FsY3VsYXRlLk5BTigpOwoJQ29udHJvbC5Qcm9wb3J0aW9uYWwgPSBDYWxjdWxhdGUuTkFOKCk7CglDb250cm9sLkludGVncmFsID0gQ2FsY3VsYXRlLk5BTigpOwoJQWN0dWF0b3IuSW5jcmVhc2UuT3V0cHV0LkR1dHkgQ3ljbGUgPSAwLjA7CgoJaWYgKGRlZmxhdGUpCgl7CgkJQ29udHJvbC5EaWFnbm9zdGljID0gQ29udHJvbC5EaWFnbm9zdGljLkRlZmxhdGU7CgkJQWN0dWF0b3IuRGVjcmVhc2UuT3V0cHV0LkR1dHkgQ3ljbGUgPSAxLjA7Cgl9CgllbHNlCgl7CgkJQ29udHJvbC5EaWFnbm9zdGljID0gQ29udHJvbC5EaWFnbm9zdGljLlNlbnNvciBGYXVsdDsKCQlBY3R1YXRvci5EZWNyZWFzZS5PdXRwdXQuRHV0eSBDeWNsZSA9IDAuMDsKCX0KfQplbHNlIGlmIChDb250cm9sLk1pbmltdW0gPiAwLjAgYW5kIGRpc2FibGVtaW4pCnsKCUNvbnRyb2wuRGlhZ25vc3RpYyA9IENvbnRyb2wuRGlhZ25vc3RpYy5NaW5pbXVtOwoJQ29udHJvbC5FcnJvciA9IENhbGN1bGF0ZS5OQU4oKTsKCUNvbnRyb2wuUHJvcG9ydGlvbmFsID0gQ2FsY3VsYXRlLk5BTigpOwoJQ29udHJvbC5JbnRlZ3JhbCA9IENhbGN1bGF0ZS5OQU4oKTsKCUFjdHVhdG9yLkluY3JlYXNlLk91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwoJQWN0dWF0b3IuRGVjcmVhc2UuT3V0cHV0LkR1dHkgQ3ljbGUgPSAwLjA7Cn0KZWxzZQp7CglDb250cm9sLkVycm9yID0gQWltIC0gVmFsdWU7CgkKCWlmIChpbkRlYWRiYW5kKQoJewoJCUFjdHVhdG9yLkluY3JlYXNlLk91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwoJCUFjdHVhdG9yLkRlY3JlYXNlLk91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwoJfQoJZWxzZQoJewoJCUNvbnRyb2wuUHJvcG9ydGlvbmFsID0gQ29udHJvbC5FcnJvciAqIENvbnRyb2wuUHJvcG9ydGlvbmFsLkdhaW47CgkJCgkJaWYgKExpYnJhcnkuQ2FsY3VsYXRlLklzTkFOKENvbnRyb2wuSW50ZWdyYWwpIG9yIENvbnRyb2wuSW50ZWdyYWwuR2FpbiA8PSAwLjApCgkJewoJCQlDb250cm9sLkludGVncmFsID0gMC4wOwoJCX0KCQllbHNlIGlmIChub3QgaW5EZWFkYmFuZCkKCQl7CgkJCWxvY2FsIHBpZCA9IENvbnRyb2wuUHJvcG9ydGlvbmFsICsgQ29udHJvbC5JbnRlZ3JhbDsKCQkJbG9jYWwgbWF4ID0gMS4wOwoJCQlsb2NhbCBtaW4gPSAtMS4wOwoJCQoJCQlsb2NhbCBpID0gQ29udHJvbC5JbnRlZ3JhbCArIChDb250cm9sLkludGVncmFsLkdhaW4gKiBDb250cm9sLkVycm9yICogZXQpOwoJCQlpZiAocGlkID4gbWF4KQoJCQl7CgkJCQkvKiBpbnRlZ3JhbCBvbmx5IGFsbG93ZWQgdG8gcmVkdWNlICovCgkJCQlpID0gTGlicmFyeS5DYWxjdWxhdGUuTWluKENvbnRyb2wuSW50ZWdyYWwsIGkpOwoJCQl9CgkJCWVsc2UgaWYgKHBpZCA8IG1pbikKCQkJewoJCQkJLyogaW50ZWdyYWwgb25seSBhbGxvd2VkIHRvIGluY3JlYXNlICovCgkJCQlpID0gTGlicmFyeS5DYWxjdWxhdGUuTWF4KENvbnRyb2wuSW50ZWdyYWwsIGkpOwoJCQl9CgkJCQoJCQlDb250cm9sLkludGVncmFsID0gTGltaXQuUmFuZ2UoaSwgQ29udHJvbC5JbnRlZ3JhbC5NaW5pbXVtLCBDb250cm9sLkludGVncmFsLk1heGltdW0pOwoJCX0KCgkJQ29udHJvbCA9IENvbnRyb2wuUHJvcG9ydGlvbmFsICsgQ29udHJvbC5JbnRlZ3JhbDsKCQkKCQlpZiAoQ29udHJvbCA+IDApCgkJewoJCQlBY3R1YXRvci5JbmNyZWFzZS5PdXRwdXQuRHV0eSBDeWNsZSA9IENhbGN1bGF0ZS5NaW4oQWN0dWF0b3IuTWluaW11bSArIENvbnRyb2wsIDEuMCk7CgkJCUFjdHVhdG9yLkRlY3JlYXNlLk91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwoJCX0KCQllbHNlIGlmIChDb250cm9sIDwgMCkKCQl7CgkJCUFjdHVhdG9yLkluY3JlYXNlLk91dHB1dC5EdXR5IEN5Y2xlID0gMC4wOwoJCQlBY3R1YXRvci5EZWNyZWFzZS5PdXRwdXQuRHV0eSBDeWNsZSA9IENhbGN1bGF0ZS5NaW4oQWN0dWF0b3IuTWluaW11bSAtIENvbnRyb2wsIDEuMCk7CgkJfQoJfQoJCglDb250cm9sLkRpYWdub3N0aWMgPSB0ZXN0ID8gQ29udHJvbC5EaWFnbm9zdGljLlRlc3QgOiBDb250cm9sLkRpYWdub3N0aWMuT0s7Cn0=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Control.Integral.Minimum">
+        <Props Qty="ratio" Validation="MinMax" ValMin="-1.00000000000000000e+000" ValMax="0.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The minimum allowed integral value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Control.Minimum">
+        <Props Qty="dPa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dkPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The minimum wastegate pressure at which to start control.</p>
+                  <p class="device_help">If the target wastegate pressure or the measured wastegate pressure are above this value closed
+                    loop control will begin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Control.Integral.Maximum">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The maximum allowed integral value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Diagnostic">
+        <Props Type="::This.Wastegate Pressure Control Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the operation of wastegate pressure control.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Resolution"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Maximum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Minimum"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Bandwidth"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Source"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Sensor.Voltage.Input Impedance"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Release"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Diagnostic Low"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Sensor.Voltage.Resource"/>
+       <Component Classname="MoTeC Input.Absolute Pressure" Name="Base.Sensor">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Value">
+        <Props DiagnosticLogRate="1S">
+         <Locale>
+          <Default Unit="kPa a" Min="0.00000000000000000e+000" Max="3.00000000000000000e+005"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Voltage.Reference.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Voltage.Reference"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Voltage.Filter.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Sensor.Voltage.Filter">
+        <Props ValMax="1.00000000000000010e-001"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Absolute"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Voltage.Normalised Filtered"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Actuator.Frequency">
+        <Props Qty="Hz" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="2.00000000000000000e+004">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The operating frequency for the increase and decrease solenoids.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Sensor.Resource">
+        <Props NameCreation="Manual" NameTarget="Parent.Parent.Sensor Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.Calibration" Name="Base.Sensor.Calibration"/>
+       <Component Classname="_CalibrationSchema.Absolute_Pressure_1" Name="Base.Sensor.Calibration.Absolute Pressure 1"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Diagnostic High"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Sensor Output"/>
+       <Component Classname="BuiltIn.CalFuncUser" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Transform"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Sensor.Diagnostic"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Value">
+        <Props DiagnosticLogRate="1S"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Sensor.Diagnostic.Time"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Sensor.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.Low"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.High"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Sensor.Diagnostic.Delay"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Sensor.Diagnostic.Delay.Value"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Sensor.Calculation"/>
+       <Component Classname="_IOMethod.ratio" Name="Base.Sensor.Voltage"/>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Translation.Value"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Sensor.Translation"/>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Translation.X"/>
+       <Component Classname="BuiltIn.CalibrationTable" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 1.Translation"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Sensor.Translation.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Sensor.Translation.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Sensor.Translation.Update"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Diagnostic Low"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Diagnostic High"/>
+       <Component Classname="BuiltIn.CalibrationParameter" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Sensor Output"/>
+       <Component Classname="BuiltIn.CalFuncUser" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Transform"/>
+       <Component Classname="_CalibrationSchema.Absolute_Pressure_2" Name="Base.Sensor.Calibration.Absolute Pressure 2"/>
+       <Component Classname="BuiltIn.CalibrationTable" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Translation"/>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Translation.Value"/>
+       <Component Classname="BuiltIn.CalibrationChannel" Caps="AutoCreated" Name="Base.Sensor.Calibration.Absolute Pressure 2.Translation.X"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Minimum.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Proportional.Gain.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Dead Band.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Offset.Value"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Actuator.Increase.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The voltage on the decrease solenoid output pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Absolute Filtered">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Absolute">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+         <Locale>
+          <Default Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Actuator.Increase.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Integral.Minimum.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Update"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Actuator.Test">
+        <Props Type="::This.Wastegate Pressure Control Actuator Test Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Set to <em class="device_enum">Enabled</em> to run the control system unconditionally.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Integral.Maximum.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Actuator.Test.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Integral.Gain.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Actuator.Increase">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information about the increase solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Actuator Decrease Output Resource">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Setup"/>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The resource connected to the decrease solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Actuator.Decrease">
+        <Comment>
+<![CDATA[<p class="device_help">This subsystem contains information about the decrease solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Actuator Increase Output Resource">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Setup"/>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The resource connected to the increase solenoid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Increase.Voltage.Release"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Absolute Filtered">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Absolute">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+         <Locale>
+          <Default Max="2.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Filter">
+        <Props TargetCreation="AutoConst" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Actuator.Decrease.Voltage.Filter.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Output.Resource"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Increase.Output.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Actuator.Decrease.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Sensor Resource">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Setup"/>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The resource connected to the wastegate pressure sensor.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Actuator.Minimum.Value"/>
+       <Component Classname="_IOMethod.abs" Name="Base.Actuator.Decrease.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Output"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The voltage on the decrease solenoid output pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Scale">
+        <Props Qty="Pa" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="kPa"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">This value sets the pressure range applied to the Wastegate Pressure Aim based on Boost Control, allowing Boost Aim to be close loop controlled by varying the wastegate pressure.</p><p class="device_help">This value is multiplied by Boost Control&nbsp;then added&nbsp;to&nbsp;<em class="device_ref">Boost Aim</em>&nbsp;and Offset. Eg if this is 50kPa, if Boost Control is 50%, 25kPa is added to the Wastegate Pressure Aim.</p>
+Set this to 0 if you wish to set Wastegate Pressure using Boost Aim and Offset only (open loop control of Boost Pressure).]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Scale.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Boost Control">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Sensor Resource"/>
+        <Component Name="Actuator Increase Output Resource"/>
+        <Component Name="Actuator Decrease Output Resource"/>
+        <Component Name="Value"/>
+        <Component Name="Enable"/>
+        <Component Name="Sensor">
+         <Component Name="Value"/>
+         <Component Name="Resource"/>
+         <Component Name="Calibration">
+          <Component Name="Absolute Pressure 1">
+           <Component Name="Translation">
+            <Component Name="Value"/>
+            <Component Name="X"/>
+           </Component>
+           <Component Name="Diagnostic Low"/>
+           <Component Name="Diagnostic High"/>
+           <Component Name="Sensor Output"/>
+           <Component Name="Transform"/>
+          </Component>
+          <Component Name="Absolute Pressure 2">
+           <Component Name="Translation">
+            <Component Name="Value"/>
+            <Component Name="X"/>
+           </Component>
+           <Component Name="Diagnostic Low"/>
+           <Component Name="Diagnostic High"/>
+           <Component Name="Sensor Output"/>
+           <Component Name="Transform"/>
+          </Component>
+         </Component>
+         <Component Name="Diagnostic">
+          <Component Name="Value"/>
+          <Component Name="Time"/>
+          <Component Name="Low"/>
+          <Component Name="High"/>
+          <Component Name="Delay">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Normalised Filtered"/>
+          <Component Name="Absolute"/>
+          <Component Name="Filter">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Reference">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+          <Component Name="Input Impedance"/>
+          <Component Name="Input Source"/>
+          <Component Name="Input Bandwidth"/>
+          <Component Name="Input Minimum"/>
+          <Component Name="Input Maximum"/>
+          <Component Name="Input Resolution"/>
+         </Component>
+         <Component Name="Translation">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Calculation"/>
+        </Component>
+        <Component Name="Aim">
+         <Component Name="Value"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Offset">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Scale">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Boost Control"/>
+        <Component Name="Boost Aim"/>
+        <Component Name="Ambient Pressure"/>
+        <Component Name="Control">
+         <Component Name="Value"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Error"/>
+         <Component Name="Dead Band">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Minimum">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Proportional">
+          <Component Name="Value"/>
+          <Component Name="Gain">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Integral">
+          <Component Name="Value"/>
+          <Component Name="Minimum">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Maximum">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Gain">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Dead Band Timer">
+          <Component Name="Start"/>
+          <Component Name="Remaining"/>
+         </Component>
+        </Component>
+        <Component Name="Actuator">
+         <Component Name="Minimum">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Test">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Frequency"/>
+         <Component Name="Increase">
+          <Component Name="Output">
+           <Component Name="Frequency"/>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+         </Component>
+         <Component Name="Decrease">
+          <Component Name="Output">
+           <Component Name="Frequency"/>
+           <Component Name="Duty Cycle">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Voltage">
+           <Component Name="Absolute Filtered"/>
+           <Component Name="Absolute"/>
+           <Component Name="Filter">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Resource"/>
+           <Component Name="Reserve"/>
+           <Component Name="Release"/>
+           <Component Name="Initialise"/>
+           <Component Name="Update"/>
+           <Component Name="Input Impedance"/>
+           <Component Name="Input Source"/>
+           <Component Name="Input Bandwidth"/>
+           <Component Name="Input Minimum"/>
+           <Component Name="Input Maximum"/>
+           <Component Name="Input Resolution"/>
+          </Component>
+         </Component>
+        </Component>
+        <Component Name="Update"/>
+        <Component Name="InUse"/>
+        <Component Name="SetEnable"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Control">
+     <Module Name="Wastegate Pressure Control"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

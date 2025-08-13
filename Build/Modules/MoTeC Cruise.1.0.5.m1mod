@@ -1,0 +1,1366 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Cruise" VersionMajor="1" VersionMinor="0" BuildNumber="5">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0057"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+            <li class="device_help">Initial release</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="3"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Cruise Exit Enumeration" Storage="enum" Default="OK">
+   <Enum Name="OK" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">No need to exit cruise control. Brake state, clutch state, throttle pedal and engine speed are ok.
+            </p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Exit" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Cruise Control must be exited due to brake state, clutch state, throttle pedal or engine speed.
+              </p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Cruise Unit Enumeration" Storage="enum" Default="Kilometres Per Hour">
+   <Enum Name="Kilometres Per Hour" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Miles Per Hour" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Cruise Brake State Enumeration" Storage="enum" Default="Unknown">
+   <Help>
+<![CDATA[<p class="device_help">Brake state conditions relevant for the cruise control.</p>]]>
+   </Help>
+   <Enum Name="Off" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The brakes are not activated. Cruise control can be activated.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The brakes are activated. Cruise control is deactivated.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Sensor Fault" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">At least one sensor to determine the state of the brakes is configured, but all configured sensors are
+              faulty. Cruise control is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">No source for the brake state is configured. Cruise control is disabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Cruise Clutch State Enumeration" Storage="enum" Default="Unknown">
+   <Help>
+<![CDATA[<p class="device_help">Clutch state conditions relevant for the cruise control.</p>]]>
+   </Help>
+   <Enum Name="Sensor Fault" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">At least one sensor to determine the state of the clutch is configured, but all configured sensors are
+              faulty. Cruise control is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">No source for the clutch state is configured. Cruise control will ignore the clutch state.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Engaged" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The clutch is engaged. Cruise control can be activated.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Disengaged" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The clutch is disengaged. Cruise control is deactivated.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Cruise Gear Enumeration" Storage="enum" Default="Neutral">
+   <Help>
+<![CDATA[<p class="device_help">Gear information relevant for the cruise control.</p>]]>
+   </Help>
+   <Enum Name="Neutral" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Reverse" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Default" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The current gear can not be determined.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Cruise Throttle Aim State Enumeration" Storage="enum" Default="Pedal">
+   <Help>
+<![CDATA[<p class="device_help">Throttle Aim State conditions relevant for the cruise control.</p>]]>
+   </Help>
+   <Enum Name="Idle" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Throttle Aim is equal to Idle Throttle Aim.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Pedal" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Throttle Aim is determined by Throttle Pedal.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Cruise Control" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">Throttle Aim is determined by the cruise control.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Throttle Limit" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">Throttle Aim is limited by another function.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Cruise Control State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Cruise Control is not active.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="On" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Cruise Control is active.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Cruise"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Cruise.Cruise Control">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class controls vehicle speed to a set value by providing a throttle aim value for a throttle servo
+            when activated. A
+              flexible switch layout allows for various wiring solutions for the cruise control buttons.</p>
+            <h1 class="device_help">Project integration</h1>
+            <p class="device_help">Usually this class is integrated as a main group and named 'Cruise'.</p>
+            <p class="device_help">The class requires specific information from the brakes, the clutch, the engine and the throttle aim
+              state. See the help on these input objects below to see if the project needs changes on these items to
+              allow for the cruise control class to work correctly.</p>
+            <p class="device_help">The only output value of the class is the <em class="device_chan">Control Throttle Aim</em> channel, which is NAN (not a
+              number) when <em class="device_chan">State</em> is <em class="device_enum">Off</em>; when <em class="device_chan">State</em> is <em class="device_enum">On</em> the channel provides the requested
+              Throttle Aim from the cruise control. <em class="device_chan">Control Throttle Aim</em> must be integrated into the
+              determination of Throttle Aim in the project. It is recommended to use a logic where the resulting
+              Throttle Aim is specified by the highest throttle aim request of all relevant subsystems which is then
+              limited by the lowest throttle aim limit of all relevant subsystems. The following code shows an example
+              how the throttle aim request from the cruise control can be integrated then:</p>
+<pre class="device_help">if (not Calculate.IsNAN(Cruise.Control.Throttle.Aim)
+  and (v &lt; Cruise.Control.Throttle.Aim)) 
+{ 
+  v = Cruise.Control.Throttle.Aim;
+  s = State.Cruise Control;
+}</pre>
+            <p class="device_help">where v is a local variable used to determine the smallest throttle aim request of all relevant subsystems,
+            and s is
+              a local variable to eventually provide the Throttle Aim State (the source of the current Throttle Aim).</p>
+            <p class="device_help">Apart from the calculation function the class also includes a function that is called at startup, so the
+              project needs to have an 'On Startup' event.</p>
+            <h1 class="device_help">Help on input objects and data types</h1>
+            <h2 class="device_help">Engine Speed</h2>
+            <p class="device_help">Connect to the Engine Speed channel.</p>
+            <h2 class="device_help">Vehicle Speed</h2>
+            <p class="device_help">Connect to the Vehicle Speed channel. The channel is allowed to be NAN, the cruise control cannot be
+              activated then.</p>
+            <h2 class="device_help">Brake State</h2>
+            <p class="device_help">The class requires a <em class="device_ref">Brake State</em> input using an enumeration that has at least the enumerators
+              <em class="device_enum">Sensor Fault</em>, <em class="device_enum">Unknown</em>, <em class="device_enum">Off</em> and <em class="device_enum">On</em> (with the meanings as described in the help on
+              the input object). The class provides a 'Cruise Brake State Enumeration' that comprises these enumerators,
+              however also a proprietary enumeration from the project can be used but must contain the mentioned
+              enumerators. In such a case the Brake State Data Type can be changed accordingly.</p>
+            <h2 class="device_help">Clutch State</h2>
+            <p class="device_help">The class requires a <em class="device_ref">Clutch State</em> input using an enumeration that has at least the enumerators
+              <em class="device_enum">Sensor Fault</em>, <em class="device_enum">Unknown</em>, <em class="device_enum">Disengaged</em> and <em class="device_enum">Engaged</em> (with the meanings as described in
+              the help on the input object). The class provides a 'Cruise Clutch State Enumeration' that comprises these
+              enumerators, however also a proprietary enumeration from the project can be used but must contain the
+              mentioned enumerators. In such a case the Clutch State Data Type can be changed accordingly.</p>
+            <h2 class="device_help">Engine State</h2>
+            <p class="device_help">Connect to the Engine State channel which must use the data type 'Engine State Enumeration' provided by
+              the MoTeC Types module.</p>
+            <h2 class="device_help">Switches</h2>
+            <p class="device_help">All switch input objects must use a data type that includes the value 'On'. The MoTeC data type 'Switch State'
+            is preselected but can be changed in the 'Value' properties. Usually these inputs are connected to a
+              hardware input source. The same hardware source can be used on more than one switch input. See the help on these input
+              objects for possible switch configurations.</p>
+            <p class="device_help">If the switches are not fixed in the project but are to be configured in the package, it is recommended
+              to copy the help text from the input object of this class to the help section of the respective switch
+              objects.</p>
+            <h2 class="device_help">Throttle Pedal</h2>
+            <p class="device_help">Connect to the Throttle Pedal channel.</p>
+            <h2 class="device_help">Throttle Position</h2>
+            <p class="device_help">Connect to the Throttle Position channel.</p>
+            <h2 class="device_help">Throttle Aim State</h2>
+            <p class="device_help">The class requires a <em class="device_ref">Throttle Aim State</em> input using an enumeration that has at least the
+              enumerators <em class="device_enum">Pedal</em>, <em class="device_enum">Idle</em>, <em class="device_enum">Cruise Control</em> and <em class="device_enum">Throttle Limit</em> (with the meanings
+              as described in the help on the input object). The class provides a 'Cruise Throttle Aim State
+              Enumeration' that comprises these enumerators, however also a proprietary enumeration from the project can
+              be used but must contain the mentioned enumerators. In such a case the Throttle Aim State Data Type can be
+              changed accordingly.</p>
+            <h2 class="device_help">Gear</h2>
+            <p class="device_help">The class requires a <em class="device_ref">Gear</em> input using enumeration that has at least the enumerators <em class="device_enum">Default</em>,
+              <em class="device_enum">Reverse</em> and <em class="device_enum">Neutral</em> (with the meanings as described in the help on the input object). The
+              class provides a 'Cruise Gear Enumeration' that comprises these enumerators, however also a proprietary
+              enumeration from the project can be used but must contain the mentioned enumerators. In such a case the
+              Gear Data Type can be changed accordingly.</p>
+            <h1 class="device_help">Events</h1>
+            <h2 class="device_help">Control Calculation Event</h2>
+            <p class="device_help">This is the event rate for the cruise control function to determine <em class="device_chan">Control Throttle Aim</em>. For a
+              fast throttle response an event rate of 100Hz is recommended.</p>
+            <h2 class="device_help">State Calculation Event</h2>
+            <p class="device_help">This is the event rate for the determination of <em class="device_chan">State</em>. An event rate of 50Hz is recommended.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="Brake State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Brake State" TargetRef="Type" DisplayName="Brake State Data Type"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Clutch State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Clutch State" TargetRef="Type" DisplayName="Clutch State Data Type"/>
+         <Property Name="Control Calculation Event" Creation="Custom" Visible="1" TargetCpt="This.Control.Calculation" TargetRef="SelectedTrigger" DisplayName="Control Calculation Event"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Engine Speed Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed" TargetRef="Target" DisplayName="Engine Speed Input Object"/>
+         <Property Name="Engine State Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine State" TargetRef="Target" DisplayName="Engine State Input Object"/>
+         <Property Name="Gear Data Type" Creation="Custom" Visible="1" TargetCpt="This.Gear" TargetRef="Type" DisplayName="Gear Data Type"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="State Calculation Event" Creation="Custom" Visible="1" TargetCpt="This.Calculation" TargetRef="SelectedTrigger" DisplayName="State Calculation Event"/>
+         <Property Name="Switches Data Type" Creation="Custom" Visible="1" TargetCpt="This.On Switch" TargetRef="Type" DisplayName="Switches Data Type"/>
+         <Property Name="Throttle Aim State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Throttle Aim State" TargetRef="Type" DisplayName="Throttle Aim State Data Type"/>
+         <Property Name="Throttle Pedal Input Object" Creation="Custom" Visible="1" TargetCpt="This.Throttle Pedal" TargetRef="Target" DisplayName="Throttle Pedal Input Object"/>
+         <Property Name="Throttle Position Input Object" Creation="Custom" Visible="1" TargetCpt="This.Throttle Position" TargetRef="Target" DisplayName="Throttle Position Input Object"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Vehicle Speed Input Object" Creation="Custom" Visible="1" TargetCpt="This.Vehicle Speed" TargetRef="Target" DisplayName="Vehicle Speed Input Object"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Brake State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Clutch State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.On Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Off Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Cancel Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Resume Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Acceleration Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Set Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Deceleration Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Aim State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Gear" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">The cruise control feature controls vehicle speed to a set value.</p>
+                  <p class="device_help">For the cruise control to work the following requirements must be met:</p>
+                  <ul class="device_help">
+                    <li class="device_help">The cruise control buttons must be configured (switches for On, Off, Set, Cancel, Resume,
+                      Acceleration, Deceleration). This is usually done in another subsystem and the defined switches
+                      are read from the cruise control. The switches can share the same input source if a wired switch
+                      has more than one function.</li>
+                    <li class="device_help">At least one sensor or input for the <em class="device_ref">Brake State</em> must be set up. <em class="device_ref">Brake State</em> must
+                      be <em class="device_enum">On</em> or <em class="device_enum">Off</em> for the cruise control to be enabled.</li>
+                    <li class="device_help">At least one sensor or input for the <em class="device_ref">Clutch State</em> should be set up if the application
+                      uses a clutch. If nothing is configured, <em class="device_ref">Clutch State</em> must be set to <em class="device_enum">Unknown</em> and the cruise
+                      control will ignore the <em class="device_ref">Clutch State</em> then (to cover application of an automatic gearbox).
+                    </li>
+                    <li class="device_help">The exit conditions in <em class="device_chan">Exit</em> must be set.</li>
+                    <li class="device_help"><em class="device_ref">Vehicle Speed</em> must be valid.</li>
+                    <li class="device_help"><em class="device_param">Mode</em> must be <em class="device_enum">Enabled</em>.</li>
+                  </ul>
+                  <p class="device_help">The vehicle speed control is provided by <em class="device_chan">Control Throttle Aim</em> when <em class="device_chan">State</em> is <em class="device_enum">On</em>.
+                  </p>
+                  <p class="device_help">See <em class="device_chan">Enable</em> for the general enable conditions of the cruise control.
+                  </p>
+                  <p class="device_help">See <em class="device_chan">State</em> for the activation and exit conditions of the cruise control.</p>
+                  <p class="device_help">See <em class="device_group">Control</em> for the setup of the control function.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" ValMax="1.80000000000000000e+005">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Connect to Engine Speed</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Vehicle Speed">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Logging"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Connect to Vehicle Speed</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Brake State">
+        <Props Type="::This.Cruise Brake State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The brake condition that is relevant for the cruise control. This comprises the following values:
+                  </p>
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_enum">Sensor Fault</em>: At least one sensor to determine the state of the brakes is configured, but
+                      all configured sensors are faulty. Cruise control is disabled.</li>
+                    <li class="device_help"><em class="device_enum">Unknown</em>: No source for <em class="device_ref">Brake State</em> is configured. Cruise control is disabled, as a
+                      valid <em class="device_ref">Brake State</em> information is mandatory for the cruise control to operate.</li>
+                    <li class="device_help"><em class="device_enum">Off</em>: The brakes are not activated. Cruise control can be activated then.</li>
+                    <li class="device_help"><em class="device_enum">On</em>: The brakes are activated. Cruise control is deactivated.</li>
+                  </ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Clutch State">
+        <Props Type="::This.Cruise Clutch State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The clutch condition that is relevant for the cruise control. This comprises the following values:
+                  </p>
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_enum">Sensor Fault</em>: At least one sensor to determine the state of the clutch is configured, but
+                      all configured sensors are faulty. Cruise control is disabled.</li>
+                    <li class="device_help"><em class="device_enum">Unknown</em>: No source for <em class="device_ref">Clutch State</em> is configured. Cruise control will ignore <em class="device_ref">
+                      Clutch State</em>.</li>
+                    <li class="device_help"><em class="device_enum">Engaged</em>: The clutch is engaged. Cruise control can be activated then.</li>
+                    <li class="device_help"><em class="device_enum">Disengaged</em>: The clutch is disengaged. Cruise control is deactivated.</li>
+                  </ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[Connect to Engine State]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.On Switch">
+        <Props Type="::Hardware.switch.state"/>
+        <Comment>
+<![CDATA[<p class="device_help">Switch input for Cruise On (general enable of the cruise control, not for setting the target
+                    <em class="device_chan">Speed</em>).</p>
+                  <p class="device_help">The switch can use the same physical input as <em class="device_ref">Off Switch</em>.</p>
+                  <p class="device_help">If the switch is not used the value must be <em class="device_enum">On</em> if the cruise control is supposed to operate.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Off Switch">
+        <Props Type="$(Parent.On Switch:Type)"/>
+        <Comment>
+<![CDATA[<p class="device_help">Switch input for Cruise Off (general disable of the cruise control, not for canceling the current
+                    cruise control operation).</p>
+                  <p class="device_help">The switch can use the same physical input as <em class="device_ref">On Switch</em>.</p>
+                  <p class="device_help">If the switch is not used the value must be <em class="device_enum">Off</em> if the cruise control is supposed to
+                    operate.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Cancel Switch">
+        <Props Type="$(Parent.On Switch:Type)"/>
+        <Comment>
+<![CDATA[<p class="device_help">Switch input for Cruise Cancel. When <em class="device_chan">State</em> is <em class="device_enum">On</em>, by activating this switch <em class="device_chan">State
+                    </em> will change to <em class="device_enum">Off</em>.</p>
+                  <p class="device_help">The switch can use the same physical input as <em class="device_ref">Set Switch</em>.</p>
+                  <p class="device_help">If the switch is not used the <em class="device_ref">Off Switch</em> must be configured and <em class="device_ref">Cancel Switch</em> must be
+                    <em class="device_enum">Off</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Resume Switch">
+        <Props Type="$(Parent.On Switch:Type)"/>
+        <Comment>
+<![CDATA[<p class="device_help">Switch input for Cruise Resume. When <em class="device_chan">State</em> is <em class="device_enum">Off</em>, by activating this switch <em class="device_chan">State</em>
+                    will become <em class="device_enum">On</em> and the target <em class="device_chan">Speed</em> will be set to the previously saved target
+                    speed or the current <em class="device_ref">Vehicle Speed</em>.</p>
+                  <p class="device_help">The switch can use the same physical input as <em class="device_ref">Acceleration Switch</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Acceleration Switch">
+        <Props Type="$(Parent.On Switch:Type)"/>
+        <Comment>
+<![CDATA[<p class="device_help">Switch input for Cruise Acceleration. When <em class="device_chan">State</em> is <em class="device_enum">On</em> the target <em class="device_chan">Speed</em> can be
+                    increased by using this switch.</p>
+                  <p class="device_help">The switch can use the same physical input as <em class="device_ref">Resume Switch</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Set Switch">
+        <Props Type="$(Parent.On Switch:Type)"/>
+        <Comment>
+<![CDATA[<p class="device_help">Switch input for Cruise Set. This is to set the target <em class="device_chan">Speed</em> and to change <em class="device_chan">State</em> to
+                    <em class="device_enum">On</em>. See <em class="device_chan">State</em> for more details.</p>
+                  <p class="device_help">The switch can use the same physical input as <em class="device_ref">Deceleration Switch</em> or <em class="device_ref">Cancel Switch</em>, but all
+                    three switches using the same input must not be configured.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Deceleration Switch">
+        <Props Type="$(Parent.On Switch:Type)"/>
+        <Comment>
+<![CDATA[<p class="device_help">Switch input for Cruise Coast/Deceleration. When <em class="device_chan">State</em> is <em class="device_enum">On</em> the target <em class="device_chan">Speed</em>
+                    can be decreased by using this switch.</p>
+                  <p class="device_help">The switch can use the same physical input as <em class="device_ref">Set Switch</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Pedal">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Connect to Throttle Pedal
+                </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Position">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Connect to Throttle Position</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Aim State">
+        <Props Type="::This.Cruise Throttle Aim State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The <em class="device_ref">Throttle Aim State</em> condition that is relevant for the cruise control. This comprises the
+                    following values:</p>
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_enum">Pedal</em>: The throttle aim is determined by the throttle pedal. Cruise control can be
+                      active.</li>
+                    <li class="device_help"><em class="device_enum">Idle</em>: The throttle aim is determined by engine idle conditions. Cruise control can be
+                      active.</li>
+                    <li class="device_help"><em class="device_enum">Throttle Limit</em>: The throttle aim is restricted from another function. Cruise control is
+                      deactivated.</li>
+                    <li class="device_help"><em class="device_enum">Cruise Control</em>: The throttle aim is determined by <em class="device_chan">Control Throttle Aim</em> from the
+                      cruise control. Cruise control is active.</li>
+                  </ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Gear">
+        <Props Type="::This.Cruise Gear Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The gear information that is relevant for the cruise control. The cruise control will be
+                  deactivated if the value is <em class="device_enum">Reverse</em> or <em class="device_enum">Neutral</em> (and active for all other values).
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Operation condition of the system.</p>
+                  <p class="device_help"><em class="device_chan">State</em> cannot be <em class="device_enum">On</em> when this value is <em class="device_enum">Disabled</em>.</p>
+                  <p class="device_help"><em class="device_chan">Enable</em> will be <em class="device_enum">Disabled</em> if any of the following conditions is met:</p>
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_ref">Brake State</em> is <em class="device_enum">Sensor Fault</em> or <em class="device_enum">Unknown</em>.</li>
+                    <li class="device_help"><em class="device_ref">Clutch State</em> is <em class="device_enum">Sensor Fault</em>.</li>
+                    <li class="device_help"><em class="device_ref">Off Switch</em> changes from <em class="device_enum">Off</em> to <em class="device_enum">On</em> while <em class="device_param">Mode</em> is <em class="device_enum">Enabled</em>.</li>
+                    <li class="device_help"><em class="device_param">Mode</em> is <em class="device_enum">Disabled</em>.</li>
+                  </ul>
+                  <p class="device_help"><em class="device_chan">Enable</em> will become <em class="device_enum">Enabled</em> when all of the following conditions are met:</p>
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_ref">Brake State</em> is not <em class="device_enum">Sensor Fault</em> or <em class="device_enum">Unknown</em>.</li>
+                    <li class="device_help"><em class="device_ref">Clutch State</em> is not <em class="device_enum">Sensor Fault</em>.</li>
+                    <li class="device_help"><em class="device_ref">On Switch</em> changes from <em class="device_enum">Off</em> to <em class="device_enum">On</em> while <em class="device_param">Mode</em> is <em class="device_enum">Disabled</em>, or
+                      <em class="device_ref">On Switch</em> is <em class="device_enum">On</em> and <em class="device_ref">Off Switch</em> is <em class="device_enum">Off</em>.</li>
+                    <li class="device_help"><em class="device_param">Mode</em> is <em class="device_enum">Enabled</em>.</li>
+                  </ul>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.Cruise Control State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Requested cruise state.</p>
+                  <p class="device_help">Cannot be <em class="device_enum">On</em> if <em class="device_param">Mode</em> is <em class="device_enum">Disabled</em> or <em class="device_chan">Enable</em> is <em class="device_enum">Disabled</em>.</p>
+                  <h2 class="device_help">Cruise Control Operation</h2>
+                  <p class="device_help">Assuming <em class="device_param">Mode</em> is <em class="device_enum">Enabled</em> the following applies:</p>
+                  <p class="device_help">If <em class="device_chan">State</em> is <em class="device_enum">Off</em>, it will become <em class="device_enum">On</em> if either
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_ref">Set Switch</em> becomes <em class="device_enum">On</em>, or</li>
+                    <li class="device_help"><em class="device_ref">Resume Switch</em> becomes <em class="device_enum">On</em>, or</li>
+                    <li class="device_help"><em class="device_ref">Acceleration Switch</em> AND <em class="device_ref">Deceleration Switch</em> are <em class="device_enum">On</em> at the same time (this
+                      is treated equal to the <em class="device_ref">Set Switch</em>)</li>
+                  </ul>
+                  AND if all of the following conditions are met:
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_ref">Engine State</em> is <em class="device_enum">Run</em></li>
+                    <li class="device_help"><em class="device_ref">Vehicle Speed</em> is greater than <em class="device_param">Minimum Speed</em></li>
+                    <li class="device_help"><em class="device_ref">Throttle Aim State</em> is <em class="device_enum">Idle</em> or <em class="device_enum">Pedal</em></li>
+                    <li class="device_help"><em class="device_ref">Brake State</em> is <em class="device_enum">Off</em></li>
+                    <li class="device_help"><em class="device_ref">Clutch State</em> is <em class="device_enum">Engaged</em> or <em class="device_enum">Unknown</em></li>
+                    <li class="device_help"><em class="device_ref">Gear</em> is not <em class="device_enum">Neutral</em> or <em class="device_enum">Reverse</em></li>
+                  </ul>
+                  If <em class="device_ref">Resume Switch</em> is used, the previously saved target <em class="device_chan">Speed</em> is set. 
+                  If <em class="device_ref">Set Switch</em> is used, or if no previously saved target speed is available, the current 
+                    <em class="device_ref">Vehicle Speed</em> will be saved as the target <em class="device_chan">Speed</em>.<p></p>
+                  <p class="device_help">If <em class="device_chan">State</em> is <em class="device_enum">On</em> the vehicle speed is controlled to the set value by
+                  <em class="device_chan">Control Throttle Aim</em>.</p>
+                  <p class="device_help">Any of the following conditions will exit cruise control and change
+                    the <em class="device_chan">State</em> to <em class="device_enum">Off</em>:
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_ref">Engine State</em> is not <em class="device_enum">Run</em> (this will also reset the saved target <em class="device_chan">Speed</em>)</li>
+                    <li class="device_help"><em class="device_ref">Vehicle Speed</em> is below <em class="device_param">Minimum Speed</em></li>
+                    <li class="device_help"><em class="device_ref">Throttle Aim State</em> is not <em class="device_enum">Idle</em>, <em class="device_enum">Pedal</em> or <em class="device_enum">Cruise Control</em> (means the
+                      Throttle Aim is restricted by another function)</li>
+                    <li class="device_help"><em class="device_ref">Brake State</em> is <em class="device_enum">On</em> or <em class="device_enum">Unknown</em> or <em class="device_enum">Sensor Fault</em></li>
+                    <li class="device_help"><em class="device_ref">Clutch State</em> is <em class="device_enum">Disengaged</em> or <em class="device_enum">Sensor Fault</em></li>
+                    <li class="device_help"><em class="device_ref">Off Switch</em> becomes <em class="device_enum">On</em> (this will also reset the saved target <em class="device_chan">Speed</em>)
+                    </li>
+                    <li class="device_help"><em class="device_ref">Cancel Switch</em> becomes <em class="device_enum">On</em></li>
+                    <li class="device_help"><em class="device_ref">Throttle Pedal</em> is greater than zero for longer than <em class="device_param">Exit Throttle Pedal Delay</em></li>
+                    <li class="device_help">The <em class="device_ref">Engine Speed</em> is greater than <em class="device_param">Exit Engine Speed Threshold</em>.</li>
+                    <li class="device_help">The <em class="device_ref">Engine Speed</em> is greater than <em class="device_chan">Exit Engine Speed Filtered</em> by <em class="device_param">Exit Engine
+                      Speed Difference</em>.</li>
+                  </ul>
+                  Some of these exit conditions are reported by <em class="device_enum">Exit</em>.<p></p><p class="device_help">
+                  While <em class="device_chan">State</em> is <em class="device_enum">On</em> the following options are available:</p>
+                  <p class="device_help">If <em class="device_ref">Set Switch</em> becomes <em class="device_enum">On</em> while <em class="device_ref">Throttle Pedal</em> is higher than would be
+                    necessary to maintain the current target <em class="device_chan">Speed</em> (this is when the driver accelerates,
+                    additional 3 seconds after that are considered), the current <em class="device_ref">Vehicle Speed</em> is saved as the
+                    new target <em class="device_chan">Speed</em>.</p>
+                  <p class="device_help">If <em class="device_ref">Deceleration Switch</em> becomes <em class="device_enum">On</em>, the target <em class="device_chan">Speed</em> is decreased by the amount
+                    calibrated in <em class="device_param">Speed Decrement Slow</em>.</p>
+                  <p class="device_help">If <em class="device_ref">Deceleration Switch</em> is kept <em class="device_enum">On</em>, when the calibrated <em class="device_param">Button Repeat</em> time
+                    expires the target <em class="device_chan">Speed</em> is decreased to the next multiple of <em class="device_param">Speed Decrement Fast</em>,
+                    and subsequently each time the calibrated <em class="device_param">Button Repeat</em> time expires the target <em class="device_chan">Speed</em>
+                    is decreased by the amount calibrated in <em class="device_param">Speed Decrement Fast</em>. For example, if <em class="device_chan">Speed</em>
+                    is 83km/h and <em class="device_param">Speed Decrement Fast</em> is 5km/h, keeping <em class="device_ref">Deceleration Switch</em> <em class="device_enum">On</em>
+                    will result in <em class="device_chan">Speed</em> changing from 83km/h to 80km/h the first time <em class="device_param">Button Repeat</em>
+                    expires, then to 75km/h the next time, then 70km/h and so on.</p>
+                  <p class="device_help">If <em class="device_ref">Acceleration Switch</em> becomes <em class="device_enum">On</em>, the target <em class="device_chan">Speed</em> is increased by the amount
+                    calibrated in <em class="device_param">Speed Increment Slow</em>.</p>
+                  <p class="device_help">If <em class="device_ref">Acceleration Switch</em> is kept <em class="device_enum">On</em>, when the calibrated <em class="device_param">Button Repeat</em> time
+                    expires the target <em class="device_chan">Speed</em> is increased to the next multiple of <em class="device_param">Speed Increment Fast</em>,
+                    and subsequently each time the calibrated <em class="device_param">Button Repeat</em> time expires the target <em class="device_chan">Speed</em>
+                    is increased by the amount calibrated in <em class="device_param">Speed Increment Fast</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Button Repeat">
+        <Props Qty="s" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <Locale>
+          <Default Unit="ms"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[If the <em class="device_ref">Deceleration Switch</em> or <em class="device_ref">Acceleration Switch</em> is held for this amount of time
+                  the button command will be repeated in steps of <em class="device_param">Speed Decrement Fast</em> or <em class="device_param">Speed Increment Fast
+                  </em> respectively.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Exit">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Reports if the cruise control must be exited because of:
+                  <ul class="device_help">
+                    <li class="device_help"><em class="device_ref">Brake State</em> is <em class="device_enum">On</em></li>
+                    <li class="device_help"><em class="device_ref">Clutch State</em> is <em class="device_enum">Disengaged</em></li>
+                    <li class="device_help"><em class="device_ref">Throttle Pedal</em> is greater zero for longer than <em class="device_param">Exit Throttle Pedal Delay</em></li>
+                    <li class="device_help">The <em class="device_ref">Engine Speed</em> is greater than <em class="device_param">Exit Engine Speed Threshold</em></li>
+                    <li class="device_help">The <em class="device_ref">Engine Speed</em> is greater than <em class="device_chan">Exit Engine Speed Filtered</em> by <em class="device_param">Exit Engine
+                      Speed Difference</em>.</li>
+                  </ul></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Exit.Value">
+        <Props Type="::This.Cruise Exit Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Exit.Throttle Pedal Delay">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false"/>
+        <Comment>
+<![CDATA[<p class="device_help">When <em class="device_ref">Throttle Pedal</em> is greater than zero for this amount of time while <em class="device_chan">State</em> is 
+                    <em class="device_enum">On</em>, the cruise control is exited and <em class="device_chan">State</em> changes to <em class="device_enum">Off</em>.</p>
+                  <p class="device_help">A value of 0.0 deactivates this feature.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Exit.Engine Speed">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Exit.Engine Speed.Filtered">
+        <Props DiagnosticLog="true" DiagnosticLogRate="100MS" Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" ValMax="180000">
+         <Locale>
+          <Default Unit="rpm" Min="0.00000000000000000e+000" Max="5.40000000000000000e+004"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_ref">Engine Speed</em> filtered with a first order filter using a time constant of <em class="device_param">Exit Engine
+                  Speed Time Constant</em>. The filter is only active when <em class="device_chan">State</em> is <em class="device_enum">On</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Exit.Engine Speed.Difference">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">If <em class="device_ref">Engine Speed</em> is greater than <em class="device_chan">Exit Engine Speed Filtered</em> by this amount while
+                    <em class="device_chan">State</em> is <em class="device_enum">On</em>, the cruise control is exited and <em class="device_chan">State</em> changes to <em class="device_enum">Off</em>.</p>
+                  <p class="device_help">This is used to catch engine speed flares, for example when the car loses traction (wheels running
+                    free) or as a fall back if the <em class="device_ref">Clutch State</em> sensing does not read correctly. However, if the
+                    car uses an automatic gearbox, it must be carefully considered if the chosen value can ensue due to
+                    gear changes.</p>
+                  <p class="device_help">The value should be a certain percentage of the above mentioned difference value that ensues when
+                    the engine revs while the car has no ground adherence (is jacked up or on a hoist, or jumps). The
+                    feature will be ineffective if set to very high rpm numbers.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Exit.Engine Speed.Time Constant">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="ms"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The time constant for the first order filter to determine <em class="device_chan">Exit Engine Speed Filtered</em>.</p>
+                  <p class="device_help">A typical value is 500ms.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Exit.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Calculation:SelectedTrigger)"/>
+        <Code Encoding="base64">
+<![CDATA[CmxvY2FsIHYgPSAoQnJha2UgU3RhdGUgZXEgQnJha2UgU3RhdGUuT24pOwp2ID0gdiBvciAoQ2x1dGNoIFN0YXRlIGVxIENsdXRjaCBTdGF0ZS5EaXNlbmdhZ2VkKTsKCmxvY2FsIGNjYWN0aXZlID0gUGFyZW50LlN0YXRlIGVxIFBhcmVudC5TdGF0ZS5PbjsKCmxvY2FsIHBlZGFsID0gRGVsYXkuUmlzaW5nKChUaHJvdHRsZSBQZWRhbCA+IDAuMCkgYW5kIGNjYWN0aXZlLCBUaHJvdHRsZSBQZWRhbCBEZWxheSk7CnYgPSB2IG9yIChwZWRhbCBhbmQgKFRocm90dGxlIFBlZGFsIERlbGF5ID4gMC4wKSk7CQkvLyBmZWF0dXJlIGRpc2FibGVkIGlmIGRlbGF5IGlzIHplcm8KClRoaXMuRW5naW5lIFNwZWVkLkZpbHRlcmVkID0gRmlsdGVyLkZpcnN0T3JkZXIoQmFzZS5FbmdpbmUgU3BlZWQsIFRoaXMuRW5naW5lIFNwZWVkLlRpbWUgQ29uc3RhbnQsIG5vdCBjY2FjdGl2ZSk7CmxvY2FsIHJwbWZsYXJlID0gKEJhc2UuRW5naW5lIFNwZWVkIC0gVGhpcy5FbmdpbmUgU3BlZWQuRmlsdGVyZWQpID4gVGhpcy5FbmdpbmUgU3BlZWQuRGlmZmVyZW5jZTsKdiA9IHYgb3IgcnBtZmxhcmU7CnYgPSB2IG9yIChCYXNlLkVuZ2luZSBTcGVlZCA+IFRoaXMuRW5naW5lIFNwZWVkLlRocmVzaG9sZCk7CgpWYWx1ZSA9IHYgPyBWYWx1ZS5FeGl0IDogVmFsdWUuT0s7Cgo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Speed">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Target cruise speed.</p>
+                  <p class="device_help">The resolution is 0.1 (km/h or mph, dependent on <em class="device_param">Speed Unit</em>). When there is no target speed
+                    this value does not show a valid number.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Speed.Value">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h" Min="1.11099999999999990e+001" Max="6.94399999999999980e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Target cruise speed.</p>
+                  <p class="device_help">When there is no target speed this value is invalid.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Speed.Count">
+        <Props Type="s32"/>
+        <Comment>
+<![CDATA[<p class="device_help"><em class="device_chan">Speed</em> using an integer representation.
+                </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Speed.Unit">
+        <Props Type="::This.Cruise Unit Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Unit of speed which is used for setting the target <em class="device_chan">Speed</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Speed.Increment Fast">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When <em class="device_ref">Acceleration Switch</em> is <em class="device_enum">On</em>, this is the speed by which the target <em class="device_chan">Speed</em> is
+                    increased every time <em class="device_param">Button Repeat</em> expires.</p>
+                  <p class="device_help">See <em class="device_chan">State</em> for more information.</p>
+                  <p class="device_help">The minimum effective resolution is 0.1 (km/h or mph, dependent on <em class="device_param">Speed Unit</em>).</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Speed.Increment Slow">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When <em class="device_chan">State</em> is <em class="device_enum">On</em>, this is the speed by which the target <em class="device_chan">Speed</em> is increased
+                    every time <em class="device_ref">Acceleration Switch</em> is pressed (switches to <em class="device_enum">On</em>).</p>
+                  <p class="device_help">The minimum effective resolution is 0.1 (km/h or mph, dependent on <em class="device_param">Speed Unit</em>).</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Speed.Decrement Fast">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When <em class="device_ref">Deceleration Switch</em> is <em class="device_enum">On</em>, this is the speed by which the target <em class="device_chan">Speed</em> is
+                    decreased every time <em class="device_param">Button Repeat</em> expires.</p>
+                  <p class="device_help">See <em class="device_chan">State</em> for more information.</p>
+                  <p class="device_help">The minimum effective resolution is 0.1 (km/h or mph, dependent on <em class="device_param">Speed Unit</em>).</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Speed.Decrement Slow">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When <em class="device_chan">State</em> is <em class="device_enum">On</em>, this is the speed by which the target <em class="device_chan">Speed</em> is decreased
+                    every time <em class="device_ref">Deceleration Switch</em> is pressed (switches to <em class="device_enum">On</em>).</p>
+                  <p class="device_help">The minimum effective resolution is 0.1 (km/h or mph, dependent on <em class="device_param">Speed Unit</em>).</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.Clear">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[U2V0Q291bnQoMCk7ClVwZGF0ZVZhbHVlKCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.DecrementSlow">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgPGludGVnZXI+IGRlYyA9IENhbGN1bGF0ZS5NYXgoQ29udmVydC5Ub0ludGVnZXIoRGVjcmVtZW50IFNsb3cgKiBHZXRTY2FsZXIoKSksIDEpOwpTZXRDb3VudChDYWxjdWxhdGUuTWF4KENvdW50IC0gZGVjLCBHZXRNaW5pbXVtKCkpKTsKVXBkYXRlVmFsdWUoKTsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.DecrementFast">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgPGludGVnZXI+IGRlYyA9IENhbGN1bGF0ZS5NYXgoQ29udmVydC5Ub0ludGVnZXIoRGVjcmVtZW50IEZhc3QgKiBHZXRTY2FsZXIoKSksIDEpOwpsb2NhbCB2ID0gKChDb3VudCAtIDEpIC8gZGVjKSAqIGRlYzsKU2V0Q291bnQoQ2FsY3VsYXRlLk1heCh2LCBHZXRNaW5pbXVtKCkpKTsKVXBkYXRlVmFsdWUoKTsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.IncrementSlow">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgPGludGVnZXI+IGluYyA9IENhbGN1bGF0ZS5NYXgoQ29udmVydC5Ub0ludGVnZXIoSW5jcmVtZW50IFNsb3cgKiBHZXRTY2FsZXIoKSksIDEpOwpTZXRDb3VudChDYWxjdWxhdGUuTWluKENvdW50ICsgaW5jLCBHZXRNYXhpbXVtKCkpKTsKVXBkYXRlVmFsdWUoKTsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.IncrementFast">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgPGludGVnZXI+IGluYyA9IENhbGN1bGF0ZS5NYXgoQ29udmVydC5Ub0ludGVnZXIoSW5jcmVtZW50IEZhc3QgKiBHZXRTY2FsZXIoKSksIDEpOwpsb2NhbCB2ID0gKChDb3VudCArIGluYykgLyBpbmMpICogaW5jOwpTZXRDb3VudChDYWxjdWxhdGUuTWluKHYsIEdldE1heGltdW0oKSkpOwpVcGRhdGVWYWx1ZSgpOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.GetMinimum">
+        <Signature Name="" ReturnType="s32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[Ck91dCA9IENvbnZlcnQuVG9JbnRlZ2VyKFBhcmVudC5NaW5pbXVtIFNwZWVkICogR2V0U2NhbGVyKCkpOwoK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.GetMaximum">
+        <Signature Name="" ReturnType="s32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[Ck91dCA9IENvbnZlcnQuVG9JbnRlZ2VyKFBhcmVudC5NYXhpbXVtIFNwZWVkICogR2V0U2NhbGVyKCkpOwoK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.GetScaler">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[LyoJU2NhbGUgZmFjdG9ycyBhcmUgbXVsdGlwbGllZCBieSAxMCB0byBwcm92aWRlIDAuMSBrbS9oIHN0ZXAgcmVzb2x1dGlvbiBmb3IgaW5jcmVtZW50L2RlY3JlbWVudC4KICoJMTAuMDAxIG1ha2VzIHN1cmUgZmxvYXRpbmcgcG9pbnQgcmVwcmVzZW50YXRpb24gYSBiaXQgYmVsb3cgaW50ZWdlciB0byBtYWtlIGNvbXBhcmlzb25zIGVhc2llciB3aGVuIFZhbHVlIGlzIGNhbGN1bGF0ZWQsCiAqCWFuZCB0byB0YWtlIGNhcmUgZm9yIGZsb2F0aW5nIHBvaW50IHJvdW5kaW5nIGVycm9ycyB3aGVuIGNhbGN1bGF0aW5nIHRoZSBpbmNyZW1lbnRzL2RlY3JlbWVudHMuCiAqLwoKd2hlbiAoVW5pdCkKewoJaXMgKEtpbG9tZXRyZXMgUGVyIEhvdXIpCgl7CgkJb3V0ID0gMzYuMDAzNjsJLy8gMy42ICogMTAuMDAxCgl9CglpcyAoTWlsZXMgUGVyIEhvdXIpCgl7CgkJb3V0ID0gMjIuMzcxNTk3OwkvLyAyLjIzNjkzNiAqIDEwLjAwMQoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.SetCount">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="val" Type="s32" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[Q291bnQgPSBpbi52YWw7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.SetSpeed">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="val" Type="f32" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgdiA9IENvbnZlcnQuVG9JbnRlZ2VyKGluLnZhbCAqIEdldFNjYWxlcigpKTsKdiA9IENhbGN1bGF0ZS5NYXgoR2V0TWluaW11bSgpLCB2KTsKdiA9IENhbGN1bGF0ZS5NaW4oR2V0TWF4aW11bSgpLCB2KTsKU2V0Q291bnQodik7ClVwZGF0ZVZhbHVlKCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Speed.UpdateValue">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[aWYgKENvdW50IGVxIDApCnsKCVZhbHVlID0gQ2FsY3VsYXRlLk5BTigpOwp9CmVsc2UKewoJVmFsdWUgPSAoQ291bnQgLyBHZXRTY2FsZXIoKSk7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control">
+        <Comment>
+<![CDATA[<p class="device_help">Vehicle speed control system.</p>
+                  <p class="device_help">This control system is used to control <em class="device_ref">Vehicle Speed</em> to the cruise control target <em class="device_chan">Speed
+                    </em>. The control determines a target for the throttle servo (<em class="device_chan">Control Throttle Aim</em>) which is
+                    used as throttle aim when <em class="device_chan">State</em> is <em class="device_enum">On</em>.</p>
+                  <p class="device_help">The system operates by applying an integral control on the difference between the current vehicle
+                    acceleration and the acceleration necessary to achieve the target <em class="device_chan">Speed</em>.</p>
+                  <p class="device_help"><em class="device_chan">Control Acceleration Actual</em> reports the current vehicle acceleration as a derivative of <em class="device_ref">
+                    Vehicle Speed</em>. The control behaviour
+                  of the cruise control benefits if the <em class="device_ref">Vehicle Speed</em> signal has a good quality, for example
+                  by using a multi-tooth wheel speed sensor instead of a single tooth wheel speed sensor.</p>
+                  <p class="device_help"><em class="device_chan">Control Acceleration Aim</em> reports the acceleration that is necessary to achieve the target
+                    <em class="device_chan">Speed</em>. The value is calculated as <em class="device_chan">Speed</em> - <em class="device_ref">Vehicle Speed</em>, divided through <em class="device_param">
+                    Control Acceleration Time Constant Positive</em> (when <em class="device_chan">Speed</em> is greater than <em class="device_ref">Vehicle Speed
+                    </em>) or <em class="device_param">Control Acceleration Time Constant Negative</em> (when <em class="device_chan">Speed</em> is below <em class="device_ref">Vehicle
+                    Speed</em>). The value is limited by <em class="device_param">Control Acceleration Limit</em>.</p>
+                  <p class="device_help"><em class="device_chan">Control Error</em> reports the difference between the two accelerations. The value is multiplied
+                    with <em class="device_param">Control Integral Gain</em> to perform an integral control.</p>
+                  <p class="device_help">The integral value <em class="device_chan">Control Integral</em> represents a ratio between 0 and 100%. This ratio is
+                    multiplied with <em class="device_chan">Control Throttle Limit</em> to determine <em class="device_chan">Control Throttle Aim</em>. Therefore
+                    <em class="device_chan">Control Throttle Limit</em> defines the maximum throttle aim that will be requested when <em class="device_chan">State
+                    </em> is <em class="device_enum">On</em>.</p>
+                  <em class="device_help">The cruise control is also operational if no direct vehicle speed measurement and/or no gear
+                    information is available. Without a direct source for <em class="device_ref">Vehicle Speed</em> the value is usually estimated
+                    based on <em class="device_ref">Engine Speed</em>, the overall gear ratio and the circumference and final
+                    drive ratio of the driven wheels. The cruise control can operate normally then. If <em class="device_ref">Vehicle Speed</em>
+                    is available but no dedicated <em class="device_ref">Gear</em>
+                    information is available, usually <em class="device_ref">Gear</em> is estimated and the cruise control can operate almost
+                    normally, except if changes into the neutral gear position are detected with delay by the gear estimation.
+                    When using a manual gearbox this is of no concern as a gear change usually involves disengaging the
+                    clutch which will exit cruise control. However using an automatic gearbox the driver must be aware
+                    that switching from a forward gear in to <em class="device_enum">Neutral</em> or <em class="device_enum">Reverse</em> during driving may not exit
+                    cruise control. If neither a direct source for <em class="device_ref">Vehicle Speed</em> nor a dedicated <em class="device_ref">Gear</em>
+                    information is available, <em class="device_ref">Gear</em> takes a <em class="device_enum">Default</em> value and a respective
+                    default gear ratio is defined. The estimated vehicle speed is then calculated based on these values.
+                    Although the vehicle speed may not be accurate then, this still enables the cruise control to
+                    operate.</em>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Error">
+        <Props Qty="m/s/s">
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-9.80700000000000040e+000" Max="9.80700000000000040e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Difference between <em class="device_chan">Control Acceleration Actual</em> and <em class="device_chan">Control Acceleration Aim</em>.</p>
+                  <p class="device_help">See <em class="device_group">Control</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control.Throttle">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Control.Throttle.Limit">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Parent.Engine Speed" MaxSites="11"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the maximum throttle aim that can be requested from the cruise control when <em class="device_chan">State</em> is
+                    <em class="device_enum">On</em>. The driver can override this <em class="device_chan">Control Throttle Aim</em> using the <em class="device_ref">Throttle Pedal</em>.
+                  </p>
+                  <p class="device_help">Dependent on <em class="device_ref">Engine Speed</em>, only a certain <em class="device_ref">Throttle Position</em> is needed to achieve a
+                    full throttle operation (when the pressure in the inlet manifold is near ambient pressure on a natural aspirated
+                    engine), for example at low engine speeds throttle positions as low as 20% may already suffice.
+                    This <em class="device_ref">Throttle Position</em> should be used as a limit value in this table. There will
+                    be no significant effect on the acceleration of the vehicle when exceeding this <em class="device_ref">Throttle Position</em>
+                    as the engine already runs unthrottled, so it should be avoided that the cruise control winds further up
+                    to a 100% open throttle. This
+                    deteriorates the control stability, as the cruise control has to wind down from 100% to 20% first before
+                    any effect can be observed on the engine power.</p>
+                  <p class="device_help">Also it may generally not be desired to allow for full throttle operation for the cruise control.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Control.Throttle.Limit.Value">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Control.Throttle.Limit.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Control.Throttle.Limit.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Calculation:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Throttle.Aim">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The aim throttle position requested from the cruise control when <em class="device_chan">State</em> is <em class="device_enum">On</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control.Acceleration">
+        <Comment>
+<![CDATA[<p class="device_help">Settings for the vehicle acceleration control to achieve the target <em class="device_chan">Speed</em>.</p>
+                  <p class="device_help">See <em class="device_group">Control</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Acceleration.Aim">
+        <Props Qty="m/s/s">
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-9.80700000000000040e+000" Max="9.80669999999999930e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Target vehicle acceleration to achieve the target <em class="device_chan">Speed</em>.</p>
+                  <p class="device_help">See <em class="device_group">Control</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Acceleration.Actual">
+        <Props Qty="m/s/s">
+         <Locale>
+          <Default Unit="G" DPS="3" Min="-9.80700000000000040e+000" Max="9.80669999999999930e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Actual vehicle acceleration as a derivative from <em class="device_ref">Vehicle Speed</em>.</p>
+                  <p class="device_help">See <em class="device_group">Control</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control.Acceleration.Time Constant">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Acceleration.Time Constant.Positive">
+        <Props Qty="s" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Acceleration time constant when <em class="device_ref">Vehicle Speed</em> is less than the target <em class="device_chan">Speed</em>.
+                  </p>
+                  <p class="device_help">The target acceleration <em class="device_chan">Control Acceleration Aim</em> is equal to (<em class="device_chan">Speed</em> - <em class="device_ref">Vehicle
+                    Speed</em>) / <em class="device_param">Control Acceleration Time Constant Positive</em>.</p>
+                  <p class="device_help">Smaller values result in more aggressive acceleration. However, the value should not be decreased
+                    to a point where <em class="device_chan">Control Acceleration Actual</em> is not able to follow <em class="device_chan">Control Acceleration
+                    Aim</em> any more.</p>
+                  <p class="device_help">A typical value is 3s.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Acceleration.Time Constant.Negative">
+        <Props Qty="s" Validation="MinMax" ValMin="1.00000000000000010e-001" ValClampMax="false">
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Acceleration time constant when <em class="device_ref">Vehicle Speed</em> is greater than the target <em class="device_chan">Speed</em>.
+                  </p>
+                  <p class="device_help">The target acceleration <em class="device_chan">Control Acceleration Aim</em> is equal to (<em class="device_chan">Speed</em> - <em class="device_ref">Vehicle
+                    Speed</em>) / <em class="device_param">Control Acceleration Time Constant Negative</em>.</p>
+                  <p class="device_help">Smaller values result in more aggressive deceleration. However, the value should not be decreased
+                    to a point where <em class="device_chan">Control Acceleration Actual</em> is not able to follow <em class="device_chan">Control Acceleration
+                    Aim</em> any more.</p>
+                  <p class="device_help">A typical value is 2s.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Acceleration.Limit">
+        <Props Qty="m/s/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="9.80700000000000040e+000">
+         <Locale>
+          <Default Unit="G" DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Acceleration/deceleration limit.</p>
+                  <p class="device_help">The absolute acceleration/deceleration target will never be greater than this value.</p>
+                  <p class="device_help">A typical value is 0.5G.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Control.Integral">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">This value is the output of the control system and represents a ratio between 0 and 100%. This
+                    ratio is multiplied with <em class="device_chan">Control Throttle Limit</em> to determine <em class="device_chan">Control Throttle Aim</em>.</p>
+                  <p class="device_help">Adjust <em class="device_param">Control Integral Gain</em> to tune the integrator response.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Control.Integral.Value">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Control.Integral.Gain">
+        <Props Qty="ratio/(m/s/s)" ValMin="0.00000000000000000e+000">
+         <Locale>
+          <Default Unit="%/G"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Gain factor for the integral component of the cruise control system.</p>
+                  <p class="device_help">The value is multiplied with <em class="device_chan">Control Error</em> to perform an integral control.</p>
+                  <p class="device_help">A fast throttle reaction has to be ensured. If <em class="device_ref">Vehicle Speed</em> has significant over- or undershoots
+                  to the target <em class="device_chan">Speed</em> or <em class="device_chan">Control Throttle Aim</em> does seem to react too slow on control
+                  deviations the gain is most likely too small.
+                  </p>
+                  <p class="device_help">A typical value is 500%/G.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Control.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[CmxvY2FsIGRpc2FibGVkID0gUGFyZW50LlN0YXRlIGVxIFBhcmVudC5TdGF0ZS5PZmY7CmxvY2FsIGV0ID0gU3lzdGVtLkVsYXBzZWRUaW1lKCk7CgpUaGlzLkFjY2VsZXJhdGlvbi5BY3R1YWwgPSBEZXJpdmF0aXZlLkZpbHRlcmVkKFZlaGljbGUgU3BlZWQpOwoKaWYgKGRpc2FibGVkKQp7CglUaGlzLkFjY2VsZXJhdGlvbi5BaW0gPSBDYWxjdWxhdGUuTkFOKCk7CglUaGlzLkVycm9yID0gQ2FsY3VsYXRlLk5BTigpOwp9CmVsc2UKewoJbG9jYWwgc3BlZWRFcnJvciA9IFBhcmVudC5TcGVlZCAtIEJhc2UuVmVoaWNsZSBTcGVlZDsKCWxvY2FsIGFjY2dhaW4gPSBzcGVlZEVycm9yID4gMC4wID8gQWNjZWxlcmF0aW9uLlRpbWUgQ29uc3RhbnQuUG9zaXRpdmUgOiBBY2NlbGVyYXRpb24uVGltZSBDb25zdGFudC5OZWdhdGl2ZTsKCglUaGlzLkFjY2VsZXJhdGlvbi5BaW0gPSBMaW1pdC5SYW5nZSgoc3BlZWRFcnJvciAvIGFjY2dhaW4pLCAoLSBBY2NlbGVyYXRpb24uTGltaXQpLCBBY2NlbGVyYXRpb24uTGltaXQpOwkKCVRoaXMuRXJyb3IgPSBUaGlzLkFjY2VsZXJhdGlvbi5BY3R1YWwgLSBUaGlzLkFjY2VsZXJhdGlvbi5BaW07Cn0KCi8qCiAqIGtlZXAgY3VycmVudCBpbnRlZ3JhbCBpZiBkcml2ZXIgdXNlcyBwZWRhbCB0byBvdmVycmlkZSBhY3RpdmUgY3J1aXNlIGNvbnRyb2wKICogaG93ZXZlciB3ZSBkbyBub3Qgd2FudCB0aGUgRXJyb3IgY2hhbm5lbCB0byBzaG93IDAuMCBvciBOQU4gZHVyaW5nIGFjdGl2ZSBjcnVpc2UgY29udHJvbAogKi8KbG9jYWwgY29udHJvbEVycm9yID0gKChCYXNlLlRocm90dGxlIFBlZGFsID4gKFRoaXMuSW50ZWdyYWwgKiBUaGlzLlRocm90dGxlLkxpbWl0KSkKCQkJYW5kIChCYXNlLlZlaGljbGUgU3BlZWQgPiBQYXJlbnQuU3BlZWQpKSA/CgkJCTAuMCA6IFRoaXMuRXJyb3I7CgovKgogKiBJbnRlZ3JhbCBhcyB0aHJvdHRsZSBwb3NpdGlvbiBzY2FsZWQgb24gVGhyb3R0bGUgTGltaXQKICovCgppZiAoZGlzYWJsZWQpCnsKCVRoaXMuVGhyb3R0bGUuQWltID0gQ2FsY3VsYXRlLk5BTigpOwoJVGhpcy5JbnRlZ3JhbCA9IENhbGN1bGF0ZS5NaW4oQmFzZS5UaHJvdHRsZSBQb3NpdGlvbiAvIFRoaXMuVGhyb3R0bGUuTGltaXQsIDEuMCk7Cn0KZWxzZQp7CglUaGlzLkludGVncmFsID0gTGltaXQuUmFuZ2UoVGhpcy5JbnRlZ3JhbCAtIChjb250cm9sRXJyb3IgKiBUaGlzLkludGVncmFsLkdhaW4gKiBldCksIDAuMCwgMS4wKTsKCVRoaXMuVGhyb3R0bGUuQWltID0gTGltaXQuUmFuZ2UoVGhpcy5JbnRlZ3JhbCAqIFRoaXMuVGhyb3R0bGUuTGltaXQsIDAuMCwgVGhpcy5UaHJvdHRsZS5MaW1pdCk7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Minimum Speed">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The minimum vehicle speed where the cruise control can be activated.</p>
+                  <p class="device_help">If the vehicle speed falls below this value while <em class="device_chan">State</em> is <em class="device_enum">On</em>, the cruise control
+                    will be deactivated.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Maximum Speed">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The maximum vehicle speed where the cruise control can be activated.</p>
+                  <p class="device_help">If this parameter is changed to a value below the current target <em class="device_chan">Speed</em> while <em class="device_chan">State</em> is
+                    <em class="device_enum">On</em>, <em class="device_chan">State</em> becomes <em class="device_enum">Off</em> and <em class="device_param">Maximum Speed</em> will be saved as target value
+                    for <em class="device_chan">Speed</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgb25zdyA9IE9uIFN3aXRjaCBlcSBPbiBTd2l0Y2guT247CmxvY2FsIG9mZnN3ID0gT2ZmIFN3aXRjaCBlcSBPZmYgU3dpdGNoLk9uOwpsb2NhbCBzZXRzdyA9IFNldCBTd2l0Y2ggZXEgU2V0IFN3aXRjaC5PbjsKbG9jYWwgY29hc3RzdyA9IERlY2VsZXJhdGlvbiBTd2l0Y2ggZXEgRGVjZWxlcmF0aW9uIFN3aXRjaC5PbjsKbG9jYWwgY2FuY2Vsc3cgPSBDYW5jZWwgU3dpdGNoIGVxIENhbmNlbCBTd2l0Y2guT247CmxvY2FsIHJlc3N3ID0gUmVzdW1lIFN3aXRjaCBlcSBSZXN1bWUgU3dpdGNoLk9uOwpsb2NhbCBhY2NlbHN3ID0gQWNjZWxlcmF0aW9uIFN3aXRjaCBlcSBBY2NlbGVyYXRpb24gU3dpdGNoLk9uOwpzdGF0aWMgbG9jYWwgY29tYmluZWRBY2NDb2FzdCA9IGZhbHNlOwppZiAoYWNjZWxzdyBhbmQgY29hc3RzdykJLy8gdHJlYXQgY29tYmluZWQgKyBhbmQgLSBzd2l0Y2ggYXMgU2V0IHN3aXRjaAp7Cgljb21iaW5lZEFjY0NvYXN0ID0gdHJ1ZTsKfQkKZWxzZSBpZiAobm90IGFjY2Vsc3cgYW5kIG5vdCBjb2FzdHN3KQkvLyBkZWJvdW5jZWQgcmVzZXQsIGJvdGggbXVzdCBiZSBmYWxzZQp7Cgljb21iaW5lZEFjY0NvYXN0ID0gZmFsc2U7Cn0KCmxvY2FsIGJyYWtlc3dlcnIgPSAoQmFzZS5CcmFrZSBTdGF0ZSBlcSBCYXNlLkJyYWtlIFN0YXRlLlNlbnNvciBGYXVsdCkgb3IgKEJhc2UuQnJha2UgU3RhdGUgZXEgQmFzZS5CcmFrZSBTdGF0ZS5Vbmtub3duKTsJLy8gQ3J1aXNlIENvbnRyb2wgcmVxdWlyZXMgdmFsaWQgYnJha2UgaW5mb3JtYXRpb24KbG9jYWwgY2x1dGNoZXJyID0gQmFzZS5DbHV0Y2ggU3RhdGUgZXEgQmFzZS5DbHV0Y2ggU3RhdGUuU2Vuc29yIEZhdWx0OwkJLy8gSWYgQ2x1dGNoIFN0YXRlIGlzICdVbmtub3duJyBpdCBpcyBpZ25vcmVkIChlLmcuIGF1dG9tYXRpYyBnZWFyYm94KQpsb2NhbCB0aHJvdHRsZU9LID0gKEJhc2UuVGhyb3R0bGUgQWltIFN0YXRlIGVxIEJhc2UuVGhyb3R0bGUgQWltIFN0YXRlLkNydWlzZSBDb250cm9sKSAKCQkJCQlvciAoQmFzZS5UaHJvdHRsZSBBaW0gU3RhdGUgZXEgQmFzZS5UaHJvdHRsZSBBaW0gU3RhdGUuUGVkYWwpCgkJCQkJb3IgKEJhc2UuVGhyb3R0bGUgQWltIFN0YXRlIGVxIEJhc2UuVGhyb3R0bGUgQWltIFN0YXRlLklkbGUpOwoKbG9jYWwgb25FID0gQ2hhbmdlLlRvKG9uc3cpOwpsb2NhbCBvZmZFID0gQ2hhbmdlLlRvKG9mZnN3KTsKbG9jYWwgY2FuY2VsRSA9IENoYW5nZS5UbyhjYW5jZWxzdyk7CmxvY2FsIGNvYXN0RSA9IENoYW5nZS5Ubyhjb2FzdHN3KTsKbG9jYWwgcmVzRSA9IENoYW5nZS5UbyhyZXNzdyk7CmxvY2FsIGFjY2VsRSA9IENoYW5nZS5UbyhhY2NlbHN3KTsKCi8qIAlpZ25vcmUgc2V0IHN3aXRjaCBpZiBDYW5jZWwgc3dpdGNoIGlzIGFscmVhZHkgT24sCglleGNlcHQgaWYgQ2FuY2VsIHN3aXRjaCBiZWNvbWVzIE9uIGF0IHRoZSBzYW1lIHRpbWUgYXMgaXQgbWF5IGJlIHdpcmVkIGFzIGEgY29tYmluZWQgU2V0L0NhbmNlbCBzd2l0Y2gJKi8KCQpsb2NhbCBzZXRFID0gQ2hhbmdlLlRvKChzZXRzdyBvciBjb21iaW5lZEFjY0NvYXN0KSBhbmQgKGNhbmNlbEUgZXEgY2FuY2Vsc3cpKTsKCi8qCiAqIFVzaW5nIHNldCBidXR0b24gdG8gcmUtc2V0IHNwZWVkIGFnYWluCiAqLwpzdGF0aWMgbG9jYWwgc2V0YWdhaW4gPSBmYWxzZTsKbG9jYWwgcmVxdmFsaWQgPSBub3QgQ2FsY3VsYXRlLklzTkFOKENvbnRyb2wuVGhyb3R0bGUuQWltKTsKbG9jYWwgYWNjZWxlcmF0ZWQgPSBEZWxheS5GYWxsaW5nKHJlcXZhbGlkIGFuZCAoQmFzZS5UaHJvdHRsZSBQZWRhbCA+IENvbnRyb2wuVGhyb3R0bGUuQWltKSwgMy4wKTsKc2V0YWdhaW4gPSBzZXRzdyBhbmQgKGFjY2VsZXJhdGVkIG9yIHNldGFnYWluKTsKCi8qCiAqIEJ1dHRvbiByZXBldGl0aW9uCiAqLwpsb2NhbCByZXAgPSBmYWxzZTsKaWYgKGNvYXN0RSBvciBhY2NlbEUgb3Igc2V0RSBvciByZXNFKQp7CglUaW1lci5TdGFydChCdXR0b24gUmVwZWF0KTsKfQplbHNlIGlmICgobm90IGFjY2Vsc3cgYW5kIG5vdCBjb2FzdHN3KSBvciBjb21iaW5lZEFjY0NvYXN0KQp7CglUaW1lci5TdGFydCgwLjApOwp9CmVsc2UgaWYgKFRpbWVyLlJlbWFpbmluZygpIDw9IDAuMCkKewoJcmVwID0gdHJ1ZTsKCVRpbWVyLlN0YXJ0KEJ1dHRvbiBSZXBlYXQpOwp9CgoKd2hlbiAoRW5hYmxlKQp7CglpcyAoRGlzYWJsZWQpCgl7CgkJaWYgKGJyYWtlc3dlcnIgb3IgY2x1dGNoZXJyIG9yIE1vZGUgZXEgTW9kZS5EaXNhYmxlZCkKCQl7CgkJCS8qIERvIG5vdGhpbmcgKi8KCQl9CgkJZWxzZSBpZiAoKG9uc3cgYW5kIChub3Qgb2Zmc3cpKSBvciBvbkUpCQkvLyBjYW4gYmUgMSBjb21iaW5lZCBPbi9PZmYgc3dpdGNoIG9yIHNlcGFyYXRlIHN3aXRjaGVzIG9yIG5vIHN3aXRjaCBhdCBhbGwKCQl7CgkJCUVuYWJsZSA9IEVuYWJsZS5FbmFibGVkOwoJCX0KCX0KCWlzIChFbmFibGVkKQoJewoJCWlmIChvZmZFIG9yIGJyYWtlc3dlcnIgb3IgY2x1dGNoZXJyIG9yIE1vZGUgZXEgTW9kZS5EaXNhYmxlZCkKCQl7CgkJCUVuYWJsZSA9IEVuYWJsZS5EaXNhYmxlZDsKCQkJU3RhdGUgPSBTdGF0ZS5PZmY7CgkJCVNwZWVkLkNsZWFyKCk7CgkJfQoJCWVsc2UKCQl7CgkJCWxvY2FsIG1heCA9IE1heGltdW0gU3BlZWQ7CgkJCWxvY2FsIGluZ2VhciA9IChHZWFyIG5lcSBHZWFyLlJldmVyc2UpIGFuZCAoR2VhciBuZXEgR2Vhci5OZXV0cmFsKTsJCS8vIEdlYXIgPSBEZWZhdWx0IGlzIGZhbGxiYWNrIGlmIG5vIGdlYXIgc2Vuc29yIG9yIHZlaGljbGUgc3BlZWQgc2Vuc29yIGlzIGF2YWlsYWJsZQoJCQlsb2NhbCBydW5uaW5nID0gQmFzZS5FbmdpbmUgU3RhdGUgZXEgQmFzZS5FbmdpbmUgU3RhdGUuUnVuOwoJCQlsb2NhbCBzcGVlZG5vdE9LID0gKChCYXNlLlZlaGljbGUgU3BlZWQgPCBNaW5pbXVtIFNwZWVkKSBvciBDYWxjdWxhdGUuSXNOQU4oQmFzZS5WZWhpY2xlIFNwZWVkKSk7CgkJCS8vIGJyYWtlcyBhbmQgY2x1dGNoIGhhbmRsZWQgaW4gRXhpdAoJCQkKCQkJbG9jYWwgaW5oaWJpdCA9IChFeGl0IGVxIEV4aXQuRXhpdCkgb3Igbm90IHJ1bm5pbmcgb3Igbm90IHRocm90dGxlT0sgb3Igc3BlZWRub3RPSyBvciBub3QgaW5nZWFyOwoKCQkJd2hlbiAoU3RhdGUpCgkJCXsKCQkJCWlzIChPZmYpCgkJCQl7CgkJCQkJaWYgKG5vdCBydW5uaW5nKQoJCQkJCXsKCQkJCQkJU3BlZWQuQ2xlYXIoKTsKCQkJCQl9CgkJCQkJZWxzZSBpZiAoaW5oaWJpdCkKCQkJCQl7CgkJCQkJCS8qIERvIG5vdGhpbmcgKi8KCQkJCQl9CgkJCQkJZWxzZSBpZiAoc2V0RSkKCQkJCQl7CgkJCQkJCVNwZWVkLlNldFNwZWVkKENhbGN1bGF0ZS5NaW4obWF4LCBCYXNlLlZlaGljbGUgU3BlZWQpKTsKCQkJCQkJU3RhdGUgPSBTdGF0ZS5PbjsKCQkJCQl9CgkJCQkJZWxzZSBpZiAocmVzRSkKCQkJCQl7CgkJCQkJCWlmIChDYWxjdWxhdGUuSXNOQU4oU3BlZWQpKQoJCQkJCQl7CgkJCQkJCQlTcGVlZC5TZXRTcGVlZChDYWxjdWxhdGUuTWluKG1heCwgQmFzZS5WZWhpY2xlIFNwZWVkKSk7CgkJCQkJCX0KCQkJCQkJU3RhdGUgPSBTdGF0ZS5PbjsKCQkJCQl9CgkJCQl9CgkJCQlpcyAoT24pCgkJCQl7CgkJCQkJaWYgKGluaGliaXQgb3IgY2FuY2VsRSkKCQkJCQl7CgkJCQkJCVN0YXRlID0gU3RhdGUuT2ZmOwoJCQkJCX0KCQkJCQllbHNlIGlmIChzZXRFIGFuZCBzZXRhZ2FpbikKCQkJCQl7CgkJCQkJCVNwZWVkLlNldFNwZWVkKENhbGN1bGF0ZS5NaW4obWF4LCBCYXNlLlZlaGljbGUgU3BlZWQpKTsKCQkJCQl9CgkJCQkJZWxzZSBpZiAoY29hc3RFKQoJCQkJCXsKCQkJCQkJU3BlZWQuRGVjcmVtZW50U2xvdygpOwoJCQkJCQkvKgoJCQkJCQkgKiBNaW5pbXVtIGVuZm9yY2VkIGJ5IERlY3JlbWVudFNsb3coKQoJCQkJCQkgKi8KCQkJCQl9CgkJCQkJZWxzZSBpZiAoY29hc3RzdyBhbmQgcmVwKQoJCQkJCXsKCQkJCQkJU3BlZWQuRGVjcmVtZW50RmFzdCgpOwoJCQkJCQkvKgoJCQkJCQkgKiBNaW5pbXVtIGVuZm9yY2VkIGJ5IERlY3JlbWVudEZhc3QoKQoJCQkJCQkgKi8KCQkJCQl9CgkJCQkJZWxzZSBpZiAoYWNjZWxFKQoJCQkJCXsKCQkJCQkJU3BlZWQuSW5jcmVtZW50U2xvdygpOwoJCQkJCQkvKgoJCQkJCQkgKiBNYXhpbXVtIGVuZm9yY2VkIGJ5IEluY3JlbWVudFNsb3coKQoJCQkJCQkgKi8KCQkJCQl9CgkJCQkJZWxzZSBpZiAoYWNjZWxzdyBhbmQgcmVwKQoJCQkJCXsKCQkJCQkJU3BlZWQuSW5jcmVtZW50RmFzdCgpOwoJCQkJCQkvKgoJCQkJCQkgKiBNYXhpbXVtIGVuZm9yY2VkIGJ5IEluY3JlbWVudEZhc3QoKQoJCQkJCQkgKi8KCQkJCQl9CgkJCQkJZWxzZQoJCQkJCXsKCQkJCQkJLyoKCQkJCQkJICogUmVkdWNlIHNldCBzcGVlZCBhbmQgZXhpdCBjcnVpc2UgY29udHJvbCBpZiB0aGUgc3BlZWQgbGltaXQgcmVkdWNlcy4KCQkJCQkJICovCgkJCQkJCWlmIChtYXggPCBTcGVlZCkKCQkJCQkJewoJCQkJCQkJU3RhdGUgPSBTdGF0ZS5PZmY7CgkJCQkJCQlTcGVlZC5TZXRTcGVlZChtYXgpOwoJCQkJCQl9CgkJCQkJfQoJCQkJfQoJCQl9CgkJfQkKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[U3RhdGUgPSBTdGF0ZS5PZmY7ClNwZWVkLkNsZWFyKCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Exit.Engine Speed.Threshold">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">If <em class="device_ref">Engine Speed</em> is greater than this value the cruise control is exited and <em class="device_chan">State</em>
+                    changes to <em class="device_enum">Off</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration"/>
+        <Comment>
+<![CDATA[Must be <em class="device_enum">Enabled</em> to allow for the cruise control to work.]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Engine Speed"/>
+        <Component Name="Vehicle Speed"/>
+        <Component Name="Brake State"/>
+        <Component Name="Clutch State"/>
+        <Component Name="Engine State"/>
+        <Component Name="On Switch"/>
+        <Component Name="Off Switch"/>
+        <Component Name="Cancel Switch"/>
+        <Component Name="Resume Switch"/>
+        <Component Name="Acceleration Switch"/>
+        <Component Name="Set Switch"/>
+        <Component Name="Deceleration Switch"/>
+        <Component Name="Throttle Pedal"/>
+        <Component Name="Throttle Position"/>
+        <Component Name="Throttle Aim State"/>
+        <Component Name="Gear"/>
+        <Component Name="Enable"/>
+        <Component Name="State"/>
+        <Component Name="Mode"/>
+        <Component Name="Button Repeat"/>
+        <Component Name="Exit">
+         <Component Name="Value"/>
+         <Component Name="Throttle Pedal Delay"/>
+         <Component Name="Engine Speed">
+          <Component Name="Filtered"/>
+          <Component Name="Difference"/>
+          <Component Name="Threshold"/>
+          <Component Name="Time Constant"/>
+         </Component>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Speed">
+         <Component Name="Value"/>
+         <Component Name="Count"/>
+         <Component Name="Unit"/>
+         <Component Name="Increment Fast"/>
+         <Component Name="Increment Slow"/>
+         <Component Name="Decrement Fast"/>
+         <Component Name="Decrement Slow"/>
+         <Component Name="Clear"/>
+         <Component Name="DecrementSlow"/>
+         <Component Name="DecrementFast"/>
+         <Component Name="IncrementSlow"/>
+         <Component Name="IncrementFast"/>
+         <Component Name="GetMinimum"/>
+         <Component Name="GetMaximum"/>
+         <Component Name="GetScaler"/>
+         <Component Name="SetCount"/>
+         <Component Name="SetSpeed"/>
+         <Component Name="UpdateValue"/>
+        </Component>
+        <Component Name="Control">
+         <Component Name="Error"/>
+         <Component Name="Throttle">
+          <Component Name="Limit">
+           <Component Name="Value"/>
+           <Component Name="Init"/>
+           <Component Name="Update"/>
+          </Component>
+          <Component Name="Aim"/>
+         </Component>
+         <Component Name="Acceleration">
+          <Component Name="Aim"/>
+          <Component Name="Actual"/>
+          <Component Name="Time Constant">
+           <Component Name="Positive"/>
+           <Component Name="Negative"/>
+          </Component>
+          <Component Name="Limit"/>
+         </Component>
+         <Component Name="Integral">
+          <Component Name="Value"/>
+          <Component Name="Gain"/>
+         </Component>
+         <Component Name="Calculation"/>
+        </Component>
+        <Component Name="Minimum Speed"/>
+        <Component Name="Maximum Speed"/>
+        <Component Name="Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+        <Component Name="Calculation"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Cruise">
+     <Module Name="Cruise Control"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

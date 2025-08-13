@@ -1,0 +1,819 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Launch" VersionMajor="1" VersionMinor="6" BuildNumber="3">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0016"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Expose Ignition Timing Limit Advance Minimum.</li>
+              <li class="device_help">Ignition Timing Limit Advance Minimum validation limit changed.</li>
+              </ul>
+          <h4 class="device_help">01.06.0001</h4>
+            <ul class="device_help">
+              <li class="device_help">Tags and value inputs refined.</li>
+            </ul>
+          <h4 class="device_help">01.04.0001</h4>
+            <ul class="device_help">
+              <li class="device_help">System changed to 01.04.</li>
+              <li class="device_help">Tags added.</li>
+              <li class="device_help">Change Integral limits.</li>
+            </ul>
+          <h4 class="device_help">01.02.0003</h4>
+            <ul class="device_help">
+              <li class="device_help">Remove vehicle speed dependency.</li>
+            </ul>
+            <h4 class="device_help">01.01.0006</h4>
+            <ul class="device_help">
+              <li class="device_help">Minor help updates.</li>
+            </ul>
+            <h4 class="device_help">01.01.0005</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Launch Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The launch system is not enabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The launch system is functional.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Exhaust Temperature High" ContainerOrder="2" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The launch system is disabled because the current exhaust temperature exceeds the activate exhaust
+              temperature.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Coolant Temperature High" ContainerOrder="3" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The launch system is disabled because the current coolant temperature exceeds the activate coolant
+              temperature.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Launch"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Launch.Throttle Based Launch Control">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements throttle based launch control.</p>
+            <p class="device_help">Features launch control by means of:
+              <ul class="device_help">
+                <li class="device_help">Ignition retard</li>
+                <li class="device_help">Engine speed limiting</li>
+                <li class="device_help">Servo throttle control</li>
+                <li class="device_help">Boost aim control</li>
+              </ul>
+            <p></p>
+            <h2 class="device_help">Integration</h2>
+            <h3 class="device_help">SetEnable Method</h3>
+            <p class="device_help">The SetEnable method enables or disables the launch system. The method must be called from a function and
+              passed a boolean value of true (enable) or false (disable).</p>
+            <p class="device_help">For example, a switch could be used to enable launch:</p>
+<pre class="device_help">Launch.SetEnable(Switch eq Switch.On ? true : false);</pre>
+            <h3 class="device_help">External Dependencies</h3>
+            <p class="device_help">It is essential that the outputs of this class are integrated into the parent project:
+              <ul class="device_help">
+                <li class="device_help">Ignition Timing Limit Advance: If State is <em class="device_enum">Disabled</em> this channel will have the value NAN (Not
+                  A Number). The library function Calculate.IsNAN can be used to discern this case. If State is <em class="device_enum">
+                  Enabled</em> the value will equal Ignition Timing Normal, or have a retarded Ignition Timing value when
+                  necessary for launch control. The Ignition Timing calculation should use this value when no further
+                  retarded values are requested from another subsystem.</li>
+                <li class="device_help">Engine Speed Limit: If State is <em class="device_enum">Disabled</em> this channel will have the value NAN (Not A Number).
+                  The library function Calculate.IsNAN can be used to discern this case. If State is <em class="device_enum">Enabled</em> the
+                  value will equal Engine Speed + Engine Speed.Margin. The Engine Speed Limit calculation should use
+                  this value as a hard limit to apply ignition cut (or/and potentially fuel cut) when no lower engine
+                  speed limit is requested from another subsystem.</li>
+                <li class="device_help">Fuel Volume Trim: If State is <em class="device_enum">Enabled</em> the fuel volume calculation should include this trim as
+                  a multiplicative factor into the overall fuel trim calculation.</li>
+                <li class="device_help">Throttle Limit: If State is <em class="device_enum">Enabled</em> the throttle limit calculation should use this value when
+                  no lower limit is requested from another subsystem.</li>
+                <li class="device_help">Boost Aim: If State is <em class="device_enum">Enabled</em> the SetAim-method for the Boost Aim should pass this value to
+                  the Boost system.</li>
+              </ul>
+            <p></p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Exhaust Temperature</h3>
+            <p class="device_help">Connect to the exhaust temperature channel.</p>
+            <h3 class="device_help">Coolant Temperature</h3>
+            <p class="device_help">Connect to the coolant temperature channel.</p>
+            <h3 class="device_help">Engine Speed X Axis</h3>
+            <p class="device_help">The channel connected to this input will be used as the X axis on the Engine Speed table.</p>
+            <p class="device_help">Usually connected to the vehicle speed channel.</p>
+            <h3 class="device_help">Throttle Pedal</h3>
+            <p class="device_help">Connect to the throttle pedal channel.</p>
+            <h3 class="device_help">Engine Speed</h3>
+            <p class="device_help">Connect to the engine speed channel.</p>
+            <h3 class="device_help">Ignition Timing Normal</h3>
+            <p class="device_help">Connect to the ignition timing normal channel.</p>
+            <h3 class="device_help">Engine State</h3>
+            <p class="device_help">Connect to the engine state channel. Must have the data type Engine State Enumeration.</p>
+            <h3 class="device_help">Ignition Timing Limit Advance Minimum</h3>
+            <p class="device_help">Usually a parameter.</p>
+            <h3 class="device_help">Fuel Volume Trim</h3>
+            <p class="device_help">Normally a table. The X Axis is fixed to Engine Speed X Axis. The Y Axis may be used to select alternate
+              mappings, for example using 'Driver.Launch Aim Switch'.</p>
+            <h3 class="device_help">Throttle Limit</h3>
+            <p class="device_help">Normally a table. The X Axis is fixed to Engine Speed X Axis. The Y Axis may be used to select alternate
+              mappings, for example using 'Driver.Launch Aim Switch'.</p>
+            <h3 class="device_help">Boost Aim</h3>
+            <p class="device_help">Normally a table. The X Axis is fixed to Engine Speed X Axis. The Y Axis may be used to select alternate
+              mappings, for example using 'Driver.Launch Aim Switch'.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Event</h3>
+            <p class="device_help">Typically 50Hz.</p>
+            <h2 class="device_help">Methods</h2>
+            <h3 class="device_help">SetEnable</h3>
+            <p class="device_help">The SetEnable method enables or disables the launch system.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="Boost Aim Tags" Creation="Custom" Visible="1" TargetCpt="This.Boost Aim" TargetRef="UserTags" DisplayName="Boost Aim Tags"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Coolant Temperature Input Object" Creation="Custom" Visible="1" TargetCpt="This.Coolant Temperature" TargetRef="Target" DisplayName="Coolant Temperature Input Object"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Engine Speed Input Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed Input" TargetRef="Target" DisplayName="Engine Speed Input Input Object"/>
+         <Property Name="Engine Speed Value Table Dimensions" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed.Value" TargetRef="NumAxes" DisplayName="Engine Speed Value Table Dimensions"/>
+         <Property Name="Engine Speed Value Y Axis Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed.Value" TargetRef="Axis.Y.Source" DisplayName="Engine Speed Value Y Axis Input Object"/>
+         <Property Name="Engine Speed Value Y Axis Maximum Sites" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed.Value" TargetRef="Axis.Y.MaxSites" DisplayName="Engine Speed Value Y Axis Maximum Sites"/>
+         <Property Name="Engine Speed Value Z Axis Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed.Value" TargetRef="Axis.Z.Source" DisplayName="Engine Speed Value Z Axis Input Object"/>
+         <Property Name="Engine Speed Value Z Axis Maximum Sites" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed.Value" TargetRef="Axis.Z.MaxSites" DisplayName="Engine Speed Value Z Axis Maximum Sites"/>
+         <Property Name="Engine Speed X Axis Display Unit" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed X Axis" TargetRef="Locale.Default.Unit" DisplayName="Engine Speed X Axis Display Unit"/>
+         <Property Name="Engine Speed X Axis Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed X Axis" TargetRef="Target" DisplayName="Engine Speed X Axis Input Object"/>
+         <Property Name="Engine Speed X Axis Quantity" Creation="Custom" Visible="1" TargetCpt="This.Engine Speed X Axis" TargetRef="Qty" DisplayName="Engine Speed X Axis Quantity"/>
+         <Property Name="Engine State Input Object" Creation="Custom" Visible="1" TargetCpt="This.Engine State" TargetRef="Target" DisplayName="Engine State Input Object"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Exhaust Temperature Input Object" Creation="Custom" Visible="1" TargetCpt="This.Exhaust Temperature" TargetRef="Target" DisplayName="Exhaust Temperature Input Object"/>
+         <Property Name="Fuel Volume Trim Tags" Creation="Custom" Visible="1" TargetCpt="This.Fuel Volume Trim" TargetRef="UserTags" DisplayName="Fuel Volume Trim Tags"/>
+         <Property Name="Ignition Timing Limit Advance Minimum Tags" Creation="Custom" Visible="1" TargetCpt="This.Ignition Timing Limit Advance.Minimum" TargetRef="UserTags" DisplayName="Ignition Timing Limit Advance Minimum Tags"/>
+         <Property Name="Ignition Timing Normal Input Object" Creation="Custom" Visible="1" TargetCpt="This.Ignition Timing Normal" TargetRef="Target" DisplayName="Ignition Timing Normal Input Object"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Throttle Limit Tags" Creation="Custom" Visible="1" TargetCpt="This.Throttle Limit" TargetRef="UserTags" DisplayName="Throttle Limit Tags"/>
+         <Property Name="Throttle Pedal Input Object" Creation="Custom" Visible="1" TargetCpt="This.Throttle Pedal" TargetRef="Target" DisplayName="Throttle Pedal Input Object"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Boost Aim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Volume Trim" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance.Minimum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance.Minimum" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Timing Limit Advance.Minimum" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">This system aids initial take-off by means of ignition retard, engine speed limiting, electronic
+                    throttle control and boost aim control. It also provides fuel volume trimming to assist exhaust
+                    cooling.</p>
+                  <p class="device_help">Engine speed limiting during launch uses the <em class="device_table">Engine Speed</em> table and <em class="device_param">Engine Speed Margin
+                    </em>. The primary means of control is ignition retard.</p>
+                  <p class="device_help">While engine speed is above launch <em class="device_table">Engine Speed</em>, the <em class="device_chan">Ignition Timing Limit Advance</em>
+                    system attempts to control engine speed using closed loop control of ignition timing. If <em class="device_table">Engine
+                    Speed</em> exceeds (launch <em class="device_table">Engine Speed</em> + <em class="device_param">Engine Speed Margin</em>), a hard limit (ignition
+                    cut or/and potentially fuel cut) is applied. This allows turbocharged engines to develop boost
+                    pressure prior to launch.</p>
+                  <p class="device_help">The activation state of the launch system is reported by <em class="device_chan">State</em> and further information about
+                    why launch is inactive is reported by <em class="device_chan">Diagnostic</em>.</p>
+                  <p class="device_help">The following conditions must all be met for launch to activate:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Mode</em> must be <em class="device_enum">Enabled</em>.</li>
+                      <li class="device_help"><em class="device_ref">Exhaust Temperature</em> must be less than <em class="device_param">Activate Exhaust Temperature</em>. If <em class="device_param">
+                        Activate Exhaust Temperature</em> is set to 0 this setting is ignored.</li>
+                      <li class="device_help"><em class="device_ref">Coolant Temperature</em> must be less than <em class="device_param">Activate Coolant Temperature</em>. If <em class="device_param">
+                        Activate Coolant Temperature</em> is set to 0 this setting is ignored.</li>
+                      <li class="device_help">The value of the channel on the X axis of the <em class="device_table">Engine Speed</em> table must be less than or
+                        equal to the minimum X axis site.</li>
+                      <li class="device_help"><em class="device_ref">Throttle Pedal</em> must be greater than <em class="device_param">Entry Throttle Pedal</em>.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">Launch will exit if any of the following conditions are met:
+                    <ul class="device_help">
+                      <li class="device_help">The engine is stopped.</li>
+                      <li class="device_help">The value of the channel on the X axis of the <em class="device_table">Engine Speed</em> table exceeds the maximum X
+                        axis site.</li>
+                      <li class="device_help"><em class="device_ref">Throttle Pedal</em> is less than <em class="device_param">Exit Throttle Pedal</em>.</li>
+                      <li class="device_help"><em class="device_ref">Exhaust Temperature</em> exceeds <em class="device_param">Activate Exhaust Temperature</em>. If <em class="device_param">Activate Exhaust
+                        Temperature</em> is set to 0 this setting is ignored.</li>
+                      <li class="device_help"><em class="device_ref">Coolant Temperature</em> exceeds <em class="device_param">Activate Coolant Temperature</em>. If <em class="device_param">Activate Coolant
+                        Temperature</em> is set to 0 this setting is ignored.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Exhaust Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[<p class="device_help">The current exhaust temperature.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[<p class="device_help">The current coolant temperature.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed X Axis">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The current value of the X axis channel on the <em class="device_table">Engine Speed</em> table.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Pedal">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The current throttle pedal position.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed Input">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The current engine speed.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Timing Normal">
+        <Props Qty="rad">
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The nominal ignition timing that is used in normal operation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of the launch system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.Launch Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports the source of any problems with launch.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode">
+        <Props Type="MoTeC Types.Subsystem Enable Enumeration">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the overall operation of launch control.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Activate">
+        <Comment>
+<![CDATA[<p class="device_help">Settings which define conditions under which launch is activated.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Activate.Exhaust Temperature">
+        <Props Qty="K" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Exhaust temperature under which launch may be activated. Set to zero to ignore.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Activate.Coolant Temperature">
+        <Props Qty="K" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Coolant temperature under which launch may be activated. Set to zero to ignore.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Entry">
+        <Comment>
+<![CDATA[<p class="device_help">Settings which define launch entry conditions.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Entry.Throttle Pedal">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Throttle Pedal value over which launch may be entered.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Exit">
+        <Comment>
+<![CDATA[<p class="device_help">Settings which define launch exit conditions.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Exit.Throttle Pedal">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Throttle Pedal value under which launch will be exited.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Ignition Timing Limit Advance">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Ignition timing when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>
+                  <p class="device_help">This system controls ignition timing to achieve the current launch engine speed.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ignition Timing Limit Advance.Value">
+        <Props Qty="rad">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC" Min="0.00000000000000000e+000" Max="7.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Ignition Timing Limit Advance.Control">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information relating to the <em class="device_group">Ignition Timing Limit Advance Control</em> subsystem.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ignition Timing Limit Advance.Control.Error">
+        <Props Qty="rad/s">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="rpm" Min="-3.00000000000000000e+003" Max="3.00000000000000000e+003"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The difference between the current engine speed and the target engine speed defined by the <em class="device_table">
+                    Engine Speed</em> table.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Ignition Timing Limit Advance.Control.Proportional">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The proportional component of the <em class="device_chan">Ignition Timing Limit Advance</em> control system.</p>
+                  <p class="device_help">Calculated from:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Ignition Timing Limit Advance Control Proportional Gain</em></li>
+                      <li class="device_help"><em class="device_chan">Ignition Timing Limit Advance Control Error</em></li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ignition Timing Limit Advance.Control.Proportional.Value">
+        <Props Qty="rad">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC" Min="-2.00000000000000000e+001" Max="5.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Ignition Timing Limit Advance.Control.Proportional.Gain">
+        <Props Qty="rad/(rad/s)" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="5"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Proportional gain for the <em class="device_chan">Ignition Timing Limit Advance</em> control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Ignition Timing Limit Advance.Control.Integral">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The integral component of the <em class="device_chan">Ignition Timing Limit Advance</em> control system.</p>
+                  <p class="device_help">Calculated from:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Ignition Timing Limit Advance Control Integral Gain</em></li>
+                      <li class="device_help"><em class="device_chan">Ignition Timing Limit Advance Control Error</em></li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Ignition Timing Limit Advance.Control.Integral.Value">
+        <Props Qty="rad">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC" Min="-2.00000000000000000e+001" Max="5.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Ignition Timing Limit Advance.Control.Integral.Gain">
+        <Props Qty="rad/rad" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="5"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Integral gain for the <em class="device_chan">Ignition Timing Limit Advance</em> control system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUserParam" Name="Base.Ignition Timing Limit Advance.Control.Calculate">
+        <Signature Name="" ReturnType="">
+         <Params/>
+         <Description>
+<![CDATA[<!-- Empty -->]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[<!-- Empty -->]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[<!-- Empty -->]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZXQgPSBTeXN0ZW0uRWxhcHNlZFRpbWUoKTsKCmlmIChCYXNlLlN0YXRlIGVxIEJhc2UuU3RhdGUuRGlzYWJsZWQKCW9yIChUaGlzLkludGVncmFsLkdhaW4gPD0gMC4wIGFuZCBUaGlzLlByb3BvcnRpb25hbC5HYWluIDw9IDAuMCkpIC8vIGlnbml0aW9uIGNvbnRyb2wgY2FuIGJlIGRpc2FibGVkCnsKCUJhc2UuSWduaXRpb24gVGltaW5nIExpbWl0IEFkdmFuY2UgPSBMaWJyYXJ5LkNhbGN1bGF0ZS5OQU4oKTsKCVRoaXMuRXJyb3IgPSBMaWJyYXJ5LkNhbGN1bGF0ZS5OQU4oKTsKCVRoaXMuUHJvcG9ydGlvbmFsID0gTGlicmFyeS5DYWxjdWxhdGUuTkFOKCk7CglUaGlzLkludGVncmFsID0gTGlicmFyeS5DYWxjdWxhdGUuTkFOKCk7Cn0KZWxzZQp7CglUaGlzLkVycm9yID0gRW5naW5lIFNwZWVkIElucHV0IC0gQmFzZS5FbmdpbmUgU3BlZWQ7CglUaGlzLlByb3BvcnRpb25hbCA9IFRoaXMuRXJyb3IgKiBUaGlzLlByb3BvcnRpb25hbC5HYWluOwoKCWlmIChMaWJyYXJ5LkNhbGN1bGF0ZS5Jc05BTihUaGlzLkludGVncmFsKSBvciBUaGlzLkludGVncmFsLkdhaW4gPD0gMC4wKQoJewoJCVRoaXMuSW50ZWdyYWwgPSBJZ25pdGlvbiBUaW1pbmcgTm9ybWFsOwoJfQoJZWxzZQoJewoJCWxvY2FsIHBpZCA9IFRoaXMuUHJvcG9ydGlvbmFsICsgVGhpcy5JbnRlZ3JhbDsKCQlsb2NhbCBtYXggPSBQYXJlbnQuTWluaW11bTsKCQlsb2NhbCBtaW4gPSBJZ25pdGlvbiBUaW1pbmcgTm9ybWFsOwoJCQoJCWxvY2FsIGkgPSBUaGlzLkludGVncmFsICsgVGhpcy5JbnRlZ3JhbC5HYWluICogVGhpcy5FcnJvciAqIGV0OwoJCWlmIChwaWQgPiBtYXgpCgkJewoJCQkvKiBpbnRlZ3JhbCBvbmx5IGFsbG93ZWQgdG8gcmVkdWNlICovCgkJCVRoaXMuSW50ZWdyYWwgPSBMaWJyYXJ5LkNhbGN1bGF0ZS5NaW4oVGhpcy5JbnRlZ3JhbCwgaSk7CgkJfQoJCWVsc2UgaWYgKHBpZCA8IG1pbikKCQl7CgkJCS8qIGludGVncmFsIG9ubHkgYWxsb3dlZCB0byBpbmNyZWFzZSAqLwoJCQlUaGlzLkludGVncmFsID0gTGlicmFyeS5DYWxjdWxhdGUuTWF4KFRoaXMuSW50ZWdyYWwsIGkpOwoJCX0KCQllbHNlCgkJewoJCQlUaGlzLkludGVncmFsID0gaTsKCQl9CQoJfQoKCUJhc2UuSWduaXRpb24gVGltaW5nIExpbWl0IEFkdmFuY2UgPSBMaWJyYXJ5LkxpbWl0LlJhbmdlKAoJCVRoaXMuUHJvcG9ydGlvbmFsICsgVGhpcy5JbnRlZ3JhbCwKCQlJZ25pdGlvbiBUaW1pbmcgTm9ybWFsLAoJCVBhcmVudC5NaW5pbXVtCgkpOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Engine Speed">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The engine speed that the launch system is trying to achieve.</p>
+                  <p class="device_help">Launch control exits at the end of the X axis.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Engine Speed.Value">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Axis>
+          <X Source="Parent.Parent.Engine Speed X Axis" MaxSites="21"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Engine Speed.Value.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="6.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm" DPS="0"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Engine Speed.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Engine Speed.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Speed.Margin">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.20000000000000000e+004">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="rpm" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Margin for ignition control between <em class="device_table">Engine Speed</em> aim and <em class="device_chan">Engine Speed Limit</em></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.FuncUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKE1vZGUgZXEgTW9kZS5Ob3QgaW4gVXNlIG9yCiAgICBFbmFibGUgZXEgRW5hYmxlLkRpc2FibGVkKQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5Ob3QgaW4gVXNlOwoJU3RhdGUgPSBTdGF0ZS5EaXNhYmxlZDsKfQplbHNlIGlmICgoQWN0aXZhdGUuRXhoYXVzdCBUZW1wZXJhdHVyZSA+IDAuMCkgYW5kCgkoRXhoYXVzdCBUZW1wZXJhdHVyZSA+IEFjdGl2YXRlLkV4aGF1c3QgVGVtcGVyYXR1cmUpCikKewoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuRXhoYXVzdCBUZW1wZXJhdHVyZSBIaWdoOwoJU3RhdGUgPSBTdGF0ZS5EaXNhYmxlZDsKfQplbHNlIGlmICgoQWN0aXZhdGUuQ29vbGFudCBUZW1wZXJhdHVyZSA+IDAuMCkgYW5kCgkoQ29vbGFudCBUZW1wZXJhdHVyZSA+IEFjdGl2YXRlLkNvb2xhbnQgVGVtcGVyYXR1cmUpCikKewoJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ29vbGFudCBUZW1wZXJhdHVyZSBIaWdoOwoJU3RhdGUgPSBTdGF0ZS5EaXNhYmxlZDsKfQplbHNlIGlmICgoU3RhdGUgZXEgU3RhdGUuRGlzYWJsZWQpIGFuZAoJKEVuZ2luZSBTdGF0ZSBlcSBFbmdpbmUgU3RhdGUuUnVuKSBhbmQKCShFbmdpbmUgU3BlZWQuWEF4aXNQb3NpdGlvbigpIDw9IDAuMCkgYW5kCgkoVGhyb3R0bGUgUGVkYWwgPiBFbnRyeS5UaHJvdHRsZSBQZWRhbCkKKQp7CglEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5PSzsKCVN0YXRlID0gU3RhdGUuRW5hYmxlZDsKfQplbHNlIGlmICgoRW5naW5lIFN0YXRlIG5lcSBFbmdpbmUgU3RhdGUuUnVuKSBvcgoJKEVuZ2luZSBTcGVlZC5YQXhpc1Bvc2l0aW9uKCkgPiAxLjApIG9yCgkoVGhyb3R0bGUgUGVkYWwgPCBFeGl0LlRocm90dGxlIFBlZGFsKQopCnsKCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJU3RhdGUgPSBTdGF0ZS5EaXNhYmxlZDsKfQplbHNlCnsKCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwp9Cgp3aGVuIChTdGF0ZSkKewoJaXMgKEVuYWJsZWQpCgl7CgkJRW5naW5lIFNwZWVkLkxpbWl0ID0gRW5naW5lIFNwZWVkICsgRW5naW5lIFNwZWVkLk1hcmdpbjsKCX0KCWlzIChEaXNhYmxlZCkKCXsKCQlFbmdpbmUgU3BlZWQuTGltaXQgPSBDYWxjdWxhdGUuTkFOKCk7Cgl9Cn0KCklnbml0aW9uIFRpbWluZyBMaW1pdCBBZHZhbmNlLkNvbnRyb2wuQ2FsY3VsYXRlKCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">The current run state of the engine.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Engine Speed.Limit">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="6.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="rpm" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The variable engine speed limit which is used while launch control is active. Exceeding this value
+                    results in an ignition cut (or/and potentially fuel cut).</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fuel Volume Trim">
+        <Props Qty="ratio" Validation="MinMax" ValMin="5.000000e-001" ValClampMax="false" TargetCreation="AutoTable" Target="This.Value">
+         <Locale>
+          <Default Unit="%Trim"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Fuel volume trim applied when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Fuel Volume Trim.Value.Value">
+        <Props>
+         <Locale>
+          <Default Min="5.000000e-001" Max="1.500000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Fuel Volume Trim.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Fuel Volume Trim.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Limit">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000" TargetCreation="AutoTable" Target="This.Value">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Throttle limit when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>
+                  <p class="device_help">All throttle limits should be set to 100% unless required.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Throttle Limit.Value">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Engine Speed X Axis" MaxSites="21"/>
+         </Axis>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Throttle Limit.Value.Value">
+        <Props>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Fuel Volume Trim.Value">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Engine Speed X Axis" MaxSites="21"/>
+         </Axis>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Throttle Limit.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Boost Aim">
+        <Props Qty="dPa" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="4.00000000000000000e+005" TargetCreation="AutoTable" Target="This.Value">
+         <Locale>
+          <Default Unit="kPa g"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Boost aim when <em class="device_chan">State</em> is <em class="device_enum">Enabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Boost Aim.Value">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Engine Speed X Axis" MaxSites="21"/>
+         </Axis>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Boost Aim.Value.Value">
+        <Props>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.00000000000000000e+005"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Boost Aim.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Boost Aim.Value.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Throttle Limit.Value.Init"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the overall operation of launch.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.SetEnable">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="enable" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[<p>Set this argument to 'true' to enable the launch system.</p>]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[<p>This function enables or disables the launch system.</p>]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[<p>The boolean argument 'enable' controls the operation of the system. Call with 'true' to
+                      enable the system and 'false' to disable the system.</p>]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[<!-- Empty -->]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[RW5hYmxlID0gaW4uZW5hYmxlCgk/IEVuYWJsZS5FbmFibGVkCgk6IEVuYWJsZS5EaXNhYmxlZDsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Ignition Timing Limit Advance.Minimum.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Timing Limit Advance.Minimum">
+        <Props Qty="rad" Validation="MinMax" ValMin="-9.00000000000000000e+001" ValMax="9.00000000000000000e+001" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Tune"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="dBTDC"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Ignition retard limit while in launch control.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Exhaust Temperature"/>
+        <Component Name="Coolant Temperature"/>
+        <Component Name="Engine Speed X Axis"/>
+        <Component Name="Throttle Pedal"/>
+        <Component Name="Engine Speed Input"/>
+        <Component Name="Ignition Timing Normal"/>
+        <Component Name="Engine State"/>
+        <Component Name="Mode"/>
+        <Component Name="State"/>
+        <Component Name="Diagnostic"/>
+        <Component Name="Enable"/>
+        <Component Name="Activate">
+         <Component Name="Exhaust Temperature"/>
+         <Component Name="Coolant Temperature"/>
+        </Component>
+        <Component Name="Entry">
+         <Component Name="Throttle Pedal"/>
+        </Component>
+        <Component Name="Exit">
+         <Component Name="Throttle Pedal"/>
+        </Component>
+        <Component Name="Ignition Timing Limit Advance">
+         <Component Name="Value"/>
+         <Component Name="Minimum">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Control">
+          <Component Name="Error"/>
+          <Component Name="Proportional">
+           <Component Name="Value"/>
+           <Component Name="Gain"/>
+          </Component>
+          <Component Name="Integral">
+           <Component Name="Value"/>
+           <Component Name="Gain"/>
+          </Component>
+          <Component Name="Calculate"/>
+         </Component>
+        </Component>
+        <Component Name="Engine Speed">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Limit"/>
+         <Component Name="Margin"/>
+        </Component>
+        <Component Name="Fuel Volume Trim">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Throttle Limit">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Boost Aim">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="SetEnable"/>
+        <Component Name="Update"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Launch">
+     <Module Name="Throttle Based Launch Control"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

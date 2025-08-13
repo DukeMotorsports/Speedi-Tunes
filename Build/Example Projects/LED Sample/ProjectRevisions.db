@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<Project Locale="English_Australia.1252" DefaultLocale="C">
+ <Version Name="Stage 1" Major="1" Minor="0" HeadBuildNo="0">
+  <Revision BuildNo="0" Locked="1">
+   <ModifiedBy UserName="duane"/>
+   <LastModified DateTime="2015-12-11 15:51:56" UserName="duane"/>
+  </Revision>
+ </Version>
+ <Version Name="Stage 2" Major="1" Minor="1" HeadBuildNo="0" From="01.00.0000">
+  <Revision BuildNo="0" Locked="0">
+   <ModifiedBy UserName="duane"/>
+   <LastModified DateTime="2015-12-11 16:00:16" UserName="duane"/>
+  </Revision>
+ </Version>
+ <Version Name="Stage 2b" Major="1" Minor="2" HeadBuildNo="0" From="01.01.0000">
+  <Revision BuildNo="0" Locked="0">
+   <ModifiedBy UserName="duane"/>
+   <LastModified DateTime="2015-12-11 16:19:16" UserName="duane"/>
+  </Revision>
+ </Version>
+ <Version Name="Stage 3" Major="1" Minor="3" HeadBuildNo="0" From="01.02.0000">
+  <Revision BuildNo="0" Locked="0">
+   <ModifiedBy UserName="duane"/>
+   <LastModified DateTime="2015-12-11 16:32:50" UserName="duane"/>
+  </Revision>
+ </Version>
+ <Version Name="Stage 4" Major="1" Minor="4" HeadBuildNo="0" From="01.03.0000">
+  <Revision BuildNo="0" Locked="0">
+   <ModifiedBy UserName="duane"/>
+   <LastModified DateTime="2015-12-11 17:14:22" UserName="duane"/>
+  </Revision>
+ </Version>
+ <Version Name="Stage 5" Major="1" Minor="5" HeadBuildNo="0" From="01.04.0000">
+  <Revision BuildNo="0" Locked="0">
+   <ModifiedBy UserName="duane"/>
+   <LastModified DateTime="2015-12-14 10:04:45" UserName="duane"/>
+  </Revision>
+ </Version>
+ <Version Name="PID Control" Major="1" Minor="6" HeadBuildNo="0" From="01.05.0000">
+  <Revision BuildNo="0" Locked="0">
+   <ModifiedBy UserName="duane"/>
+   <LastModified DateTime="2015-12-14 10:27:37" UserName="duane"/>
+  </Revision>
+ </Version>
+</Project>

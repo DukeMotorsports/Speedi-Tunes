@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC VCS" VersionMajor="1" VersionMinor="4" BuildNumber="4">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0034"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Add 'Mode' value input.</li>
+              <li class="device_help">Set channels to NAN on CAN bus timeout.</li>
+              <li class="device_help">Update to system 01.03.16.0031</li>
+            </ul>
+            <h4 class="device_help">01.03.0000</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="3"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="VCS Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Bus Timeout" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No VCS data has been received for longer than 3 seconds.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Initialising DSP" ContainerOrder="3" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that it is initialising its digital signal processor.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Waiting for DSP" ContainerOrder="4" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that it is waiting for its digital signal processor.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Configuring DSP" ContainerOrder="5" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that it is configuring its digital signal processor.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stopped" ContainerOrder="6">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that recording has stopped.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Recording" ContainerOrder="7">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that it is recording.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="USB" ContainerOrder="8">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that USB communications are in progress.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="DSP Recovery" ContainerOrder="9">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that it is recovering its digital signal processor.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CF Card Full" ContainerOrder="10" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that its compact flash card is full.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Polling DSP" ContainerOrder="11">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that it is polling its digital signal processor.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Synchronisation Failure" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The VCS is reporting that synchronisation failed.</p>
+            <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">VCS communication is disabled.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.VCS">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class communicates with a MoTeC Video Capture System (VCS).</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">CAN Bus Input Object</h3>
+            <p class="device_help">Controls the CAN bus used to receive VCS messages.</p>
+            <h3 class="device_help">Mode Input Object</h3>
+            <p class="device_help">Controls the overall operation of the class.</p>
+            <p class="device_help">When <em class="device_enum">Enabled</em> VCS message reception is enabled.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Event</h3>
+            <p class="device_help">The rate at which VCS messages are decoded.</p>
+            <h2 class="device_help">External Dependencies</h2>
+            <p class="device_help">A 'CAN Bus' class is required to initialise the CAN bus.</p>
+            <p class="device_help">Data can be transmitted to the VCS using the 'CanComms' library functions. Refer to the VCS documentation
+              for more information.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Script" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to a MoTeC Video Capture System (VCS) device connected via CAN.
+                  </p>
+                  <p class="device_help">For this device to function the following items must be calibrated:
+                    <ul class="device_help">
+                      <li class="device_help">Set <em class="device_param">Mode</em> to <em class="device_enum">Enabled</em>.</li>
+                      <li class="device_help">Configure <em class="device_param">CAN Bus</em>.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used to receive VCS messages.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.CAN Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.CAN Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0"/>
+         </Params>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.CAN Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.Sync Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.Sync Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0"/>
+         </Params>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.Sync Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.VCS Diagnostic Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the VCS.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Memory Used">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Memory usage as received from the VCS.</p>
+                  <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Battery Voltage">
+        <Props Qty="V">
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Vehicle battery voltage as received from the VCS.</p>
+                  <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Temperature">
+        <Props Qty="K">
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="8.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal temperature as received from the VCS.</p>
+                  <p class="device_help">Refer to the VCS documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Script">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.500MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlJ4T3BlbkV4dGVuZGVkKENBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MDAwMDAwMjAsIDB4MDAwMDAwMDAsIHRydWUpOwoKaWYgKERpYWdub3N0aWMgbmVxIERpYWdub3N0aWMuTm90IGluIFVzZSkKewoJaWYgKENhbkNvbW1zLlJ4TWVzc2FnZShoKQoJCWFuZCAoQ2FuQ29tbXMuR2V0TGVuZ3RoKGgpIGVxIDgpKQoJewoJCWlmIChDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDAsIDgpIGVxIDApCS8qIGNvbXBvdW5kIElEIDAgKi8KCQl7CgkJCU1lbW9yeSBVc2VkID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDE2LCA4KSAqIDEuMGUtMjsKCQkJRGlhZ25vc3RpYy5TZXQoQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCAyNCwgOCkgKyAxKTsKCQkJQmF0dGVyeSBWb2x0YWdlID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDMyLCAxNikgKiAxLjBlLTI7CgkJCUludGVybmFsIFRlbXBlcmF0dXJlID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCA0OCwgMTYpICogMS4wZS0yOwoKCQkJQ0FOIFRpbWVyLlN0YXJ0KDMuMCk7CgkJfQoJfQoJZWxzZSBpZiAoQ0FOIFRpbWVyLlJlbWFpbmluZygpIDw9IDAuMCkKCXsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gQnVzIFRpbWVvdXQ7CgkJTWVtb3J5IFVzZWQgPSBDYWxjdWxhdGUuTkFOKCk7CgkJQmF0dGVyeSBWb2x0YWdlID0gQ2FsY3VsYXRlLk5BTigpOwoJCUludGVybmFsIFRlbXBlcmF0dXJlID0gQ2FsY3VsYXRlLk5BTigpOwoJfQoJZWxzZSBpZiAoU3luYyBUaW1lci5SZW1haW5pbmcoKSA8PSAwLjApCgl7CgkJaWYgKG5vdCBWQ1MuU3luY2hyb25pc2UoQ0FOIEJ1cy5Bc0ludGVnZXIoKSwgMHgwMjEpKQoJCXsKCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuU3luY2hyb25pc2F0aW9uIEZhaWx1cmU7CgkJfQoKCQlTeW5jIFRpbWVyLlN0YXJ0KDYwLjApOwoJfQp9]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[TWVtb3J5IFVzZWQgPSBDYWxjdWxhdGUuTkFOKCk7CkJhdHRlcnkgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKSW50ZXJuYWwgVGVtcGVyYXR1cmUgPSBDYWxjdWxhdGUuTkFOKCk7Cgp3aGVuIChNb2RlKQp7CglpcyAoRGlzYWJsZWQpCgl7CgkJLyogRGlhZ25vc3RpYyBsZWZ0IGF0ICdOb3QgaW4gVXNlJyAqLwoJfQoJaXMgKEVuYWJsZWQpCgl7CgkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ0FOIEJ1cyBUaW1lb3V0OwoJCUNBTiBUaW1lci5TdGFydCgyLjApOwoJCVN5bmMgVGltZXIuU3RhcnQoNS4wKTsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the operation of the VCS message receive subsystem.</p>
+                  <p class="device_help">Set to <em class="device_enum">Enabled</em> if SLM messages should be received.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+        <Component Name="Sync Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+        <Component Name="Diagnostic"/>
+        <Component Name="Memory Used"/>
+        <Component Name="Battery Voltage"/>
+        <Component Name="Internal Temperature"/>
+        <Component Name="Script"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="VCS"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

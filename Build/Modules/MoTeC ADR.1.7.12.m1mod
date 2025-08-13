@@ -1,0 +1,524 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10105" Name="MoTeC ADR" VersionMajor="1" VersionMinor="7" BuildNumber="12">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0071"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version (01.07.0012)</h4><ul><li><div class="device_help">Fix potential CAN Rx buffer overrun issue</div></li><li><div class="device_help">Remove Yaw Rate channel (not used in ADR or ADR2, only included in&nbsp;the FIA spec).</div></li><li><div class="device_help">Set unused channels to NaN based on Type setting.<br></div></li></ul><h4 class="device_help">01.07.0011</h4><ul><li><div class="device_help">Communications for a MoTeC&nbsp;ADR2 added.</div></li></ul><h4 class="device_help">01.06.0001</h4><ul><li><div class="device_help">Don't open CAN Bus -1 (ie not allocated).</div></li></ul><h4 class="device_help">01.06.0000</h4><ul><li><div class="device_help">Update to system 01.04.00.0016.</div></li></ul><h4 class="device_help">01.05.0001</h4>
+            <ul class="device_help">
+              <li class="device_help">Update to system 01.03.17.</li>
+              <li class="device_help">Add tags.</li>
+            </ul>
+            <h4 class="device_help">01.03.0005</h4>
+            <ul class="device_help">
+              <li class="device_help">Update to system 01.03.16.0031.</li>
+            </ul>
+            <h4 class="device_help">01.02.0001</h4>
+            <ul class="device_help">
+              <li class="device_help">Remove Event from class interface.</li>
+              <li class="device_help">Add Mode to class interface.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="ADR Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Corrupt Calibration" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR contains a corrupt calibration.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid Configuration" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR contains an invalid configuration.</p>
+            <p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Accelerometer Self Test Failed" ContainerOrder="3" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a problem with its accelerometer.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Logging Memory Failed" ContainerOrder="4" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a logging memory problem.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="External LED Open Circuit" ContainerOrder="17" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a problem with the external LED.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal 2V3 Fault" ContainerOrder="6" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a power supply problem.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal 5V5 Fault" ContainerOrder="9" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a power supply problem.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal 3V0 Fault" ContainerOrder="7" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a power supply problem.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="External 5V0 Warning" ContainerOrder="18" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a power supply problem.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal 5V0 Fault" ContainerOrder="8" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a power supply problem.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal VCAN Fault" ContainerOrder="10" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected a power supply problem.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus Timeout" ContainerOrder="11" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No ADR data is currently being received.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPS Data Invalid" ContainerOrder="14" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The ADR is receiving invalid GPS data.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="GPS Timeout" ContainerOrder="15" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The ADR is is not receiving GPS data.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="12">
+    <Help>
+<![CDATA[<p class="device_help">ADR message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="13">
+    <Help>
+<![CDATA[<p class="device_help">The ADR is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The current state of the ADR is unknown.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">This may be due to a CAN bus timeout.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Oscillator Fault" ContainerOrder="5" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has detected an oscillator fault.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Receive Timeout" ContainerOrder="16" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The ADR is not receiving CAN data.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="ADR State Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">ADR message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The ADR is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Event in Progress" ContainerOrder="3" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The ADR is reporting that an event is in progress.</p>
+            <p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Event Log Full" ContainerOrder="6" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The ADR event log is full.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Unknown" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The current state of the ADR is unknown.</p>
+            <p class="device_help">This may be due to a CAN bus timeout.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Events Logged" ContainerOrder="4" Tags="Information">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has logged one or more events.</p>
+            <p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Severe Event Logged" ContainerOrder="5" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The ADR has logged a severe event.</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Downloading" ContainerOrder="7">
+    <Help>
+<![CDATA[<p class="device_help">The ADR logging is being downloaded</p>
+<p class="device_help">This state is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR2</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="ADR Type Enumeration" Storage="enum" Default="MoTeC ADR">
+   <Enum Name="MoTeC ADR" ContainerOrder="0">
+    <Help/>
+   </Enum>
+   <Enum Name="MoTeC ADR2" ContainerOrder="1">
+    <Help/>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.ADR">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class receives and decodes CAN data from a MoTeC Accident Data Recorder (ADR or ADR2).</p>
+<h2 class="device_help">Value Inputs</h2>
+<h3 class="device_help">CAN Bus Input Object</h3>
+<p class="device_help">Controls the CAN bus used to receive ADR or ADR2 messages.</p>
+<h3 class="device_help">CAN ID Input Object</h3>
+<p class="device_help">Controls the CAN ID used to receive ADR messages (ADR2 has fixed IDs).</p>
+<p class="device_help">ADR default IDs are 0x448 and 0x449.</p>
+<p class="device_help">ADR2 IDs are 0x7B and 0x81</p>
+<h2 class="device_help">External Dependencies</h2>
+<p class="device_help">A 'CAN Bus' class is required to initialise the CAN bus.</p>
+<p class="device_help">Data can be transmitted to the ADR using the 'CanComms' library functions external to this module. Refer to the ADR or ADR2 documentation for more information.</p>
+]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN ID" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Type" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to a MoTeC Accident Data Recorder (ADR or ADR2) device connected via CAN.</p>
+<p class="device_help">For data to be received from this device the following items must be calibrated:</p>
+<ul class="device_help">
+        <li class="device_help">Configure <em class="device_param">CAN Bus</em>.</li>
+        <li class="device_help">Set <em class="device_param">Type</em> based on the model of ADR.</li>
+        <li class="device_help">If <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em> set <em class="device_param">CAN ID</em>. For an ADR transmitting on its default ID of 0x448 enter 1096.</li>
+</ul>
+<p class="device_help">For ADR2, GPS data on CAN may come from a source other than this ECU. See ECU Transmit GPS for more information.</p>
+<ul class="device_help"></ul>
+]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used to receive ADR messages.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN ID">
+        <Props Type="u32" Validation="MinMax" ValMin="1" ValMax="2047" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Format="Hex"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN ID used to receive ADR messages.</p>
+<p class="device_help">Only required when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">For an ADR transmitting on its default ID of 0x448 enter 1096.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN ID.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.ADR Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the ADR.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Events">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max="10"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Number of events that the ADR has logged.</p>
+<p class="device_help">This channel is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Capacitor Charge">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The charge state of the ADR capacitor as received from the ADR.</p>
+<p class="device_help">This channel is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Battery Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Vehicle battery voltage as received from the ADR.</p>
+<p class="device_help">This channel is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR</em>.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Acceleration">
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.X">
+        <Props Qty="m/s/s">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Acceleration in the X direction as received from the ADR.</p>
+                  <p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Y">
+        <Props Qty="m/s/s">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Acceleration in the Y direction as received from the ADR.</p>
+                  <p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Acceleration.Z">
+        <Props Qty="m/s/s">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="G"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Acceleration in the Z direction as received from the ADR.</p>
+                  <p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.ADR State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Current state of the ADR message receive subsystem.</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[aWYgKChDQU4gSUQgPiAweDAgb3IgVHlwZSBlcSBUeXBlLk1vVGVDIEFEUjIpIGFuZCBDQU4gQnVzLkFzSW50ZWdlcigpID4gMCkKewoJU3lzdGVtLkRlYnVnKCJBRFIgRW5hYmxlZCIpOwp9CgppZiAoVHlwZSBlcSBUeXBlLk1vVGVDIEFEUikJLy9zZXQgQVJEMiBvbmx5IGNoYW5uZWxzIHRvIE5BTgp7CglTb2Z0d2FyZSBWZXJzaW9uID0gQ2FsY3VsYXRlLk5BTigpOwp9CmVsc2UJLy9zZXQgQURSIG9ubHkgY2hhbm5lbHMgdG8gTkFOCnsKCUJhdHRlcnkgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCUNhcGFjaXRvciBDaGFyZ2UgPSBDYWxjdWxhdGUuTkFOKCk7Cn0=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Type">
+        <Props Type="::This.ADR Type Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[ADR model.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Type.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Accident Severity Index">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Severity of the last accident detected since power on.</p>
+<p class="device_help">This channel is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR2</em>.</p>
+<p class="device_help">0 = No accident</p>
+<p class="device_help">The last known value is held if CAN communications are lost (<em class="device_item">Diagnostic</em> equals <em class="device_enum">CAN Bus Timeout</em>).</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Software Version">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">ADR software version.</p>
+<p class="device_help">This channel is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR2</em>.</p>
+<p class="device_help">The last known value is held if CAN communications are lost (<em class="device_item">Diagnostic</em> equals <em class="device_enum">CAN Bus Timeout</em>).</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Serial Number">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">ADR Serial number</p>
+<p class="device_help">This channel is only available when the ADR <em class="device_item">Type</em> is <em class="device_enum">MoTeC ADR2</em>.</p>
+<p class="device_help">The last known value is held if CAN communications are lost (<em class="device_item">Diagnostic</em> equals <em class="device_enum">CAN Bus Timeout</em>).</p>
+<p class="device_help">Refer to the ADR documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaDAxID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmRCdWZmZXJlZChDQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgQ0FOIElELCAweDAxLCB0cnVlKTsKbG9jYWwgaDdCID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmRCdWZmZXJlZChDQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgMHgwN0IsIDB4MCwgdHJ1ZSk7CmxvY2FsIGg4MSA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkQnVmZmVyZWQoQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEsIDB4MDgxLCAweDAsIHRydWUpOwoKc3RhdGljIGxvY2FsIGhydG8wMSA9IDAuMjU7CnN0YXRpYyBsb2NhbCBocnRvN0IgPSAxLjA7CgppZiAoQ0FOIEJ1cyBuZXEgQ0FOIEJ1cy5Ob3QgaW4gVXNlKQp7Cgl3aGVuIChUeXBlKQoJewoJCWlzIChNb1RlQyBBRFIpCgkJewkJCgkJCS8qCgkJCSAqIDB4MDEgLSBBRFIgUmVjZWl2ZSwgdHdvIElEcyBhdCA1MEh6CgkJCSAqLwkJCgkJCQoJCQlpZiAoQ2FuQ29tbXMuUnhGaW5kTWVzc2FnZShoMDEsIENBTiBJRCArIDB4MSwgMCwgMCwgMHgwKSkKCQkJewoJCQkJRXZlbnRzID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoMDEsIDAsICA4KTsKCQkJCWxvY2FsIGV2ZW50YiA9IENhbkNvbW1zLkdldEludGVnZXIoaDAxLCAgOCwgIDgpOwoJCQkJaWYgKGV2ZW50YiBlcSAwKQoJCQkJewoJCQkJCVN0YXRlID0gU3RhdGUuT0s7CgkJCQl9CgkJCQllbHNlIGlmICgoZXZlbnRiICYgMHgwOCkgbmVxIDApCgkJCQl7CgkJCQkJU3RhdGUgPSBTdGF0ZS5FdmVudCBMb2cgRnVsbDsKCQkJCX0KCQkJCWVsc2UgaWYgKChldmVudGIgJiAweDA0KSBuZXEgMCkKCQkJCXsKCQkJCQlTdGF0ZSA9IFN0YXRlLlNldmVyZSBFdmVudCBMb2dnZWQ7CgkJCQl9CgkJCQllbHNlIGlmICgoZXZlbnRiICYgMHgwMikgbmVxIDApCgkJCQl7CgkJCQkJU3RhdGUgPSBTdGF0ZS5FdmVudHMgTG9nZ2VkOwoJCQkJfQoJCQkJZWxzZSBpZiAoKGV2ZW50YiAmIDB4MDEpIG5lcSAwKQoJCQkJewoJCQkJCVN0YXRlID0gU3RhdGUuRXZlbnQgaW4gUHJvZ3Jlc3M7CgkJCQl9CgkJCQllbHNlCgkJCQl7CgkJCQkJU3RhdGUgPSBTdGF0ZS5Vbmtub3duOwoJCQkJfQoKCQkJCUNhcGFjaXRvciBDaGFyZ2UgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaDAxLCAxNiwgOCkgKiAwLjAxOwoJCQkJbG9jYWwgZGlhZ2IgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKGgwMSwgMzIsIDE2KTsKCQkJCWxvY2FsIGZhdWx0YiA9IENhbkNvbW1zLkdldEludGVnZXIoaDAxLCA0OCwgMTYpOwoJCQkJaWYgKGRpYWdiIGVxIDAgYW5kIGZhdWx0YiBlcSAwKQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJCQkJfQoJCQkJZWxzZSBpZiAoKGZhdWx0YiAmIDB4MDAwMSkgbmVxIDApCgkJCQl7CgkJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuQ29ycnVwdCBDYWxpYnJhdGlvbjsKCQkJCX0KCQkJCWVsc2UgaWYgKChmYXVsdGIgJiAweDAwMDIpIG5lcSAwKQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkludmFsaWQgQ29uZmlndXJhdGlvbjsKCQkJCX0KCQkJCWVsc2UgaWYgKChmYXVsdGIgJiAweDAwMDQpIG5lcSAwKQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkFjY2VsZXJvbWV0ZXIgU2VsZiBUZXN0IEZhaWxlZDsKCQkJCX0KCQkJCWVsc2UgaWYgKChmYXVsdGIgJiAweDAwMDgpIG5lcSAwKQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkxvZ2dpbmcgTWVtb3J5IEZhaWxlZDsKCQkJCX0KCQkJCS8qIDB4MDAxMCBiZWxvdyAobG93ZXIgcHJpb3JpdHkpICovCgkJCQllbHNlIGlmICgoZmF1bHRiICYgMHgwMDIwKSBuZXEgMCkKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5Pc2NpbGxhdG9yIEZhdWx0OwoJCQkJfQoJCQkJLyogMHgwMDQwIGFuZCAweDAwODAgdW51c2VkICovCgkJCQllbHNlIGlmICgoZmF1bHRiICYgMHgwMTAwKSBuZXEgMCkKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5JbnRlcm5hbCAyVjMgRmF1bHQ7CgkJCQl9CgkJCQllbHNlIGlmICgoZmF1bHRiICYgMHgwMjAwKSBuZXEgMCkKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5JbnRlcm5hbCA1VjUgRmF1bHQ7CgkJCQl9CgkJCQllbHNlIGlmICgoZmF1bHRiICYgMHgwNDAwKSBuZXEgMCkKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5JbnRlcm5hbCAzVjAgRmF1bHQ7CgkJCQl9CgkJCQllbHNlIGlmICgoZmF1bHRiICYgMHgwODAwKSBuZXEgMCkKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5JbnRlcm5hbCA1VjAgRmF1bHQ7CgkJCQl9CgkJCQllbHNlIGlmICgoZmF1bHRiICYgMHgxMDAwKSBuZXEgMCkKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5JbnRlcm5hbCBWQ0FOIEZhdWx0OwoJCQkJfQoJCQkJZWxzZSBpZiAoKGZhdWx0YiAmIDB4MjAwMCkgbmVxIDApCgkJCQl7CgkJCQkJRGlhZ25vc3RpYyA9IERpYWdub3N0aWMuRXh0ZXJuYWwgNVYwIFdhcm5pbmc7CgkJCQl9CgkJCQkvKiAweDQwMDAgYW5kIDB4ODAwMCB1bnVzZWQgKi8KCQkJCWVsc2UgaWYgKChmYXVsdGIgJiAweDAwMTApIG5lcSAwKQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkV4dGVybmFsIExFRCBPcGVuIENpcmN1aXQ7CgkJCQl9CgkJCQllbHNlIGlmICgoZGlhZ2IgJiAweDAwMDEpIG5lcSAwKQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkdQUyBEYXRhIEludmFsaWQ7CgkJCQl9CgkJCQllbHNlIGlmICgoZGlhZ2IgJiAweDAwMDIpIG5lcSAwKQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLkdQUyBUaW1lb3V0OwoJCQkJfQoJCQkJZWxzZSBpZiAoKGRpYWdiICYgMHgwMDA0KSBuZXEgMCkKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gUmVjZWl2ZSBUaW1lb3V0OwoJCQkJfQoJCQkJLyogMHhGRkY4IHVudXNlZCAqLwoJCQkJZWxzZQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLlVua25vd247CgkJCQl9CgoJCQkJaHJ0bzAxID0gMC4yNTsKCQkJfQoJCQllbHNlIGlmIChocnRvMDEgPiAwLjApCgkJCXsKCQkJCWhydG8wMSAtPSBVcGRhdGUuUGVyaW9kKCk7CgkJCX0KCQkJZWxzZQoJCQl7CgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gQnVzIFRpbWVvdXQ7CgkJCQlTdGF0ZSA9IFN0YXRlLlVua25vd247CgkJCQlDYXBhY2l0b3IgQ2hhcmdlID0gQ2FsY3VsYXRlLk5BTigpOwoJCQl9CgoJCQkvL2Jhc2UgSUQKCQkJaWYgKENhbkNvbW1zLlJ4RmluZE1lc3NhZ2UoaDAxLCBDQU4gSUQsIDAsIDAsIDB4MCkpCgkJCXsKCQkJCUFjY2VsZXJhdGlvbi5YID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoMDEsIDAsIDE2KSAqIDAuMSAqIDkuODE7CgkJCQlBY2NlbGVyYXRpb24uWSA9IENhbkNvbW1zLkdldEludGVnZXIoaDAxLCAxNiwgMTYpICogMC4xICogOS44MTsKCQkJCUFjY2VsZXJhdGlvbi5aID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoMDEsIDMyLCAxNikgKiAwLjEgKiA5LjgxOwoJCQkJQmF0dGVyeSBWb2x0YWdlID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgwMSwgNDgsIDE2KSAqIDEuMGUtMzsKCQkJfQoJCQllbHNlIGlmIChEaWFnbm9zdGljIGVxIERpYWdub3N0aWMuQ0FOIEJ1cyBUaW1lb3V0KQkJLy9JRCArIDEgaGFzIHRvIHRpbWVvdXQgdG8gdHJpZ2dlciB0aGUgQ0FOIHRpbWVvdXQuCgkJCXsKCQkJCUJhdHRlcnkgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQkJCUFjY2VsZXJhdGlvbi5YID0gQ2FsY3VsYXRlLk5BTigpOwoJCQkJQWNjZWxlcmF0aW9uLlkgPSBDYWxjdWxhdGUuTkFOKCk7CgkJCQlBY2NlbGVyYXRpb24uWiA9IENhbGN1bGF0ZS5OQU4oKTsKCQkJfQoKCQl9CgkJaXMgKE1vVGVDIEFEUjIpCgkJewoJCQkvKgoJCQkgKiAweDdCIC0gQURSMiBSZWNlaXZlCgkJCSAqLwkKCQkJaWYgKENhbkNvbW1zLlJ4RmluZE1lc3NhZ2UoaDdCLCAweDAsIDAsIDAsIDB4MCkpCgkJCXsKCQkJCUFjY2lkZW50IFNldmVyaXR5IEluZGV4ID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyCShoN0IsICAgMCwgICA4KTsKCQkJCVNvZnR3YXJlIFZlcnNpb24gPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIJCQkoaDdCLCAgIDgsICAgOCkgKiAwLjE7CgkJCQlsb2NhbCBzdGF0dXMgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIJCQkJKGg3QiwgIDE2LCAgMTYpOwoJCQkJU2VyaWFsIE51bWJlciA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcgkgICAgICAgICAgICAoaDdCLCAgMzIsICAxNik7CgkJCQkJCQkKCQkJCS8vU2V0IERpYWdub3N0aWMKCQkJCWlmICgoc3RhdHVzICYgMHgwMikgZXEgMCkgLy9Mb2dnaW5nIENvbmZpZyBub3QgT2sKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5JbnZhbGlkIENvbmZpZ3VyYXRpb247CgkJCQl9CgkJCQllbHNlIGlmICgoc3RhdHVzICYgMHgwNCkgZXEgMCkgLy9DQU4gVGVhbSBub3QgT2sKCQkJCXsKCQkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gUmVjZWl2ZSBUaW1lb3V0OwoJCQkJfQoJCQkJZWxzZQoJCQkJewoJCQkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJCQkJfQoJCQkJCgkJCQkvL1NldCBTdGF0ZQkJCQkJCQoJCQkJaWYgKChzdGF0dXMgJiAweDIwKSBuZXEgMCkgLy9Eb3dubG9hZCBtb2RlCgkJCQl7CgkJCQkJU3RhdGUgPSBTdGF0ZS5Eb3dubG9hZGluZzsKCQkJCX0KCQkJCWVsc2UgaWYgKChzdGF0dXMgJiAweDEwKSBuZXEgMCkgLy9BY2NpZGVudCBBY3RpdmUKCQkJCXsKCQkJCQlTdGF0ZSA9IFN0YXRlLkV2ZW50IGluIFByb2dyZXNzOwoJCQkJfQoJCQkJZWxzZSBpZiAoKHN0YXR1cyAmIDB4MDEpIG5lcSAwKSAvL0xvZ2dpbmcgaW4gcHJvZ3Jlc3MKCQkJCXsKCQkJCQlTdGF0ZSA9IFN0YXRlLkV2ZW50IGluIFByb2dyZXNzOwoJCQkJfQkKCQkJCWVsc2UgaWYgKChzdGF0dXMgJiAweDA4KSBuZXEgMCkgLy9BY2NpZGVudCBTdG9yZWQKCQkJCXsKCQkJCQlTdGF0ZSA9IFN0YXRlLkV2ZW50cyBMb2dnZWQ7CgkJCQl9CQoJCQkJZWxzZSBpZiAoc3RhdHVzIDw9IDB4MUYpCgkJCQl7CgkJCQkJU3RhdGUgPSBTdGF0ZS5PSzsKCQkJCX0KCQkJCWVsc2UKCQkJCXsKCQkJCQlTdGF0ZSA9IFN0YXRlLlVua25vd247CgkJCQl9CQkJCQoJCQkJCQkJCQoJCQkJaHJ0bzdCID0gMS4wOwoJCQl9CgkJCWVsc2UgaWYgKGhydG83QiA+IDAuMCkKCQkJewoJCQkJaHJ0bzdCIC09IFVwZGF0ZS5QZXJpb2QoKTsKCQkJfQoJCQllbHNlCgkJCXsKCQkJCS8vSG9sZCBsYXN0IGtub3duIEFjY2lkZW50IFNldmVyaXR5IEluZGV4LCBTb2Z0d2FyZSBWZXJzaW9uIGFuZCBTZXJpYWwgTnVtYmVyCgkJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gQnVzIFRpbWVvdXQ7CQkJCQoJCQkJU3RhdGUgPSBTdGF0ZS5Vbmtub3duOwoJCQl9CgoJCQkvKgoJCQkgKiAweDgxIC0gQURSMiBSZWNlaXZlIDEwMEh6CgkJCSAqLwkKCQkJaWYgKENhbkNvbW1zLlJ4RmluZE1lc3NhZ2UoaDgxLCAweDAsIDAsIDAsIDB4MCkpCgkJCXsJCQoJCQkJLy9ZYXcgUmF0ZSA9IENhbkNvbW1zLkdldEludGVnZXIJCShoODEsICAwLCAxNikgKiA4Ljc1IC8gMTAwMC4wOwkvL09wdGlvbmFsIHNlbnNvciBpbiBGSUEgc3BlYywgQURSMiBkb2VzIG5vdCBoYXZlIG9uZS4KCQkJCUFjY2VsZXJhdGlvbi5ZID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoODEsIDE2LCAxNikgKiAwLjAwNjEyNSAqIDkuODE7CgkJCQlBY2NlbGVyYXRpb24uWCA9IENhbkNvbW1zLkdldEludGVnZXIoaDgxLCAzMiwgMTYpICogMC4wMDYxMjUgKiA5LjgxOwoJCQkJQWNjZWxlcmF0aW9uLlogPSBDYW5Db21tcy5HZXRJbnRlZ2VyKGg4MSwgNDgsIDE2KSAqIDAuMDA2MTI1ICogOS44MTsKCQkJfQoJCQllbHNlIGlmIChEaWFnbm9zdGljIGVxIERpYWdub3N0aWMuQ0FOIEJ1cyBUaW1lb3V0KQkvL3RpbWVvdXQgZnJvbSBhYm92ZS4gCgkJCXsKCQkJCS8vWWF3IFJhdGUgPSBDYWxjdWxhdGUuTkFOKCk7CgkJCQlBY2NlbGVyYXRpb24uWCA9IENhbGN1bGF0ZS5OQU4oKTsKCQkJCUFjY2VsZXJhdGlvbi5ZID0gQ2FsY3VsYXRlLk5BTigpOwoJCQkJQWNjZWxlcmF0aW9uLlogPSBDYWxjdWxhdGUuTkFOKCk7CgkJCX0KCQl9Cgl9Cn0K]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN ID">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Type">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Diagnostic"/>
+        <Component Name="State"/>
+        <Component Name="Acceleration">
+         <Component Name="X"/>
+         <Component Name="Y"/>
+         <Component Name="Z"/>
+        </Component>
+        <Component Name="Accident Severity Index"/>
+        <Component Name="Battery Voltage"/>
+        <Component Name="Capacitor Charge"/>
+        <Component Name="Events"/>
+        <Component Name="Software Version"/>
+        <Component Name="Serial Number"/>
+        <Component Name="Update"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="ADR"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

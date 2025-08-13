@@ -1,0 +1,1128 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC OE Mazda RX8 2004" VersionMajor="1" VersionMinor="0" BuildNumber="4">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0056"/>
+ <BuildHelp>
+<![CDATA[<H4 class="device_help">Current Version (1.0.0004)</H4>
+<UL class="device_help">
+<LI class="device_help">Driver Switch Index Enumeration</LI>
+<LI class="device_help">System version updated to 1.4.0.0046</LI></UL>
+<H4 class="device_help">1.0.0001</H4>
+<UL class="device_help">
+<LI class="device_help">Mode added to enable all CAN messages or only CAN messages related to the EPS</LI></UL>
+<H4 class="device_help">1.0.0000</H4>
+<UL class="device_help">
+<LI class="device_help">Initial release</LI></UL>
+<UL class="device_help"></UL>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC Output" VersionMajor="1" VersionMinor="9" VersionBuild="6"/>
+  <File Name="MoTeC Input" VersionMajor="1" VersionMinor="10" VersionBuild="17"/>
+  <File Name="MoTeC Cruise" VersionMajor="1" VersionMinor="3" VersionBuild="2"/>
+  <File Name="MoTeC Warning" VersionMajor="1" VersionMinor="4" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Transmission Type Enumeration" Storage="enum" Default="Manual Transmission 5 Speed">
+   <Enum Name="Continously Variable Transmission" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Manual Transmission 5 Speed" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Manual Transmission 6 Speed" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Auto Transmission with PCM Control" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Auto Transmission with TCM Control" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Tyre Pressure Monitor Battery Enumeration" Storage="enum" Default="Ok">
+   <Enum Name="Communication Error" ContainerOrder="0">
+    <Help>
+<![CDATA[CAN error.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Ok" ContainerOrder="1">
+    <Help>
+<![CDATA[Battery&nbsp;voltage&nbsp;is ok.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Low" ContainerOrder="2" Tags="Warning">
+    <Help>
+<![CDATA[Battery&nbsp;voltage&nbsp;is low.]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Electronic Power Steering Activation Enumeration" Storage="enum" Default="Engine Running">
+   <Enum Name="Engine Running" ContainerOrder="0">
+    <Help>
+<![CDATA[Electronic Power Steering is enabled whenever&nbsp;<em class="device_item">Engine State</em> equals <em class="device_enum">Run</em>.]]>
+    </Help>
+   </Enum>
+   <Enum Name="ECU On" ContainerOrder="1">
+    <Help>
+<![CDATA[Electronic Power Steering is enabled whenever the ECU is powered.]]>
+    </Help>
+   </Enum>
+   <Enum Name="Switch" ContainerOrder="2">
+    <Help>
+<![CDATA[Electronic Power Steering is enabled whenever&nbsp;<em class="device_item">Electronic Power Steering Enable Switch State</em> is&nbsp;<em class="device_enum">On</em> or&nbsp;<em class="device_item">Engine State</em> equals <em class="device_enum">Run</em>.]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Mazda RX8 Driver Switch Index Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 1" ContainerOrder="1">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 2" ContainerOrder="2">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 3" ContainerOrder="3">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 4" ContainerOrder="4">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 8" ContainerOrder="16">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 7" ContainerOrder="15">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 6" ContainerOrder="14">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 5" ContainerOrder="13">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 4" ContainerOrder="12">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 3" ContainerOrder="11">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 2" ContainerOrder="10">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Rotary Switch 1" ContainerOrder="9">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 8" ContainerOrder="8">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 7" ContainerOrder="7">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 6" ContainerOrder="6">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+   <Enum Name="Driver Switch 5" ContainerOrder="5">
+    <Help>
+<![CDATA[<!--Empty-->]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Mazda RX8 Mode Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="Not in Use" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The subsystem is not in use.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enable All" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">CAN messaging for ABS, OE dash, <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>Electronic </span>Power Steering, Transmission&nbsp;and&nbsp;Tyre Pressure Monitoring are enabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Enable Power Steering Only" ContainerOrder="2">
+    <Help>
+<![CDATA[Only&nbsp;CAN messaging for&nbsp;<span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>Electronic </span>Power Steering is enabled. Use this mode to reduce ECU CPU usage if&nbsp;CAN messaging for the ABS, OE dash,&nbsp;Transmission&nbsp;and&nbsp;Tyre Pressure Monitoring is not required.]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Mazda RX8 2004 Integration"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Mazda RX8 2004 Integration.Mazda RX8 2004">
+     <BuildHelp>
+<![CDATA[<P class="device_help">This class implements OE Integration for Mazda&nbsp;RX8 2004</P>
+<P class="device_help">Components include CAN messaging for ABS, OE dash, <SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Arial', 'sans-serif'; COLOR: black; FONT-SIZE: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">Electronic </SPAN>Power Steering, Transmission&nbsp;and&nbsp;Tyre Pressure Monitoring.</P>
+<H2 class="device_help">Value Inputs</H2>
+<H3 class="device_help">Airbox Mass Flow, Coolant Temperature, <SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Arial', 'sans-serif'; COLOR: rgb(98,151,196); FONT-SIZE: 9pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">Cruise </SPAN>Control Enable, <SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Arial', 'sans-serif'; COLOR: rgb(98,151,196); FONT-SIZE: 9pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA">Cruise </SPAN>Control Speed. Crusie Control State, Engine Displacement, Engine Oil Pressure Low Switch, Engine Over Rev Warning, Engine Speed, Engine State, Fuel Pulse, High Speed Fuel Pump Status, Ignition&nbsp;Rotor 1 Timing, Inlet Air Temperature, Number of Rotors,&nbsp;Throttle Position, Vehicle Speed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </H3>
+<P class="device_help">Connect to the respectively named channels in the project.</P>
+<H2 class="device_help">Data Types</H2>
+<H3 class="device_help">Driver Switch Index Data Type</H3>
+<P class="device_help">Connect to the respectively named data types in the project.</P>
+<H2 class="device_help">Attributes</H2>
+<H3 class="device_help">Engine Oil Level Switch Update Event</H3>
+<P class="device_help">Typically 10Hz.</P>
+<H3 class="device_help">Electronic Power Steering&nbsp;Enable Switch Event</H3>
+<P class="device_help">Typically 10Hz.</P>
+<H3 class="device_help">Electronic Power Steering Enable Update Event</H3>
+<P class="device_help">Typically 10Hz.</P>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed">
+        <Props Qty="rad/s">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Coolant Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">The ECU CAN bus used to communicate with the Mazda RX8 vehicle CAN bus.</P>
+<P class="device_help"><STRONG class="device_help">Mazda RX8 vehicle CAN must be on a seperate CAN bus to the M1's ECU Transmit.</STRONG></P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Wheel Circumference">
+        <Props Qty="m" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The wheel circumference used for converting the wheel speeds reported by the VDC to a rotational hub speed as 
+				  used in the wheel speed inputs. Set to match the VDC internal wheel circumference of 1.971m. This can differ from the 
+				  real wheel circumference. This is set in the Wheel Speed Front and Rear Circumference to calibrate the measured speed.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Driver Switch Index Data Type" Creation="Custom" Visible="1" TargetCpt="This.Electronic Power Steering Enable.Switch" TargetRef="Index Data Type" DisplayName="Driver Switch Index Data Type"/>
+         <Property Name="Electronic Power Steering Enable Switch Event" Creation="Custom" Visible="1" TargetCpt="This.Electronic Power Steering Enable.Switch" TargetRef="Event" DisplayName="Electronic Power Steering Enable Switch Event"/>
+         <Property Name="Electronic Power Steering Enable Update Event" Creation="Custom" Visible="1" TargetCpt="This.Electronic Power Steering Enable.Update" TargetRef="SelectedTrigger" DisplayName="Electronic Power Steering Enable Update Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Coolant Level Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Cruise Control Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Cruise Control Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Cruise Control State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Displacement" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Over Rev Warning" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Fuel Pulse" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.High Speed Fuel Pump Status" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Inlet Air Temperature" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Number of Rotors" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Position" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Vehicle Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Oil Level Switch" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Airbox Mass Flow" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Oil Pressure Low Switch" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Ignition Rotor 1 Timing" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to Original Equipment components unique to the Mazda&nbsp;RX8
+                    vehicle platform.</p>
+                  <p class="device_help">Some of these component values are received as CAN messages from the OE platform, and may be
+                    accessed by means of Firmware CAN Resources for selected channels:
+                    <ul class="device_help">
+                      <li class="device_help">Wheel Speed Front Left appears as Firmware 1 &amp; 5.</li>
+                      <li class="device_help">Wheel Speed Front Right appears as Firmware 2 &amp; 6.</li>
+                      <li class="device_help">Wheel Speed Rear Left appears as Firmware 3 &amp; 7.</li>
+                      <li class="device_help">Wheel Speed Rear Right appears as Firmware 4 &amp; 8.</li>
+<li class="device_help">Steering Angle appears as Firmware 9.</li>
+                      <li class="device_help">Fuel Level Percentage appears as Firmware 10.</li><li class="device_help">Fuel Level Voltage appears as Firmware 11.</li>
+                    </ul>
+                  <p></p>
+                  <p class="device_help">The following values are received as CAN messages from the OE platform and have direct links to
+                    the relevant features:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_chan">Park Brake Status</em></li><li class="device_help"><em class="device_chan">Tyre Pressure Monitoring Lamp Output</em></li><li class="device_help"><em class="device_chan">Tyre Pressure Monitoring Tyre 1,2,3 &amp; 4 Pressure</em></li><li class="device_help"><em class="device_chan">Tyre Pressure Monitoring Tyre 1,2,3 &amp; 4 Battery</em></li></ul><p class="device_help"><br></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Position">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Vehicle Speed">
+        <Props Qty="m/s" Validation="Positive Gain">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[RW5naW5lIFNwZWVkIFJhdGUgT2YgQ2hhbmdlID0gRGVyaXZhdGl2ZS5Ob3JtYWwoRW5naW5lIFNwZWVkKTsKVGhyb3R0bGUgUG9zaXRpb24gUmF0ZSBPZiBDaGFuZ2UgPSBEZXJpdmF0aXZlLk5vcm1hbChUaHJvdHRsZSBQb3NpdGlvbik7Cgo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Transmission Type">
+        <Props Type="::This.Transmission Type Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">The ECU CAN bus used to communicate with the Subaru STI vehicle CAN bus. If using the MoTeC adaptor loom, set to CAN Bus 2.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Engine Speed Rate Of Change">
+        <Props Qty="rad/s/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="rpm/s" Min="-4.80000000000000000e+004" Max="4.80000000000000000e+004"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><font face="Times New Roman" size="3">
+
+</font></p><p style="margin: 0cm 0cm 10pt;"><span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt;'>The derivative of </span><em><span style='color: rgb(52, 145, 220); line-height: 115%; font-family: "Arial","sans-serif"; font-size: 8pt; font-style: normal;'>Engine Speed</span></em><span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt;'>.</span></p><p class="device_help"><font face="Times New Roman" size="3">
+
+</font></p>
+                    
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Throttle Position Rate Of Change">
+        <Props Qty="ratio/s">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%/s" Min="-1.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help"><font face="Times New Roman" size="3">
+
+</font></p><p style="margin: 0cm 0cm 10pt;"><span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt;'>The derivative of </span><em><span style='color: rgb(52, 145, 220); line-height: 115%; font-family: "Arial","sans-serif"; font-size: 8pt; font-style: normal;'>Throttle Position</span></em><span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt;'>.</span></p><p class="device_help"><font face="Times New Roman" size="3">
+
+<br></font></p>
+                    
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Displacement">
+        <Props Qty="m3">
+         <Locale>
+          <Default Unit="l"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Number of Rotors">
+        <Props Type="u32">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Cruise Control State">
+        <Props Type="MoTeC Cruise.Cruise Control State Enumeration">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Cruise Control Speed">
+        <Props Qty="m/s">
+         <Locale>
+          <Default Unit="km/h" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Cruise Control Enable">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Fuel Pulse">
+        <Props Qty="m3">
+         <Locale>
+          <Default Unit="ml" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Oil Pressure Low Switch">
+        <Props Type="::Hardware.av_switch.sw_state">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.High Speed Fuel Pump Status">
+        <Props Type="MoTeC Output.Switched Output State Enumeration">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Over Rev Warning">
+        <Props Type="MoTeC Warning.Warning Enumeration">
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Airbox Mass Flow">
+        <Props Qty="kg/s">
+         <Locale>
+          <Default Unit="g/s"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine State">
+        <Props Type="MoTeC Types.Engine State Enumeration"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Ignition Rotor 1 Timing">
+        <Props Qty="rad">
+         <Locale>
+          <Default Unit="dADV"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.av_switch" Name="Base.Engine Oil Level Switch">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine oil level low switch.</p><p class="device_help"><em class="device_enum">On</em> when engine oil level is low.</p><p class="device_help">This is for information and is not used by any other system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.State">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Diagnostic">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Pullup Control">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Oil Level Switch.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Active Edge">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Oil Level Switch.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Threshold">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Oil Level Switch.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Hysteresis">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Oil Level Switch.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Debounce">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Engine Oil Level Switch.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Engine Oil Level Switch.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.UpdateDiagnostic"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Engine Oil Level Switch.Update"/>
+       <Component Classname="_IOMethod.av_switch" Name="Base.Coolant Level Switch">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Coolant level low switch.</p>
+            <p class="device_help"><em class="device_enum">On</em> when coolant level is low.</p>
+            <p class="device_help">This is for information and is not used by any other system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant Level Switch.State">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant Level Switch.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Coolant Level Switch.Diagnostic">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Level Switch.Pullup Control">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant Level Switch.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Level Switch.Active Edge">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant Level Switch.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Level Switch.Threshold">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant Level Switch.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Level Switch.Hysteresis">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant Level Switch.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Coolant Level Switch.Debounce">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Coolant Level Switch.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Coolant Level Switch.Resource">
+        <Props NameCreation="AutoParam" NameTarget="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Coolant Level Switch.Resource.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Level Switch.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Level Switch.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Level Switch.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Level Switch.UpdateDiagnostic"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Coolant Level Switch.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Engine Oil Level Switch.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Inlet Air Temperature">
+        <Props Qty="K"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Park Brake Status">
+        <Props Type="::Hardware.av_switch.sw_state">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Status of the Mazda RX8&nbsp;Park Brake as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode">
+        <Props Type="::This.Mazda RX8 Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The ECU CAN bus used to communicate with the Mazda RX8 vehicle CAN bus.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[Q0FOIEJ1czsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Receive 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBmYWxzZTsKbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IGggPSAwOwoKLyoKICogMHg0QjEgLSBBQlMgV2hlZWwgc3BlZWRzIAogKi8KCmggPSBDYW5Db21tcy5SeE9wZW5TdGFuZGFyZChQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSA+IDAgPyBQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDEgOiAwLCAweDRCMSwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKCmxvY2FsIHJ4dGltZW91dDRCMSA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjUpOwoKaWYgKG5vdCByeHRpbWVvdXQ0QjEgYW5kIE1vZGUgZXEgTW9kZS5FbmFibGUgQWxsKQp7Cglsb2NhbCBmbCA9IChDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgIDEsIDE1KSkgKiAwLjAxOwoJbG9jYWwgZnIgPSAoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDE3LCAxNSkpICogMC4wMTsKCWxvY2FsIHJsID0gKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAzMywgMTUpKSAqIDAuMDE7Cglsb2NhbCByciA9IChDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgNDksIDE1KSkgKiAwLjAxOwoJCglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxLCBmbCAvIChXaGVlbCBDaXJjdW1mZXJlbmNlICogMy42KSk7CS8vZmFjdG9yIGNvbnZlcnRzIENBTiB2YWx1ZSAoa20vaCkgdG8gcmV2L3MgKEh6KQoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMiwgZnIgLyAoV2hlZWwgQ2lyY3VtZmVyZW5jZSAqIDMuNikpOwkKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDMsIHJsIC8gKFdoZWVsIENpcmN1bWZlcmVuY2UgKiAzLjYpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDQsIHJyIC8gKFdoZWVsIENpcmN1bWZlcmVuY2UgKiAzLjYpKTsKfQplbHNlCnsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDEsIDAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgyLCAwLjApOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoMywgMC4wKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDQsIDAuMCk7Cn0KCgovKgogKiAweDRCMCAtIEFCUyBXaGVlbCBzcGVlZHMgCiAqLwoKaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpID4gMCA/IFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSA6IDAsIDB4NEIwLCAweDAwMCwgdHJ1ZSk7CnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwoKbG9jYWwgcnh0aW1lb3V0NEIwID0gbm90IERlbGF5LkZhbGxpbmcocngsIDAuNSk7CgppZiAobm90IHJ4dGltZW91dDRCMCBhbmQgTW9kZSBlcSBNb2RlLkVuYWJsZSBBbGwpCnsKCWxvY2FsIGZsID0gKENhbkNvbW1zLkdldEludGVnZXIoaCwgIDAsIDE2KSkgKiAwLjAxOwoJbG9jYWwgZnIgPSAoQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCAxNiwgMTYpKSAqIDAuMDE7Cglsb2NhbCBybCA9IChDYW5Db21tcy5HZXRJbnRlZ2VyKGgsIDMyLCAxNikpICogMC4wMTsKCWxvY2FsIHJyID0gKENhbkNvbW1zLkdldEludGVnZXIoaCwgNDgsIDE2KSkgKiAwLjAxOwoJCglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSg1LCBmbCAvIChXaGVlbCBDaXJjdW1mZXJlbmNlICogMy42KSk7CS8vZmFjdG9yIGNvbnZlcnRzIENBTiB2YWx1ZSAoa20vaCkgdG8gcmV2L3MgKEh6KQoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoNiwgZnIgLyAoV2hlZWwgQ2lyY3VtZmVyZW5jZSAqIDMuNikpOwkKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDcsIHJsIC8gKFdoZWVsIENpcmN1bWZlcmVuY2UgKiAzLjYpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDgsIHJyIC8gKFdoZWVsIENpcmN1bWZlcmVuY2UgKiAzLjYpKTsKfQplbHNlCnsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDUsIDAuMCk7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSg2LCAwLjApOwoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoNywgMC4wKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDgsIDAuMCk7Cn0KCi8qCiAqIDB4MDgxIC0gU3RlZXJpbmcgV2hlZWwgQW5nbGUgLSAxMDBoeiByZWNlaXZlCiAqLwoKaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgMHgwODEsIDB4MDAwLCB0cnVlKTsKcnggPSBDYW5Db21tcy5SeE1lc3NhZ2UoaCk7Cgpsb2NhbCByeHRpbWVvdXQwODEgPSBub3QgRGVsYXkuRmFsbGluZyhyeCwgMC41KTsKCmlmIChub3Qgcnh0aW1lb3V0MDgxIGFuZCAoTW9kZSBlcSBNb2RlLkVuYWJsZSBBbGwgb3IgTW9kZSBlcSBNb2RlLkVuYWJsZSBQb3dlciBTdGVlcmluZyBPbmx5KSkKewoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoOSwgKENhbkNvbW1zLkdldEludGVnZXIoaCwgMTYsIDE2KSkgKiAxLjApOwp9CmVsc2UKewoJU3lzdGVtLlNldEZpcm13YXJlUmVzb3VyY2UoOSwgQ2FsY3VsYXRlLk5BTigpKTsKfQoKLyoKICogMHg0MTAgLSBUeXJlIFByZXNzdXJlIE1vbml0b3JpbmcgIC0gMTBoeiByZWNlaXZlCiAqLwoKaCA9IENhbkNvbW1zLlJ4T3BlblN0YW5kYXJkKFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMSwgMHg0MTAsIDB4MDAwLCB0cnVlKTsJCnJ4ID0gQ2FuQ29tbXMuUnhNZXNzYWdlKGgpOwoKbG9jYWwgcnh0aW1lb3V0NDEwID0gbm90IERlbGF5LkZhbGxpbmcocngsIDAuNSk7CmlmIChub3Qgcnh0aW1lb3V0NDEwIGFuZCBNb2RlIGVxIE1vZGUuRW5hYmxlIEFsbCkKewoKCVR5cmUgUHJlc3N1cmUgTW9uaXRvcmluZy5UeXJlIDQgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgNTYsIDgpOyAJCglUeXJlIFByZXNzdXJlIE1vbml0b3JpbmcuVHlyZSAzID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDQ4LCA4KTsKCVR5cmUgUHJlc3N1cmUgTW9uaXRvcmluZy5UeXJlIDIgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgNDAsIDgpOwoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLlR5cmUgMSA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgOCk7CgkKCVR5cmUgUHJlc3N1cmUgTW9uaXRvcmluZy5MYW1wIE91dHB1dCA9IENhbkNvbW1zLkdldEJpdChoLCAxNikgPyBUeXJlIFByZXNzdXJlIE1vbml0b3JpbmcuTGFtcCBPdXRwdXQuT24gOiBUeXJlIFByZXNzdXJlIE1vbml0b3JpbmcuTGFtcCBPdXRwdXQuT2ZmOyAvLzA9T2ZmIDE9T24KCQoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLlR5cmUgNC5CYXR0ZXJ5ID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDEyKSA/IFR5cmUgUHJlc3N1cmUgTW9uaXRvciBCYXR0ZXJ5IEVudW1lcmF0aW9uLkxvdyA6IFR5cmUgUHJlc3N1cmUgTW9uaXRvciBCYXR0ZXJ5IEVudW1lcmF0aW9uLk9rOyAvLzA9Vm9sdGFnZSBTdWZmaWNpZW50IDE9TG93CglUeXJlIFByZXNzdXJlIE1vbml0b3JpbmcuVHlyZSAzLkJhdHRlcnkgPSBDYW5Db21tcy5HZXRCaXQoaCwgOCkgPyBUeXJlIFByZXNzdXJlIE1vbml0b3IgQmF0dGVyeSBFbnVtZXJhdGlvbi5Mb3cgOiBUeXJlIFByZXNzdXJlIE1vbml0b3IgQmF0dGVyeSBFbnVtZXJhdGlvbi5PazsgLy8wPVZvbHRhZ2UgU3VmZmljaWVudCAxPUxvdwoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLlR5cmUgMi5CYXR0ZXJ5ID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDQpID8gVHlyZSBQcmVzc3VyZSBNb25pdG9yIEJhdHRlcnkgRW51bWVyYXRpb24uTG93IDogVHlyZSBQcmVzc3VyZSBNb25pdG9yIEJhdHRlcnkgRW51bWVyYXRpb24uT2s7IC8vMD1Wb2x0YWdlIFN1ZmZpY2llbnQgMT1Mb3cKCVR5cmUgUHJlc3N1cmUgTW9uaXRvcmluZy5UeXJlIDEuQmF0dGVyeSA9IENhbkNvbW1zLkdldEJpdChoLCAwKSA/IFR5cmUgUHJlc3N1cmUgTW9uaXRvciBCYXR0ZXJ5IEVudW1lcmF0aW9uLkxvdyA6IFR5cmUgUHJlc3N1cmUgTW9uaXRvciBCYXR0ZXJ5IEVudW1lcmF0aW9uLk9rOyAvLzA9Vm9sdGFnZSBTdWZmaWNpZW50IDE9TG93Cgp9CmVsc2UKewoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLlR5cmUgNCA9IENhbGN1bGF0ZS5OQU4oKTsKCVR5cmUgUHJlc3N1cmUgTW9uaXRvcmluZy5UeXJlIDMgPSBDYWxjdWxhdGUuTkFOKCk7CglUeXJlIFByZXNzdXJlIE1vbml0b3JpbmcuVHlyZSAyID0gQ2FsY3VsYXRlLk5BTigpOwoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLlR5cmUgMSA9IENhbGN1bGF0ZS5OQU4oKTsKCQoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLkxhbXAgT3V0cHV0ID0gVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLkxhbXAgT3V0cHV0Lk9mZjsKCQoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLlR5cmUgNC5CYXR0ZXJ5ID0gVHlyZSBQcmVzc3VyZSBNb25pdG9yIEJhdHRlcnkgRW51bWVyYXRpb24uQ29tbXVuaWNhdGlvbiBFcnJvcjsKCVR5cmUgUHJlc3N1cmUgTW9uaXRvcmluZy5UeXJlIDMuQmF0dGVyeSA9IFR5cmUgUHJlc3N1cmUgTW9uaXRvciBCYXR0ZXJ5IEVudW1lcmF0aW9uLkNvbW11bmljYXRpb24gRXJyb3I7CglUeXJlIFByZXNzdXJlIE1vbml0b3JpbmcuVHlyZSAyLkJhdHRlcnkgPSBUeXJlIFByZXNzdXJlIE1vbml0b3IgQmF0dGVyeSBFbnVtZXJhdGlvbi5Db21tdW5pY2F0aW9uIEVycm9yOwoJVHlyZSBQcmVzc3VyZSBNb25pdG9yaW5nLlR5cmUgMS5CYXR0ZXJ5ID0gVHlyZSBQcmVzc3VyZSBNb25pdG9yIEJhdHRlcnkgRW51bWVyYXRpb24uQ29tbXVuaWNhdGlvbiBFcnJvcjsKfQoKLyoKICogMHg0MzAgLSBIeWJyaWQgRWxlY3Ryb25pYyBDbHVzdGVyIC0gMmh6IHJlY2VpdmUKICovCgpoID0gQ2FuQ29tbXMuUnhPcGVuU3RhbmRhcmQoUGFyZW50LkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxLCAweDQzMCwgMHgwMDAsIHRydWUpOwpyeCA9IENhbkNvbW1zLlJ4TWVzc2FnZShoKTsKCmxvY2FsIHJ4dGltZW91dDQzMCA9IG5vdCBEZWxheS5GYWxsaW5nKHJ4LCAwLjUpOwoKaWYgKG5vdCByeHRpbWVvdXQ0MzAgYW5kIE1vZGUgZXEgTW9kZS5FbmFibGUgQWxsKQp7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxMCwgKENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAwLCA4KSkgKiAwLjM5MjEyKTsgLy9GdWVsIExldmVsIFBlcmNlbnRhZ2UKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDExLCAoQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKGgsIDgsIDgpKSAqIDAuMDE5NjEpOyAvL0Z1ZWwgTGV2ZWwgQUQgQ291bnQKCVBhcmsgQnJha2UgU3RhdHVzID0gQ2FuQ29tbXMuR2V0Qml0KGgsIDUwKSA/IFBhcmsgQnJha2UgU3RhdHVzLk9uIDogUGFyayBCcmFrZSBTdGF0dXMuT2ZmOyAvL1BhcmsgQnJha2UgRW5nYWdlZCAwPU9mZiAxPU9uCn0KZWxzZQp7CglTeXN0ZW0uU2V0RmlybXdhcmVSZXNvdXJjZSgxMCwgQ2FsY3VsYXRlLk5BTigpKTsKCVN5c3RlbS5TZXRGaXJtd2FyZVJlc291cmNlKDExLCBDYWxjdWxhdGUuTkFOKCkpOwp9Cgo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 20Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.20MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[Ly8yMEh6IHJ1biBhdCA1MEh6Cgpsb2NhbCBoID0gQ2FuQ29tbXMuVHhPcGVuKHRydWUpOwoKc3RhdGljIGxvY2FsIGRlcmF0ZSA9IDA7Ci8vbG9jYWwgY2hlY2tsaWdodCA9IERlbGF5LkZhbGxpbmcoV2FybmluZyBTb3VyY2UgbmVxIFdhcm5pbmcgU291cmNlLk5vbmUsIDEuMCk7CgoKCmlmIChkZXJhdGUgZXEgNCkKewoJZGVyYXRlID0gMDsKCglzdGF0aWMgbG9jYWwgPFVuc2lnbmVkIEludGVnZXI+IHJvbGwgPSAwOwoJcm9sbCA9IChyb2xsICsgMSkgJiAweGY7CgoJaWYgKFBhcmVudC5DQU4gQnVzIG5lcSBQYXJlbnQuQ0FOIEJ1cy5Ob3QgaW4gVXNlIGFuZCBNb2RlIG5lcSBNb2RlLk5vdCBpbiBVc2UpCgl7CgkJbG9jYWwgb2sgPSB0cnVlOwoJCWxvY2FsIGJ1cyA9IFBhcmVudC5DQU4gQnVzLkFzSW50ZWdlcigpIC0gMTsKCgkJLyoKCQkgKiBQQ00gMDQxCgkJICovCgkvKglpZiAgKE1vZGUgZXEgTW9kZS5FbmFibGUgQWxsKQoJCXsKCQkJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICA1NiwgIDgsIFBBVFMgRGF0YSBCeXRlIDgpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICA0OCwgIDgsIFBBVFMgRGF0YSBCeXRlIDcpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICA0MCwgIDgsIFBBVFMgRGF0YSBCeXRlIDYpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAzMiwgIDgsIFBBVFMgRGF0YSBCeXRlIDUpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAyNCwgIDgsIFBBVFMgRGF0YSBCeXRlIDQpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAxNiwgIDgsIFBBVFMgRGF0YSBCeXRlIDMpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAgOCwgIDgsIFBBVFMgRGF0YSBCeXRlIDIpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAgMCwgIDgsIFBBVFMgRGF0YSBCeXRlIDEpOwkvL1BBVFMgRGF0YSBCeXRlIDEgLT4gMDE9VmVoaWNsZSBFbmFibGUgMDc9Q2hhbGxlbmdlIFF1ZXJ5IDA5PVRhcmdldCBJRCBTdGF0dXMgODE9VmVoaWNsZSBEaXNhYmxlZCBDNT1SZXF1ZXN0IEtleSBTdGF0dXMgPz0/Pz8KCQkJb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLCBidXMsIDB4MDQxKTsKCQl9CiovCgoJCS8qCgkJICogUENNIDI0MAoJCSAqLwoJCWlmICAoTW9kZSBlcSBNb2RlLkVuYWJsZSBBbGwpCgkJewoJCQlDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7Ci8vCQkJQ2FuQ29tbXMuU2V0SW50ZWdlcgkoaCwgIDQwLCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoTG9uZyBUZXJtIEZ1ZWwgVHJpbSBCYW5rIDEpIC8gKDEwMC8xMjgpKSkpOwovLwkJCUNhbkNvbW1zLlNldEludGVnZXIJKGgsICAzMiwgIDgsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoKFNob3J0IFRlcm0gRnVlbCBUcmltIEJhbmsgMSkgLyAoMTAwLzEyOCkpKSk7CgkJCUNhbkNvbW1zLlNldEludGVnZXIJKGgsICAyNCwgIDgsIENvbnZlcnQuVG9JbnRlZ2VyKChDb29sYW50IFRlbXBlcmF0dXJlKSAvIDEpKTsKLy8JCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAxNiwgIDgsIENhbGN1bGF0ZWQgTG9hZCBWYWx1ZSk7CQovLwkJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgICAwLCAxNiwgRnVlbCBTeXN0ZW0gU3RhdHVzKTsJCQoJCQlvayA9IG9rIGFuZCBDYW5Db21tcy5UeFN0YW5kYXJkKGgsIGJ1cywgMHgyNDApOwoJCX0KCQkKCQkKCQkvKgoJCSAqIFBDTSAyNTAKCQkgKi8KCQlpZiAgKE1vZGUgZXEgTW9kZS5FbmFibGUgQWxsKQoJCXsKCQkJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwovLwkJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgIDQ4LCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihDb21tYW5kIFNlY29uZGFyeSBBaXIgU3RhdHVzKTsKCQkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgNDgsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChUaHJvdHRsZSBQb3NpdGlvbiAqIDEwMC4wKSAvIDAuMzkyMikpOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAzMiwgIDE2LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChBaXJib3ggTWFzcyBGbG93ICogMTAwMCkgLyAwLjAxKSk7IC8vQWlyYm94IE1hc3MgRmxvdyA/Pz8gdW5zdXJlIG9mIHVuaXRzCgkJCUNhbkNvbW1zLlNldEludGVnZXIJKGgsICAyNCwgIDgsIENvbnZlcnQuVG9JbnRlZ2VyKChJbmxldCBBaXIgVGVtcGVyYXR1cmUpIC8gMSkpOwkKCQkJQ2FuQ29tbXMuU2V0SW50ZWdlcgkoaCwgIDE2LCAgOCwgQ29udmVydC5Ub0ludGVnZXIoKElnbml0aW9uIFJvdG9yIDEgVGltaW5nICogLTEpIC8gMC41KSk7CgkJCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDI1MCk7CgkJfQoKCgkJLyoKCQkgKiBQQ00gNDIwCgkJICovCgkJaWYgIChNb2RlIGVxIE1vZGUuRW5hYmxlIEFsbCkKCQl7CgkJCUNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKLy8JCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICA1NSwgIAkgU0lMKTsKCQkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgNTQsICAJIENvb2xhbnQgTGV2ZWwgU3dpdGNoIGVxIENvb2xhbnQgTGV2ZWwgU3dpdGNoLk9uKTsKLy8JCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICA0OSwgIAkgQUxUIEwpOwoJCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICA0OCwgIAkgRW5naW5lIE9pbCBMZXZlbCBTd2l0Y2ggZXEgRW5naW5lIE9pbCBMZXZlbCBTd2l0Y2guT24pOwoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICA0NiwgIDIsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoRW5naW5lIE92ZXIgUmV2IFdhcm5pbmcgZXEgRW5naW5lIE92ZXIgUmV2IFdhcm5pbmcuTGltaXQgPyAxIDogMCkpOyAvLzA9T3ZlciBSZXYgSGlnaCAxPU92ZXIgUmV2IExvdyAyPUludmFsaWQgMz0/Pz8KCQkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgNDQsICAyLCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKEhpZ2ggU3BlZWQgRnVlbCBQdW1wIFN0YXR1cyBlcSBIaWdoIFNwZWVkIEZ1ZWwgUHVtcCBTdGF0dXMuT24gPyAxIDogMCkpOyAvLzA9UHVtcCBMbyAxPVB1bXAgSGkgMj1JbnZhbGlkIFN0YXRlIDM9Pz8/CQovLwkJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgIDQyLCAgMiwgUEFUUyBJbmRpY2F0b3IpOyAKLy8JCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICA0MCwgIDIsIE1JTCBULi4uLi4pOyAKCQkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgMzIsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKEVuZ2luZSBPaWwgUHJlc3N1cmUgTG93IFN3aXRjaCBlcSBFbmdpbmUgT2lsIFByZXNzdXJlIExvdyBTd2l0Y2guT24gPyAxIDogMCkpOyAvLzA9T2ZmIDE9T24KLy8JCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAxNiwgIDE2LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChGdWVsIFB1bHNlICogMTAwMCkgLyByZXNvbHV0aW9uPykpKTsgLy9GdWVsIFB1bHNlCi8vCQkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgIDgsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKE9ETyBDb3VudCkpOwoJCQlDYW5Db21tcy5TZXRJbnRlZ2VyCShoLCAgIDAsICA4LCBDb252ZXJ0LlRvSW50ZWdlcigoQ29vbGFudCBUZW1wZXJhdHVyZSkgLyAxKSk7CgkJCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDQyMCk7CgkJfQoKCgkJLyoKCQkgKiBQQ00gNjIwCgkJICovCgkJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgIDQ4LCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigwMCkpOyAvL0NvdW50cnkgSW5mb3JtYXRpb24gLT4gMDA9VW5rbm93biAwMT1KYXBhbiAwMj1FVSAoTGVmdCBIYW5kKSAwMz1BTUNBIDA0PUVDIChSaWdodCBIYW5kKSAwNT1BRFIgMDY9U291dGggQWZyaWNhID89Pz8/CgkJbG9jYWwgQ2FsaWJyYXRpb24gVHlwZSA9IDA7CgkJaWYgKFRyYW5zbWlzc2lvbiBUeXBlIGVxIFRyYW5zbWlzc2lvbiBUeXBlLk1hbnVhbCBUcmFuc21pc3Npb24gNSBTcGVlZCkKCQl7CgkJCUNhbGlicmF0aW9uIFR5cGUgPSAwOwoJCX0KCQllbHNlIGlmIChUcmFuc21pc3Npb24gVHlwZSBlcSBUcmFuc21pc3Npb24gVHlwZS5NYW51YWwgVHJhbnNtaXNzaW9uIDYgU3BlZWQpCgkJewoJCQlDYWxpYnJhdGlvbiBUeXBlID0gMTsKCQl9CgkJZWxzZSBpZiAoVHJhbnNtaXNzaW9uIFR5cGUgZXEgVHJhbnNtaXNzaW9uIFR5cGUuQXV0byBUcmFuc21pc3Npb24gd2l0aCBQQ00gQ29udHJvbCBvciBUcmFuc21pc3Npb24gVHlwZSBlcSBUcmFuc21pc3Npb24gVHlwZS5BdXRvIFRyYW5zbWlzc2lvbiB3aXRoIFRDTSBDb250cm9sKQoJCXsKCQkJQ2FsaWJyYXRpb24gVHlwZSA9IDI7CgkJfQoJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgIDMyLCAgNCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihDYWxpYnJhdGlvbiBUeXBlKSk7IC8vQ2FsaWJyYXRpb24gVHlwZSAtPiAwPU1hbnVhbCBUcmFuc21pc3Npb24gVHlwZSBBICg1TVQpIDE9TWFudWFsIFRyYW5zbWlzc2lvbiBUeXBlIEIgKDZNVCkgMj1BdXRvbWF0aWMgVHJhbnNtaXNzaW9uID89Pz8/CgkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgMjAsICA0LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKDIpKTsgLy9GdWVsIERlbGl2YXJ5IFR5cGUgLT4gMT1HYXNvbGluZSBDRkkgMj1HYXNvbGluZSBFRkkgMz1EaWVzZWwgREkgND1EaWVzZWwgSURJIDU9RWxlY3RyaWMgNj1OYXR1cmFsIEdhcyBDRkkgNz1OYXR1cmFsR2FzIEVGSSA4PUZsZXhpYmxlIEZ1ZWwgQ0ZJID89Pz8/CgkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgMTUsICA0LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKDEpKTsgLy9BaXIgSW5kdWN0aW9uIFR5cGUgLT4gMD1Vbmtub3duIDE9Tm9ybWFsbHkgQXNwaXJhdGUgMj1UdXJib2NoYXJnZWQgMz1TdXBlcmNoYXJnZWQgPz0/Pz8KCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICAgOCwgIDQsIE51bWJlciBvZiBSb3RvcnMpOwoJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgICAwLCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoRW5naW5lIERpc3BsYWNlbWVudCAqIDEwMDApIC8gMC4xKSk7CgkJb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLCBidXMsIDB4NjIwKTsKCgoJCS8qCgkJICogUENNIDYzMAoJCSAqLwoJCWlmICAoTW9kZSBlcSBNb2RlLkVuYWJsZSBBbGwpCgkJewoJCQlDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CgkJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgIDU2LCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoV2hlZWwgQ2lyY3VtZmVyZW5jZSkgLyAwLjAxKSk7IC8vUmVhcgoJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIJKGgsICA0OCwgIDgsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoKFdoZWVsIENpcmN1bWZlcmVuY2UpIC8gMC4wMSkpOyAvL0Zyb250CgkJCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgICA2LCAJIFRyYW5zbWlzc2lvbiBUeXBlIGVxIFRyYW5zbWlzc2lvbiBUeXBlLkF1dG8gVHJhbnNtaXNzaW9uIHdpdGggVENNIENvbnRyb2wpOyAvL0F1dG8gd2l0aCBUQ00gLT4gMD1ObyAxPVllcwoJCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICAgNSwgCSBUcmFuc21pc3Npb24gVHlwZSBlcSBUcmFuc21pc3Npb24gVHlwZS5BdXRvIFRyYW5zbWlzc2lvbiB3aXRoIFBDTSBDb250cm9sKTsgLy9BdXRvIHdpdGggUENNIC0+IDA9Tm8gMT1ZZXMKCQkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgIDQsIAkgVHJhbnNtaXNzaW9uIFR5cGUgZXEgVHJhbnNtaXNzaW9uIFR5cGUuTWFudWFsIFRyYW5zbWlzc2lvbiA1IFNwZWVkIG9yIFRyYW5zbWlzc2lvbiBUeXBlIGVxIFRyYW5zbWlzc2lvbiBUeXBlLk1hbnVhbCBUcmFuc21pc3Npb24gNiBTcGVlZCk7IC8vTWFudWFsIC0+IDA9Tm8gMT1ZZXMKCQkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgIDMsIAkgVHJhbnNtaXNzaW9uIFR5cGUgZXEgVHJhbnNtaXNzaW9uIFR5cGUuQ29udGlub3VzbHkgVmFyaWFibGUgVHJhbnNtaXNzaW9uKTsgLy9DVlQgLT4gMD1ObyAxPVllcwoJCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICAgMiwgCSBmYWxzZSk7IC8vQVdEIC0+IDA9Tm8gMT1ZZXMKCQkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgIDEsIAkgdHJ1ZSk7IC8vUldEIC0+IDA9Tm8gMT1ZZXMKCQkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgIDAsIAkgZmFsc2UpOyAvL0ZXRCAtPiAwPU5vIDE9WWVzCgkJCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDYzMCk7CgkJfQoJCQoJCQoJCS8qCgkJICogUENNIDY1MAoJCSAqLwoJCWlmICAoTW9kZSBlcSBNb2RlLkVuYWJsZSBBbGwpCgkJewoJCQlDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7Ci8vCQkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgIDMsIAkgMSBTdGVwIFNoaWZ0IERvd24pOyAvLzEgU3RlcCBTaGlmdCBEb3duIC0+IDA9Tm8gMT1ZZXMKCQkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgIDIsIAkgQ3J1aXNlIENvbnRyb2wgU3RhdGUgZXEgQ3J1aXNlIENvbnRyb2wgU3RhdGUuT24pOyAvL0F1dG8gQ3J1aXNlIERyaXZpbmcgLT4gMD1ObyAxPVllcwoJCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICAgMSwgCSBub3QgQ2FsY3VsYXRlLklzTkFOKENydWlzZSBDb250cm9sIFNwZWVkKSk7IC8vU2V0IElORCAtPiAwPU5vIDE9WWVzCgkJCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgICAwLCAJIENydWlzZSBDb250cm9sIEVuYWJsZSBlcSBDcnVpc2UgQ29udHJvbCBFbmFibGUuRW5hYmxlZCk7IC8vTWFpbiBJTkQgLT4gMD1ObyAxPVllcwoJCQlvayA9IG9rIGFuZCBDYW5Db21tcy5UeFN0YW5kYXJkKGgsIGJ1cywgMHg2NTApOwoJCX0KCgoJCS8qCgkJICogU2h1dCB1cCBidWlsZAoJCSAqLwoJCW9rID0gb2s7Cgl9Cn0KZWxzZQp7CglkZXJhdGUgKz0gMTsKfQ==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Communications.Transmit 100Hz">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCmlmIChQYXJlbnQuQ0FOIEJ1cyBuZXEgUGFyZW50LkNBTiBCdXMuTm90IGluIFVzZSBhbmQgTW9kZSBuZXEgTW9kZS5Ob3QgaW4gVXNlKQp7Cglsb2NhbCBvayA9IHRydWU7Cglsb2NhbCBidXMgPSBQYXJlbnQuQ0FOIEJ1cy5Bc0ludGVnZXIoKSAtIDE7CgkKCQoJLyoKCSAqIFBDTSAyMDEKCSAqLwoJQ2FuQ29tbXMuVHhJbml0aWFsaXNlKGgsIDgpOwoJQ2FuQ29tbXMuU2V0SW50ZWdlcgkoaCwgIDU2LCAgOCwgQ29udmVydC5Ub0ludGVnZXIoVGhyb3R0bGUgUG9zaXRpb24gUmF0ZSBPZiBDaGFuZ2UgKiAxMDAuMCkpOwoJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgNDgsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChUaHJvdHRsZSBQb3NpdGlvbiAqIDEwMC4wKSAvIDAuNSkpOwoJQ2FuQ29tbXMuU2V0SW50ZWdlcgkoaCwgIDMyLCAgMTYsIENvbnZlcnQuVG9JbnRlZ2VyKCgoVmVoaWNsZSBTcGVlZCAqIDMuNikpIC8gMC4wMSkpOyAvLzAuMDEga20vaCByZXNvbHV0aW9uCglDYW5Db21tcy5TZXRJbnRlZ2VyCShoLCAgMTYsICAxNiwgQ29udmVydC5Ub0ludGVnZXIoKChFbmdpbmUgU3BlZWQgUmF0ZSBPZiBDaGFuZ2UgLyA2LjApKSAvIDAuMjUpKTsgLy8wLjI1IHJwbS9zIHJlc29sdXRpb24KCWlmIChFbmdpbmUgU3RhdGUgbmVxIEVuZ2luZSBTdGF0ZS5SdW4gYW5kIEVsZWN0cm9uaWMgUG93ZXIgU3RlZXJpbmcgRW5hYmxlIGVxIEVsZWN0cm9uaWMgUG93ZXIgU3RlZXJpbmcgRW5hYmxlLkVuYWJsZWQpCgl7CgkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgIDAsICAxNiwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigxMDAgLyAwLjI1KSk7IC8vMC4yNSBycG0gcmVzb2x1dGlvbgoJfQoJZWxzZQoJewoJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgICAwLCAgMTYsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoKEVuZ2luZSBTcGVlZCAvIDYuMCkgLyAwLjI1KSk7IC8vMC4yNSBycG0gcmVzb2x1dGlvbgoJfQoJb2sgPSBvayBhbmQgQ2FuQ29tbXMuVHhTdGFuZGFyZChoLCBidXMsIDB4MjAxKTsKCQkKCQkKCS8qCgkgKiBQQ00gMjAzCgkgKi8KLyoJaWYgIChNb2RlIGVxIE1vZGUuRW5hYmxlIEFsbCkKCXsKCQlDYW5Db21tcy5UeEluaXRpYWxpc2UoaCwgOCk7CgkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgNDgsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChUaHJvdHRsZSBCYXNlZCBEcml2ZXIgUmVxdWVzdGVkIFRvcnF1ZSAqIDEwMC4wKSAvICgxMDAvMjU0KSkpOwoJCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgIDQ3LCAJIEJTIFNpZ25hbDsgLy8tPiAwPU5vIDE9WWVzCgkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgNDYsIAkgRW5naW5lIENvbnRyb2wgTGV2ZWwgMTsgLy8tPiAwPVJlZ3VsYXIgMT1QcmVtaXVtCgkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgNDUsIAkgRVNQIENBTiBDb21tYW5kcyBub3QgUmVjaWV2ZWQ7IC8vLT4gMD1ObyAxPVllcwoJCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgIDQ0LCAJIFRxZG93biBsaW1pdGVkIGJ5IEVuZ2luZSBSZWxpYWJpbGl0eTsgLy8tPiAwPU5vIDE9WWVzCgkJQ2FuQ29tbXMuU2V0Qml0CSAgICAgICAgCShoLCAgNDMsIAkgSW5oaWJpdCBvZiB0aGUgVHEgRG93biBDb250cm9sOyAvLy0+IDA9Tm8gMT1ZZXMKCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICA0MiwgCSBJbmhpYml0IG9mIHRoZSBGQyBDb250cm9sOyAvLy0+IDA9Tm8gMT1ZZXMKCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICA0MSwgCSBJbmhpYml0IG9mIHRoZSBSZXRhcmQgQ29udHJvb2w7IC8vLT4gMD1ObyAxPVllcwoJCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgIDQwLCAJIEluaGliaXQgZHVlIHRvIEVuZ2luZSBTeXMgRmFpbHVyZTsgLy8tPiAwPU5vIDE9WWVzCgkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgMzIsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChSZWZlcmVuY2UgVG9ycXVlICogPz8/KSAvIDIuMCkpOwoJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgIDI0LCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoRW5naW5lIERyYWcgVG9ycXVlICogMTAwLjApIC8gKDEwMC8yNTQpKSk7CgkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgMTYsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChJbnRlcm5hbCBEcml2ZXIgUmVxdWVzdGVkIFRvcnF1ZSAqIDEwMC4wKSAvICgxMDAvMjU0KSkpOwoJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgICA4LCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoQWN0dWFsIFRvcnF1ZSBiYXNlZCBvbmx5IG9uIFRZTyAqIDEwMC4wKSAvICgxMDAvMjU0KSkpOwoJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcgkoaCwgICAwLCAgOCwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoQWN0dWFsIFRvcnF1ZSAqIDEwMC4wKSAvICgxMDAvMjU0KSkpOwoJCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDIwMyk7Cgl9CiovCQoJCgkvKgoJICogUENNIDIxNQoJICovCglpZiAgKE1vZGUgZXEgTW9kZS5FbmFibGUgQWxsKQoJewoJCUNhbkNvbW1zLlR4SW5pdGlhbGlzZShoLCA4KTsKLy8JCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgIDYzLCAJICBUb3JxdWUgRG93biBFbmFibGU7IC8vVG9ycXVlIERvd24gRW5hYmwgZS0+IDA9Tm8gMT1ZZXMKLy8JCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgIDYyLCAJICBCYXR0ZXJ5IE9mZjsgLy9CYXR0ZXJ5IE9mZiAtPiAwPU5vIDE9WWVzCi8vCQlDYW5Db21tcy5TZXRCaXQJICAgICAgICAJKGgsICA2MSwgCSAgUENNIEFCUyBGYWlsOyAvL0Nhcm5raW5nIEZsYWcgLT4gMD1ObyAxPVllcwoJCUNhbkNvbW1zLlNldEJpdAkgICAgICAgIAkoaCwgIDU2LCAJICBFbmdpbmUgU3RhdGUgZXEgRW5naW5lIFN0YXRlLkNyYW5rKTsgLy8gQ2FybmtpbmcgRmxhZy0+IDA9Tm8gMT1ZZXMJCgkJQ2FuQ29tbXMuU2V0VW5zaWduZWRJbnRlZ2VyCShoLCAgNDgsICA4LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChUaHJvdHRsZSBQb3NpdGlvbiAqIDEwMC4wKSAvIDAuNSkpOyAvL0VsZWN0cmljYWwgVGhyb3R0bGUgUG9zaXRpb24KLy8JCUNhbkNvbW1zLlNldEludGVnZXIJKGgsICAzMiwgIDE2LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKChFbmdpbmUgTG9zcyBUb3JxdWUgKiA/Pz8pIC8gMS4wKSk7Ci8vCQlDYW5Db21tcy5TZXRJbnRlZ2VyCShoLCAgMTYsICAxNiwgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcigoRW5naW5lIFRvcnF1ZSB3aXRoIFRvcnF1ZSBEb3duICogPz8/KSAvIDEuMCkpOwovLwkJQ2FuQ29tbXMuU2V0SW50ZWdlcgkoaCwgICAwLCAgMTYsIENvbnZlcnQuVG9VbnNpZ25lZEludGVnZXIoKEVuZ2luZSBUb3JxdWUgdy9vIFRvcnF1ZSBEb3duICogPz8/KSAvIDEuMCkpOwoJCW9rID0gb2sgYW5kIENhbkNvbW1zLlR4U3RhbmRhcmQoaCwgYnVzLCAweDIxNSk7Cgl9CgkKCS8qCgkgKiBTaHV0IHVwIGJ1aWxkCgkgKi8KCW9rID0gb2s7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Communications">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Electronic Power Steering Enable">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<FONT size=3 face="Times New Roman"></FONT>
+<P style="MARGIN: 0cm 0cm 10pt"><SPAN style="LINE-HEIGHT: 115%; FONT-FAMILY: 'Arial', 'sans-serif'; COLOR: black; FONT-SIZE: 10pt">When <EM class="device_enum">Enabled</EM>&nbsp;a CAN message is sent to enable the&nbsp;Mazda RX8 Electronic Power Steering.</SPAN></P><FONT size=3 face="Times New Roman"></FONT>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Electronic Power Steering Enable.Value">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Mode">
+        <Props Type="::This.Electronic Power Steering Activation Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt;'>method used to enable the&nbsp;Mazda RX8 Electronic Power Steering.</span>]]>
+        </Comment>
+       </Component>
+       <Component Classname="MoTeC Input.Indexed Switch" Name="Base.Electronic Power Steering Enable.Switch">
+        <Comment>
+<![CDATA[<P class="device_help">A two position switch function (assigns an <EM class="device_enum">A</EM> or <EM class="device_enum">B</EM> state to each of the possible switch positions) which can be linked to one of <EM class="device_chan">Driver Switch N</EM> or <EM class="device_chan">Driver Rotary Switch N</EM>.</P>
+<P class="device_help">When <EM class="device_enum">On</EM> this enables the&nbsp;Electronic Power Steering. <EM class="device_item">Electronic Power Steering Enable Switch Type</EM>&nbsp;needs to be set to <EM class="device_enum">Switch</EM>.</P>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Electronic Power Steering Enable.Switch.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Index">
+        <Props Type="::This.Mazda RX8 Driver Switch Index Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Index.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.Electronic Power Steering Enable.Switch.Position"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Electronic Power Steering Enable.Switch.Mapping"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Default"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Default.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Zero.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.One"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.One.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Two"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Two.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Three"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Zero"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Four"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Four.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Five"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Five.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Six"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Six.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Seven"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Seven.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Eight"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Eight.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Nine"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Nine.Value"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Electronic Power Steering Enable.Switch.Update"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Electronic Power Steering Enable.Update">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEVuZ2luZSBTdGF0ZSBlcSBFbmdpbmUgU3RhdGUuUnVuKQp7CglWYWx1ZSA9IFZhbHVlLkVuYWJsZWQ7Cn0KZWxzZQp7CglpZiAoVGhpcy5Nb2RlIGVxIFRoaXMuTW9kZS5FQ1UgT24pIC8vQWx3YXlzIG9uIHdpdGggRUNVCgl7CgkJVmFsdWUgPSBWYWx1ZS5FbmFibGVkOwoJfQoJZWxzZSBpZiAoVGhpcy5Nb2RlIGVxIFRoaXMuTW9kZS5Td2l0Y2ggYW5kIFRoaXMuU3dpdGNoIGVxIFRoaXMuU3dpdGNoLk9uKSAvL1R1cm5zIG9uIHdpdGggc3dpdGNoCgl7CgkJVmFsdWUgPSBWYWx1ZS5FbmFibGVkOwoJfQoJZWxzZQoJewoJCVZhbHVlID0gVmFsdWUuRGlzYWJsZWQ7Cgl9Cn0=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Electronic Power Steering Enable.Switch.Mapping.Three.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Tyre Pressure Monitoring">
+        <Comment>
+<![CDATA[Values and status of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Lamp Output">
+        <Props Type="::Hardware.av_switch.sw_state">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Status of the Mazda RX8 Tyre Pressure Monitoring Lamp&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Tyre Pressure Monitoring.Tyre 1">
+        <Props UseDefValue="true" DefValue="This.Pressure"/>
+        <Comment>
+<![CDATA[Tyre pressure values of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 1.Pressure">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 1.Battery">
+        <Props Type="::This.Tyre Pressure Monitor Battery Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Battery status&nbsp;of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Tyre Pressure Monitoring.Tyre 2">
+        <Props UseDefValue="true" DefValue="This.Pressure"/>
+        <Comment>
+<![CDATA[Tyre pressure values of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 2.Pressure">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 2.Battery">
+        <Props Type="::This.Tyre Pressure Monitor Battery Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Battery status&nbsp;of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Tyre Pressure Monitoring.Tyre 3">
+        <Props UseDefValue="true" DefValue="This.Pressure"/>
+        <Comment>
+<![CDATA[Tyre pressure values of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 3.Pressure">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 3.Battery">
+        <Props Type="::This.Tyre Pressure Monitor Battery Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Battery status&nbsp;of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Tyre Pressure Monitoring.Tyre 4">
+        <Props UseDefValue="true" DefValue="This.Pressure"/>
+        <Comment>
+<![CDATA[Tyre pressure values of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 4.Pressure">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Tyre Pressure Monitoring.Tyre 4.Battery">
+        <Props Type="::This.Tyre Pressure Monitor Battery Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[Battery status&nbsp;of the Mazda RX8 Tyre Pressure Monitoring system&nbsp;as <span style='color: black; line-height: 115%; font-family: "Arial","sans-serif"; font-size: 10pt; mso-fareast-font-family: Calibri; mso-fareast-theme-font: minor-latin; mso-ansi-language: EN-AU; mso-fareast-language: EN-US; mso-bidi-language: AR-SA;'>received </span>via CAN.]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[TW9kZTsKQ0FOIEJ1czs=]]>
+        </Code>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Mode"/>
+        <Component Name="Airbox Mass Flow"/>
+        <Component Name="Coolant Temperature"/>
+        <Component Name="Cruise Control Enable"/>
+        <Component Name="Cruise Control Speed"/>
+        <Component Name="Cruise Control State"/>
+        <Component Name="Engine Displacement"/>
+        <Component Name="Engine Oil Pressure Low Switch"/>
+        <Component Name="Engine Over Rev Warning"/>
+        <Component Name="Engine Speed"/>
+        <Component Name="Engine State"/>
+        <Component Name="Fuel Pulse"/>
+        <Component Name="High Speed Fuel Pump Status"/>
+        <Component Name="Ignition Rotor 1 Timing"/>
+        <Component Name="Inlet Air Temperature"/>
+        <Component Name="Number of Rotors"/>
+        <Component Name="Transmission Type"/>
+        <Component Name="Throttle Position"/>
+        <Component Name="Vehicle Speed"/>
+        <Component Name="Wheel Circumference"/>
+        <Component Name="Communications">
+         <Component Name="Transmit 100Hz"/>
+         <Component Name="Transmit 20Hz"/>
+         <Component Name="Receive 100Hz"/>
+         <Component Name="Startup"/>
+        </Component>
+        <Component Name="Calculation"/>
+        <Component Name="CAN Bus"/>
+        <Component Name="Engine Speed Rate Of Change"/>
+        <Component Name="Throttle Position Rate Of Change"/>
+        <Component Name="Coolant Level Switch">
+         <Component Name="State"/>
+         <Component Name="Voltage"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Pullup Control">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Active Edge">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Threshold">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Hysteresis">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Debounce">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="UpdateDiagnostic"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Engine Oil Level Switch">
+         <Component Name="State"/>
+         <Component Name="Voltage"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Pullup Control">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Active Edge">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Threshold">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Hysteresis">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Debounce">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reserve"/>
+         <Component Name="Release"/>
+         <Component Name="Initialise"/>
+         <Component Name="UpdateDiagnostic"/>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Electronic Power Steering Enable">
+         <Component Name="Value"/>
+         <Component Name="Mode"/>
+         <Component Name="Switch">
+          <Component Name="Value"/>
+          <Component Name="Index">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Position"/>
+          <Component Name="Mapping">
+           <Component Name="Default">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Zero">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="One">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Two">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Three">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Four">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Five">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Six">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Seven">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Eight">
+            <Component Name="Value"/>
+           </Component>
+           <Component Name="Nine">
+            <Component Name="Value"/>
+           </Component>
+          </Component>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Update"/>
+        </Component>
+        <Component Name="Park Brake Status"/>
+        <Component Name="Tyre Pressure Monitoring">
+         <Component Name="Lamp Output"/>
+         <Component Name="Tyre 1">
+          <Component Name="Pressure"/>
+          <Component Name="Battery"/>
+         </Component>
+         <Component Name="Tyre 2">
+          <Component Name="Pressure"/>
+          <Component Name="Battery"/>
+         </Component>
+         <Component Name="Tyre 3">
+          <Component Name="Pressure"/>
+          <Component Name="Battery"/>
+         </Component>
+         <Component Name="Tyre 4">
+          <Component Name="Pressure"/>
+          <Component Name="Battery"/>
+         </Component>
+        </Component>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Mazda RX8 2004 Integration">
+     <Module Name="Mazda RX8 2004"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

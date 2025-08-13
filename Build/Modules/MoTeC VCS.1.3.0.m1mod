@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC VCS" VersionMajor="1" VersionMinor="3" BuildNumber="0">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0018"/>
+ <DataTypes>
+  <Type Name="VCS Diagnostic Enumeration" Storage="enum" Default="Unknown">
+   <Enum Name="CAN Bus Timeout" ContainerOrder="1" Tags="Fault"/>
+   <Enum Name="Unknown" ContainerOrder="2"/>
+   <Enum Name="Initialising DSP" ContainerOrder="3" Tags="Information"/>
+   <Enum Name="Waiting for DSP" ContainerOrder="4" Tags="Information"/>
+   <Enum Name="Configuring DSP" ContainerOrder="5" Tags="Information"/>
+   <Enum Name="Stopped" ContainerOrder="6"/>
+   <Enum Name="Recording" ContainerOrder="7"/>
+   <Enum Name="USB" ContainerOrder="8"/>
+   <Enum Name="DSP Recovery" ContainerOrder="9"/>
+   <Enum Name="CF Card Full" ContainerOrder="10" Tags="Information"/>
+   <Enum Name="Polling DSP" ContainerOrder="11"/>
+   <Enum Name="Synchronisation Failure" ContainerOrder="0"/>
+  </Type>
+ </DataTypes>
+ <DependantModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="3" VersionBuild="1"/>
+ </DependantModules>
+ <Modules>
+  <TemplateStream>
+   <List>
+    <TemplateGroup Name="Comms"/>
+    <Template Base="BuiltIn.GroupCompound" Name="Comms.VCS">
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Script" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration" TargetCreation="AutoParam" Target="This.Value"/>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.CAN Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.CAN Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0"/>
+         </Params>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.CAN Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.Sync Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.Sync Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0"/>
+         </Params>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.Sync Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.VCS Diagnostic Enumeration"/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Memory Used">
+        <Props Qty="ratio">
+         <Locale>
+          <Default Unit="%" Min="0.00000000000000000e+000" Max="1.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Supply Voltage">
+        <Props Qty="V">
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="2.40000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Temperature">
+        <Props Qty="K">
+         <Locale>
+          <Default Min="0.00000000000000000e+000" Max="8.00000000000000000e+001"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Script">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.500MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgaCA9IENhbkNvbW1zLlJ4T3BlbkV4dGVuZGVkKENBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MDAwMDAwMjAsIDB4MDAwMDAwMDAsIHRydWUpOwpsb2NhbCBkID0gRGlhZ25vc3RpYy5Bc0ludGVnZXIoKTsKCmlmIChDYW5Db21tcy5SeE1lc3NhZ2UoaCkKCWFuZCAoQ2FuQ29tbXMuR2V0TGVuZ3RoKGgpIGVxIDgpKQp7CglpZiAoQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCAwLCA4KSBlcSAwKQkvKiBjb21wb3VuZCBJRCAwICovCgl7CgkJTWVtb3J5IFVzZWQgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMTYsIDgpICogMS4wZS0yOwoJCWQgPSBDYW5Db21tcy5HZXRVbnNpZ25lZEludGVnZXIoaCwgMjQsIDgpICsgMTsKCQlTdXBwbHkgVm9sdGFnZSA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihoLCAzMiwgMTYpICogMS4wZS0yOwoJCVRlbXBlcmF0dXJlID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihoLCA0OCwgMTYpICogMS4wZS0yOwoKCQlDQU4gVGltZXIuU3RhcnQoMy4wKTsKCX0KfQplbHNlIGlmIChDQU4gVGltZXIuUmVtYWluaW5nKCkgPD0gMCkKewoJZCA9IFZDUyBEaWFnbm9zdGljIEVudW1lcmF0aW9uLkNBTiBCdXMgVGltZW91dC5Bc0ludGVnZXIoKTsKfQoKaWYgKFN5bmMgVGltZXIuUmVtYWluaW5nKCkgPD0gMCkKewoJaWYgKCBub3QgVkNTLlN5bmNocm9uaXNlKENBTiBCdXMuQXNJbnRlZ2VyKCksIDB4MDIxKSkKCXsKCQlkID0gVkNTIERpYWdub3N0aWMgRW51bWVyYXRpb24uU3luY2hyb25pc2F0aW9uIEZhaWx1cmUuQXNJbnRlZ2VyKCk7Cgl9CgoJU3luYyBUaW1lci5TdGFydCg2MC4wKTsKfQoKRGlhZ25vc3RpYy5TZXQoZCk7]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[Q0FOIFRpbWVyLlN0YXJ0KDIuMCk7ClN5bmMgVGltZXIuU3RhcnQoNS4wKTs=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.CAN Bus.Value"/>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="CAN Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+        <Component Name="Sync Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+        <Component Name="Diagnostic"/>
+        <Component Name="Memory Used"/>
+        <Component Name="Supply Voltage"/>
+        <Component Name="Temperature"/>
+        <Component Name="Script"/>
+        <Component Name="Startup"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Template>
+   </List>
+   <Organisation>
+    <TemplateGroup Name="Comms">
+     <Template Name="VCS"/>
+    </TemplateGroup>
+   </Organisation>
+  </TemplateStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

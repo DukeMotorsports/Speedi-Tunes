@@ -1,0 +1,2354 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC SLM" VersionMajor="1" VersionMinor="5" BuildNumber="7">
+ <System VersionMajor="1" VersionMinor="3" VersionRelease="16" VersionBuild="0034"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version</h4>
+            <ul class="device_help">
+              <li class="device_help">Initial release.</li>
+            </ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="4" VersionBuild="2"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="SLM Colour Enumeration" Storage="enum" Default="Red">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Red" ContainerOrder="1">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Orange" ContainerOrder="2">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Yellow" ContainerOrder="3">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Blue" ContainerOrder="5">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Green" ContainerOrder="4">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Cyan" ContainerOrder="6">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="Magenta" ContainerOrder="7">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+   <Enum Name="White" ContainerOrder="8">
+    <Help>
+<![CDATA[]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Staged SLM State Enumeration" Storage="enum" Default="Off">
+   <Enum Name="Off" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">The M1 is requesting that the SLM switch all lights off.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stage 1" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">The M1 is requesting that the SLM display the stage 1 pattern.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stage 2" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The M1 is requesting that the SLM display the stage 2 pattern.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stage 3" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The M1 is requesting that the SLM display the stage 3 pattern.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stage 4" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">The M1 is requesting that the SLM display the stage 4 pattern.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Stage 5" ContainerOrder="5">
+    <Help>
+<![CDATA[<p class="device_help">The M1 is requesting that the SLM display the stage 5 pattern.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Warning" ContainerOrder="6">
+    <Help>
+<![CDATA[<p class="device_help">The M1 is requesting that the SLM display the stage warning pattern.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Staged SLM Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="CAN Bus Timeout" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">No SLM data has been received for longer than 1 second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">SLM message reception is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The SLM is operating correctly.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Staged SLM Priority Enumeration" Storage="enum" Default="Shift Lights">
+   <Enum Name="Shift Lights" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Shift lights will override warning lights.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Warning" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">Warning lights will override shift lights.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Comms"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Comms.Staged SLM">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class communicates with a MoTeC Shift Light Module (SLM).</p>
+            <p class="device_help">The SLM lights can be controlled in engine speed dependent stages and by a warning input.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">CAN Bus Input Object</h3>
+            <p class="device_help">Controls the CAN bus used to transmit and receive SLM messages.</p>
+            <h3 class="device_help">Mode Input Object</h3>
+            <p class="device_help">Controls the overall operation of the class.</p>
+            <p class="device_help">When <em class="device_enum">Enabled</em> SLM communication is enabled.</p>
+            <h3 class="device_help">Engine Speed Input Object</h3>
+            <p class="device_help">Connect to the engine speed channel in the project.</p>
+            <h3 class="device_help">Gear Input Object</h3>
+            <p class="device_help">Connect to the gear channel in the project.</p>
+            <p class="device_help">If no gear channel is available configure as a constant.</p>
+            <h3 class="device_help">Warning State Input Object</h3>
+            <p class="device_help">Connect to the warning state channel in the project.</p>
+            <p class="device_help">When this channel has a value greater than 0 the warning pattern will be displayed.</p>
+            <h3 class="device_help">Priority Input Object</h3>
+            <p class="device_help">Controls the pattern priority.</p>
+            <h2 class="device_help">Data Types</h2>
+            <h3 class="device_help">Gear Data Type</h3>
+            <p class="device_help">Controls the data type used for the gear input. Typically set to Gear Enumeration.</p>
+            <p class="device_help">If the project has no gear channel this will need to be configured with a dummy data type containing a
+              single enumerator.</p>
+            <h3 class="device_help">Warning State Data Type</h3>
+            <p class="device_help">Controls the data type used for the warning state input. Typically set to Warning Source Enumeration.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Event</h3>
+            <p class="device_help">The rate at which SLM messages are decoded and transmitted.</p>
+            <h2 class="device_help">External Dependencies</h2>
+            <p class="device_help">A 'CAN Bus' class is required to initialise the CAN bus.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.Reference" Name="Base.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">The CAN bus used to transmit and receive SLM messages.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Diagnostic">
+        <Props Type="::This.Staged SLM Diagnostic Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the SLM.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Timeout">
+        <Props Qty="s" Value="1.000000e+000"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Power Level">
+        <Props Qty="ratio">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" Min="0.000000e+000" Max="1.000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Power level as received from the SLM.</p>
+                  <p class="device_help">Refer to the SLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Firmware Version">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Firmware version as received from the SLM.</p>
+                  <p class="device_help">Refer to the SLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Serial Number">
+        <Props Type="s32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Serial number as received from the SLM.</p>
+                  <p class="device_help">Refer to the SLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Internal Temperature">
+        <Props Qty="K">
+         <Locale>
+          <Default DPS="0" Min="-4.000000e+001" Max="8.500000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Internal temperature as received from the SLM.</p>
+                  <p class="device_help">Refer to the SLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Battery Voltage">
+        <Props Qty="V" Validation="MinMax" ValMin="0.000000e+000" ValMax="2.400000e+001">
+         <Locale>
+          <Default DPS="3" Min="0.000000e+000" Max="1.400000e+001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Vehicle battery voltage as received from the SLM.</p>
+                  <p class="device_help">Refer to the SLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Timer" Name="Base.Timer"/>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Set" Caps="AutoCreated" Name="Base.Timer.Start">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Timeout" Type="f32" Attrs="0"/>
+         </Params>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Timer.Remaining" Caps="AutoCreated" Name="Base.Timer.Remaining">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+        </Signature>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Reset.Countdown">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reset countdown as received from the SLM.</p>
+                  <p class="device_help">Refer to the SLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Reset.Source">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reset source as received from the SLM.</p>
+                  <p class="device_help">Refer to the SLM documentation for more information.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration" TargetCreation="AutoConst" Target="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the operation of the SLM message transmit and receive subsystem.</p>
+                  <p class="device_help">Set to <em class="device_enum">Enabled</em> if SLM messages should be transmitted and received.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Reset">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Update">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.1S"/>
+          <Entry Value="res.knl.500MS"/>
+          <Entry Value="res.knl.200MS"/>
+          <Entry Value="res.knl.100MS"/>
+          <Entry Value="res.knl.50MS"/>
+          <Entry Value="res.knl.20MS"/>
+          <Entry Value="res.knl.10MS"/>
+          <Entry Value="res.knl.5MS"/>
+          <Entry Value="res.knl.2MS"/>
+          <Entry Value="res.knl.1MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgcnggPSBDYW5Db21tcy5SeE9wZW5TdGFuZGFyZChDQU4gQnVzLkFzSW50ZWdlcigpLCAweDAyYSwgMHgwMDAsIHRydWUpOwpsb2NhbCB0eCA9IENhbkNvbW1zLlR4T3Blbih0cnVlKTsKCndoZW4gKE1vZGUpCnsKCWlzIChFbmFibGVkKQoJewoJCS8qIFJlY2VpdmUgU0xNIGNhbiBtZXNzYWdlcyAqLwoJCWlmIChDYW5Db21tcy5SeE1lc3NhZ2UocngpKQoJCXsKCQkJbG9jYWwgbXNnID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihyeCwgMCwgOCk7CgkJCWlmIChtc2cgZXEgMSkKCQkJewoJCQkJUG93ZXIgTGV2ZWwgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCA4LCA4KSAqIDAuMDYyNTsKCQkJCVJlc2V0LlNvdXJjZSA9IENhbkNvbW1zLkdldFVuc2lnbmVkSW50ZWdlcihyeCwgNDgsIDgpOwoJCQkJUmVzZXQuQ291bnRkb3duID0gQ2FuQ29tbXMuR2V0VW5zaWduZWRJbnRlZ2VyKHJ4LCA1NiwgOCk7CgkJCX0KCQkJZWxzZSBpZiAobXNnIGVxIDApCgkJCXsKCQkJCUludGVybmFsIFRlbXBlcmF0dXJlID0gQ2FuQ29tbXMuR2V0SW50ZWdlcihyeCwgOCwgOCk7CgkJCQlCYXR0ZXJ5IFZvbHRhZ2UgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCAxNiwgMTYpICogMC4wMTsKCQkJCUZpcm13YXJlIFZlcnNpb24gPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCAzMiwgMTYpICogMC4wMTsKCQkJCVNlcmlhbCBOdW1iZXIgPSBDYW5Db21tcy5HZXRJbnRlZ2VyKHJ4LCA0OCwgMTYpOwoJCQl9CgkJCVRpbWVyLlN0YXJ0KFRpbWVvdXQpOwoJCX0KCgkJbG9jYWwgbGMgMSA9IC0xOwoJCWxvY2FsIGxjIDIgPSAtMTsKCQlsb2NhbCBsYyAzID0gLTE7CgkJbG9jYWwgbGMgNCA9IC0xOwoJCWxvY2FsIGxjIDUgPSAtMTsKCQlsb2NhbCBsYyA2ID0gLTE7CgkJbG9jYWwgbGMgNyA9IC0xOwoJCWxvY2FsIGxjIDggPSAtMTsKCQlsb2NhbCBsaSAxID0gMC4wOwoJCWxvY2FsIGxpIDIgPSAwLjA7CgkJbG9jYWwgbGkgMyA9IDAuMDsKCQlsb2NhbCBsaSA0ID0gMC4wOwoJCWxvY2FsIGxpIDUgPSAwLjA7CgkJbG9jYWwgbGkgNiA9IDAuMDsKCQlsb2NhbCBsaSA3ID0gMC4wOwoJCWxvY2FsIGxpIDggPSAwLjA7CgkJbG9jYWwgcyA9IFN0YXRlLk9mZjsKCQkKCQlpZiAoUHJpb3JpdHkgZXEgUHJpb3JpdHkuU2hpZnQgTGlnaHRzKQoJCXsKCQkJaWYgKFdhcm5pbmcgU3RhdGUuQXNJbnRlZ2VyKCkgPiAwKQoJCQl7CgkJCQlleHBhbmQgKG4gPSAxIHRvIDgpCgkJCQl7CgkJCQkJbGMgJChuKSA9IFdhcm5pbmcuTEVEICQobikuQ29sb3VyLkFzSW50ZWdlcigpOwoJCQkJCWxpICQobikgPSBXYXJuaW5nLkxFRCAkKG4pLkludGVuc2l0eTsKCQkJCX0KCgkJCQlzID0gU3RhdGUuV2FybmluZzsKCQkJfQoJCX0KCgkJZXhwYW5kIChuID0gMSB0byA1KQoJCXsKCQkJaWYgKEVuZ2luZSBTcGVlZCA+PSBTdGFnZSAkKG4pLkVuZ2luZSBTcGVlZCkKCQkJewoJCQkJZXhwYW5kIChvID0gMSB0byA4KQoJCQkJewoJCQkJCWxvY2FsIGNvbG91ciA9IFN0YWdlICQobikuTEVEICQobykuQ29sb3VyLkFzSW50ZWdlcigpOwoJCQkJCWxvY2FsIGludGVuc2l0eSA9IFN0YWdlICQobikuTEVEICQobykuSW50ZW5zaXR5OwoJCQkJCWlmIChjb2xvdXIgPj0gMCBhbmQgaW50ZW5zaXR5ID4gMC4wKQoJCQkJCXsKCQkJCQkJbGMgJChvKSA9IGNvbG91cjsKCQkJCQkJbGkgJChvKSA9IGludGVuc2l0eTsKCQkJCQl9CgkJCQl9CgoJCQkJcyA9IFN0YXRlLlN0YWdlICQobik7CgkJCX0KCQl9CgoJCWlmIChQcmlvcml0eSBlcSBQcmlvcml0eS5XYXJuaW5nKQoJCXsKCQkJaWYgKFdhcm5pbmcgU3RhdGUuQXNJbnRlZ2VyKCkgPiAwKQoJCQl7CgkJCQlleHBhbmQgKG4gPSAxIHRvIDgpCgkJCQl7CgkJCQkJbG9jYWwgY29sb3VyID0gV2FybmluZy5MRUQgJChuKS5Db2xvdXIuQXNJbnRlZ2VyKCk7CgkJCQkJbG9jYWwgaW50ZW5zaXR5ID0gV2FybmluZy5MRUQgJChuKS5JbnRlbnNpdHk7CgkJCQkJaWYgKGNvbG91ciA+PSAwIGFuZCBpbnRlbnNpdHkgPiAwLjApCgkJCQkJewoJCQkJCQlsYyAkKG4pID0gY29sb3VyOwoJCQkJCQlsaSAkKG4pID0gaW50ZW5zaXR5OwoJCQkJCX0KCQkJCX0KCgkJCQlzID0gU3RhdGUuV2FybmluZzsKCQkJfQoJCX0KCgkJLyogVHJhbnNtaXQgU0xNIGNhbiBtZXNzYWdlcyAqLwoJCUNhbkNvbW1zLlR4SW5pdGlhbGlzZSh0eCwgOCk7CgoJCWV4cGFuZCAobiA9IDEgdG8gOCkKCQl7CgkJCWlmIChsYyAkKG4pID49IDAgYW5kIGxpICQobikgPiAwLjApCgkJCXsKCQkJCWxvY2FsIGludGVuc2l0eSA9IDQgKyBsaSAkKG4pICogMjc7CgkJCQlsb2NhbCBiaXRvZmYgPSAoJChuKSAtIDEpICogODsKCQkJCUNhbkNvbW1zLlNldFVuc2lnbmVkSW50ZWdlcih0eCwgYml0b2ZmLCAgMywgQ29udmVydC5Ub1Vuc2lnbmVkSW50ZWdlcihsYyAkKG4pKSk7CgkJCQlDYW5Db21tcy5TZXRVbnNpZ25lZEludGVnZXIodHgsIGJpdG9mZiArIDMsICA1LCBDb252ZXJ0LlRvVW5zaWduZWRJbnRlZ2VyKGludGVuc2l0eSkpOwoJCQl9CgkJfQoKCQlpZiAoQ2FuQ29tbXMuVHhTdGFuZGFyZCh0eCwgQ0FOIEJ1cy5Bc0ludGVnZXIoKSwgMHgwMjkpIGFuZCBUaW1lci5SZW1haW5pbmcoKSA+IDAuMCkKCQl7CgkJCURpYWdub3N0aWMgPSBEaWFnbm9zdGljLk9LOwoJCX0KCQllbHNlCgkJewoJCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5DQU4gQnVzIFRpbWVvdXQ7CgkJfQoJCQoJCVN0YXRlID0gczsKCX0KCWlzIChEaXNhYmxlZCkKCXsKCQlTdGF0ZSA9IFN0YXRlLk9mZjsKCQlEaWFnbm9zdGljID0gRGlhZ25vc3RpYy5Ob3QgaW4gVXNlOwoJCUJhdHRlcnkgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQlJbnRlcm5hbCBUZW1wZXJhdHVyZSA9IENhbGN1bGF0ZS5OQU4oKTsKCQlQb3dlciBMZXZlbCA9IENhbGN1bGF0ZS5OQU4oKTsKCQlTZXJpYWwgTnVtYmVyID0gMDsKCQlGaXJtd2FyZSBWZXJzaW9uID0gQ2FsY3VsYXRlLk5BTigpOwoJCVJlc2V0LlNvdXJjZSA9IDA7CgkJUmVzZXQuQ291bnRkb3duID0gMDsKCX0KfQo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Mode.Value">
+        <Props Value="Enabled"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to the stage 1 pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Stage 1.Engine Speed">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Gear"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the engine speed above which this pattern is applied.</p>
+                  <p class="device_help">This pattern may be overridden by a higher stage or by the warning pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Stage 1.Engine Speed.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm" Min="0.00000000000000000e+000" Max="6.00000000000000000e+004"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Stage 1.Engine Speed.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Stage 1.Engine Speed.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 1">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 1.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 1.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 2">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 2.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 2.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 3">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 3.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 3.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 4">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 4.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 4.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 5">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 5.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 5.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 6">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 6.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 6.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 7">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 7.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 7.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 1.LED 8">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 8.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 1.LED 8.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to the stage 2 pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Stage 2.Engine Speed">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Gear"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the engine speed above which this pattern is applied.</p>
+                  <p class="device_help">This pattern may be overridden by a higher stage or by the warning pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Stage 2.Engine Speed.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm" Min="0.00000000000000000e+000" Max="6.00000000000000000e+004"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Stage 2.Engine Speed.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Stage 2.Engine Speed.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 1">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 1.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 1.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 2">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 2.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 2.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 3">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 3.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 3.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 4">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 4.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 4.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 5">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 5.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 5.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 6">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 6.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 6.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 7">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 7.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 7.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 2.LED 8">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 8.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 2.LED 8.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to the stage 3 pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Stage 3.Engine Speed">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Gear"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the engine speed above which this pattern is applied.</p>
+                  <p class="device_help">This pattern may be overridden by a higher stage or by the warning pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Stage 3.Engine Speed.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm" Min="0.00000000000000000e+000" Max="6.00000000000000000e+004"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Stage 3.Engine Speed.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Stage 3.Engine Speed.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 1">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 1.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 1.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 2">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 2.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 2.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 3">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 3.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 3.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 4">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 4.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 4.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 5">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 5.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 5.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 6">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 6.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 6.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 7">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 7.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 7.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 3.LED 8">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 8.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 3.LED 8.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to the stage 4 pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Stage 4.Engine Speed">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Gear"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the engine speed above which this pattern is applied.</p>
+                  <p class="device_help">This pattern may be overridden by a higher stage or by the warning pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Stage 4.Engine Speed.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm" Min="0.00000000000000000e+000" Max="6.00000000000000000e+004"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Stage 4.Engine Speed.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Stage 4.Engine Speed.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 1">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 1.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 1.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 2">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 2.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 2.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 3">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 3.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 3.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 4">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 4.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 4.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 5">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 5.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 5.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 6">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 6.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 6.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 7">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 7.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 7.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 4.LED 8">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 8.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 4.LED 8.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to the stage 5 pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Stage 5.Engine Speed">
+        <Props>
+         <Axis>
+          <X Source="Parent.Parent.Gear"/>
+         </Axis>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the engine speed above which this pattern is applied.</p>
+                  <p class="device_help">This pattern may be overridden by a higher stage or by the warning pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Stage 5.Engine Speed.Value">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm" Min="0.00000000000000000e+000" Max="6.00000000000000000e+004"/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Stage 5.Engine Speed.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Stage 5.Engine Speed.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 1">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 1.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 1.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 2">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 2.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Event" Creation="Custom" Visible="1" TargetCpt="This.Update" TargetRef="SelectedTrigger" DisplayName="Event"/>
+         <Property Name="Gear Data Type" Creation="Custom" Visible="1" TargetCpt="This.Gear" TargetRef="Type" DisplayName="Gear Data Type"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Warning State Data Type" Creation="Custom" Visible="1" TargetCpt="This.Warning State" TargetRef="Type" DisplayName="Warning State Data Type"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Gear" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Warning State" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Priority" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to a MoTeC Shift Light Module (SLM) device connected via CAN.
+                  </p>
+                  <p class="device_help">Data is transmitted to the SLM on <em class="device_item">CAN Bus</em> at the default IDs.</p>
+                  <p class="device_help">For this device to function the following items must be calibrated:
+                    <ul class="device_help">
+                      <li class="device_help">Set <em class="device_item">Mode</em> to <em class="device_enum">Enabled</em>.</li>
+                      <li class="device_help">Configure <em class="device_item">CAN Bus</em>.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">The SLM is configured in five engine speed dependant stages. For each stage an engine speed can
+                    be defined for each gear. Within each stage the colour and intensity of each of the eight LEDs can
+                    be configured.</p>
+                  <p class="device_help">An additional <em class="device_group">Warning</em> group overrides the stage settings with configurable colour and
+                    intensity of each of the eight LEDs.</p>
+                  <p class="device_help"><em class="device_ref">Priority</em> defines the precedence of the two indications:
+                    <ul class="device_help">
+                      <li class="device_help">If <em class="device_ref">Priority</em> is set to <em class="device_enum">Shift Lights</em>, <em class="device_group">Stage 1</em> to <em class="device_group">Stage 5
+                        </em> lights will override any warning lights.</li>
+                      <li class="device_help">If <em class="device_ref">Priority</em> is set to <em class="device_enum">Warning</em>, <em class="device_group">Stage 1</em> to <em class="device_group">Stage 5</em>
+                        lights will be overridden by any warning lights.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 3">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 3.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 3.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 4">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 4.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 4.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 5">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 5.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 5.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 6">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 6.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 6.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 7">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 7.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 7.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Stage 5.LED 8">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 8.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 8.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to the warning pattern.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 1">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 1.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 1.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 2">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Stage 5.LED 2.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 2.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 3">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 3.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 3.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 4">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 4.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 4.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 5">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 5.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 5.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 6">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 6.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 6.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 7">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 7.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 7.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Warning.LED 8">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 8.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 8.Intensity">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.000000e+000" ValMax="1.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%" DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the intensity of the LED.</p>
+                  <p class="device_help">If the intensity is set to 0.0 the colour and intensity from the previous pattern will be used.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Gear">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Warning State">
+        <Props Type="::Hardware.switch.state"/>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.Staged SLM State Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Current pattern state.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Warning.LED 2.Colour">
+        <Props Type="::This.SLM Colour Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines the colour of the LED.</p>
+                  <p class="device_help">If the colour is set to <em class="device_enum">Off</em> the colour and intensity from the previous pattern will be
+                    used.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Priority">
+        <Props Type="::This.Staged SLM Priority Enumeration"/>
+        <Comment>
+<![CDATA[<p class="device_help">Controls the priority of the SLM patterns.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="CAN Bus">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Engine Speed"/>
+        <Component Name="Gear"/>
+        <Component Name="Warning State"/>
+        <Component Name="Priority"/>
+        <Component Name="State"/>
+        <Component Name="Diagnostic"/>
+        <Component Name="Battery Voltage"/>
+        <Component Name="Internal Temperature"/>
+        <Component Name="Power Level"/>
+        <Component Name="Serial Number"/>
+        <Component Name="Firmware Version"/>
+        <Component Name="Reset">
+         <Component Name="Source"/>
+         <Component Name="Countdown"/>
+        </Component>
+        <Component Name="Stage 1">
+         <Component Name="Engine Speed">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="LED 1">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 2">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 3">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 4">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 5">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 6">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 7">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 8">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+        </Component>
+        <Component Name="Stage 2">
+         <Component Name="Engine Speed">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="LED 1">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 2">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 3">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 4">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 5">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 6">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 7">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 8">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+        </Component>
+        <Component Name="Stage 3">
+         <Component Name="Engine Speed">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="LED 1">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 2">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 3">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 4">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 5">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 6">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 7">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 8">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+        </Component>
+        <Component Name="Stage 4">
+         <Component Name="Engine Speed">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="LED 1">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 2">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 3">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 4">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 5">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 6">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 7">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 8">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+        </Component>
+        <Component Name="Stage 5">
+         <Component Name="Engine Speed">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="LED 1">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 2">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 3">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 4">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 5">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 6">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 7">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 8">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+        </Component>
+        <Component Name="Warning">
+         <Component Name="LED 1">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 2">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 3">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 4">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 5">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 6">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 7">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+         <Component Name="LED 8">
+          <Component Name="Colour"/>
+          <Component Name="Intensity"/>
+         </Component>
+        </Component>
+        <Component Name="Timeout"/>
+        <Component Name="Update"/>
+        <Component Name="Timer">
+         <Component Name="Start"/>
+         <Component Name="Remaining"/>
+        </Component>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <ModuleGroup Name="Old"/>
+    <ModuleGroup Name="Old.Comms"/>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Comms">
+     <Module Name="Staged SLM"/>
+    </ModuleGroup>
+    <ModuleGroup Name="Old">
+     <ModuleGroup Name="Comms"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

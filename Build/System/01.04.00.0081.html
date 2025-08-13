@@ -1,0 +1,1489 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>MoTeC M1 System Release Notes</title>
+    <style type="text/css">
+      <!--
+    body {
+      font-size: 10pt;
+      font-family: Arial;
+    }
+
+    div.container {
+      margin-left: auto;
+      margin-right: auto;
+      width: 800px;
+    }
+
+    h4 {
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    h5 {
+      margin-left: 12px;
+    }
+
+    table {
+      border: 0;
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 0;
+    }
+
+    a img {
+      border:none;
+      vertical-align:top;
+    }
+
+    .revision {
+      border: 1px solid #A0A0A0;
+      background-color: #F4F4F4;
+      width: 780px;
+      margin-left : 12px;
+      margin-bottom: 32px;
+
+      -moz-box-shadow: 3px 3px 4px #888;
+      -webkit-box-shadow: 3px 3px 4px #888;
+      box-shadow: 3px 3px 4px #888;
+    }
+
+    tr.logo_text{
+      font-family: Arial;
+      color: white;
+      background-color: #303030;
+      width: 100%;
+    }
+
+    td.logo {
+        text-align: left;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    td.date {
+        text-align: right;
+        font-size: 16px;
+        padding-right: 8px;
+    }
+
+    div.revision h4 {
+      background-color: #C0C0C0;
+      margin: 0px;
+      padding: 4px;
+    }
+    -->
+    </style>
+  </head>
+  <!--
+    INSERT_VERSION_HERE is automatically replaced with the current build version.
+    INSERT_DATE_HERE is automatically replaced with the build date
+  -->
+  <body>
+    <div class="container">
+      <table>
+        <tr>
+          <td colspan="2">
+            <a href="http://www.motec.com.au">
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAABkCAIAAADxM8PYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzcxRDFCNjU5RTI0MTFFOUExRkJDQ0FGRkMzNTU0RkQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzcxRDFCNjY5RTI0MTFFOUExRkJDQ0FGRkMzNTU0RkQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNzFEMUI2MzlFMjQxMUU5QTFGQkNDQUZGQzM1NTRGRCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNzFEMUI2NDlFMjQxMUU5QTFGQkNDQUZGQzM1NTRGRCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pn4lP30AADDkSURBVHja7J0JXMzp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"/>
+            </a>
+          </td>
+        </tr>
+        <tr class="logo_text">
+          <td class="logo">MoTeC M1 System 1.4.0</td>
+          <td class="date"/>
+        </tr>
+      </table>
+      <div>
+        <h5>Installation of the latest version:</h5>
+        <ul>
+          <li>In M1 Tune or M1 Build select 'Help-&gt;Check for Updates...'</li>
+        </ul>
+	<div class="revision">
+          <h4>Version 01.04.00.0081 - (14 July 2020)</h4>
+          <h5>New in this version:</h5>
+	  <ul>
+            <li>Feature #21471: CAN: disable receiving own transmitted messages (lower CPU usage)</li>
+          </ul>
+          <h5>M1 Build SDK:</h5>
+          <ul>
+            <li>Bug #21470: SDK: Incorrect NAN behaviour in Filter functions (introduced in SDK 01.04.00.0080)</li>
+          </ul>
+        </div>
+        <h4>Revision History:</h4>
+	<div class="revision">
+          <h4>Version 01.04.00.0080 - (27 June 2020)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #14530: Add Caterpillar C15 reference mode</li>
+            <li>Feature #21060: Add Ford Cyclone reference mode (3.5L V6 Ecoboost GEN1)</li>
+            <li>Feature #21206: Subaru EA82 reference mode</li>
+            <li>Feature #21294: Add General Motors LN3 Reference Mode</li>
+            <li>Feature #21295: Add Ford EA Falcon reference mode</li>
+            <li>Feature #20727: Increase maximum firmware code size</li>
+            <li>Feature #21293: campump: extend maximum hold angle to Camshaft Lobe Pitch</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #21083: sent: spurious Serial CRC diagnostic with multiple sensors</li>
+            <li>Bug #21132: Stale licence information being reported after ECU clear licence is sent [introduced in 01.04.00.0073]</li>
+          </ul>
+          <h5>M1 Build SDK:</h5>
+          <ul>
+            <li>Feature #21296: Add Calculate.IsFinite()</li>
+            <li>Feature #21297: Propagate NAN in table ReverseLoopupX()</li>
+            <li>Feature #21298: handle NAN and infinite in Filter.FirstOrder(), Filter.Minimum() and Filter.Maximum() functions</li>
+            <li>Feature #21331: Add support for "Not in Use" CAN bus to RxOpen*(). Fixes debug like: CanComms.RxStandard: bus -1 invalid</li>
+            <li>Feature #21433: enforce minimum timeout in GPS.Timeout*() to avoid bug reports</li>
+            <li>Bug #20743: Filter object in Absolute Voltage class has an Input tag selected as the default</li>
+            <li>Bug #20786: CAN ID 0 is incorrectly discarded</li>
+            <li>Bug #20990: Code generation fails for a (very) large table (> 32767 sites)</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0079 - (19 February 2020)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #20452: SDK: Add System.Unused() library function as a way to consume unused variables in a clean way</li>
+            <li>Feature #20836: Add Private 7 Reference Mode</li>
+            <li>Feature #20877: UDIG: Add Missed Threshold Diagnostic</li>
+            <li>Feature #20897: SDK: Limit debug messages to 10 per second</li>
+            <li>Feature #20913: Add Navistar T444E Reference Mode (aka Ford Powerstroke 7.3L)</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18438: UDIG Pin Diagnostic falsely reporting Rejected Pulse when debounce setting is changed.</li>
+            <li>Bug #20602: GPS beacon: Baskerville coordinates incorrect</li>
+            <li>Bug #20770: J1919.RxTicks returns 1 when no message has been received</li>
+            <li>Bug #20771: First PG received by J1939 contains zeroes instead of PG data</li>
+            <li>Bug #20816: Logging: occasional missing sample when data retrieved by a user who can not convert</li>
+            <li>Bug #20833: UDIG1: Edge hardware method does not work</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0078 - (20 December 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #20694: Finalise Mazda BP-Z3 reference mode (MX5 NB)</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0077 - (18 December 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #20696: Finalise Hyundai Lambda II T-GDi reference mode</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0076 - (11 December 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #19946: Fix and finalise Peugeot EB2 DTS reference mode</li>
+            <li>Feature #20447: Add and finalise KTM SXF reference mode</li>
+            <li>Feature #20694: Add experimental Mazda BP-Z3 reference mode</li>
+            <li>Feature #20696: Add experimental Hyundai Lambda II T-GDi reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #20327: Periodic measurement: high frequency (above 256 * scheduled rate) reported incorrectly when Sample Teeth = 0</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0075 - (20 September 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #19767: SDK: add default tags to hardware properties</li>
+            <li>Feature #20284: Add Renault F4R reference mode (Renault Clio Sport RS 3)</li>
+            <li>Feature #20403: campump: reduce minimum Hold Duty Cycle</li>
+            <li>Finalise AMC 242 Reference mode (Jeep Cherokee XJ)</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #20288: Incorrect error number (35) may be reported when no space left in ECU</li>
+            <li>Bug #20301: VQ35 reference mode: bad pitch reported during erratic camshaft movement</li>
+            <li>Bug #20384: Minimum Knock TDC spacing does not support 90deg V12 engines</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0074 - (19 July 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #20090: Add Honda Marine BF250D reference mode</li>
+            <li>Feature #20227: CAN: Improve reporting of Bus Off and Transmit Error. Add Receive Error</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0073 - (27 June 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #14292: UDIG1: allow Decoded Digital measurement method (for non-engine applications)</li>
+            <li>Feature #19999: Document Ford Boss 6.2L and Indmar Raptor in Ford Coyote reference mode</li>
+            <li>Feature #20015: Add Volkswagen EA211 reference mode</li>
+            <li>Feature #20043: Library.System.*() Library.Logging.*(): increase update rate to 10Hz</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #20032: Crash due to occasional memory corruption by CAN driver transmit</li>
+            <li>Bug #20059: After Sending firmware which is too large (Device Error: line 297, code=28) send a "good" package may fail (Device Error: line 270, code=16)</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0072 - (24 May 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Cummins B series reference mode</li>
+            <li>Finalise 2ZR reference mode (adjust for 8AR)</li>
+            <li>Document Mercedes M159 engine support</li>
+            <li>Feature #19652: SDK: Update GPS venues</li>
+            <li>Feature #19768: SDK: GPSLap.Calculate() report diagnostic when GPS not Valid</li>
+            <li>Feature #19769: SDK: Add System.rand() for random number generation</li>
+            <li>Feature #19800: Adjust BMW S50 Reference Mode camshaft pattern</li>
+            <li>Feature #19946: Add Peugeot EB2 DTS reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #19771: Evenly spaced camshaft patterns: glitch in Tooth Index channel (cosmetic - introduced in 01.04.00.0067)</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0071 - (28 February 2019)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #19647: decode: DIG4 not supported but could be selected</li>
+            <li>Bug #19649: decode: SENT protocol: diagnostic not updating for some sensors (Introduced in 1.4.0.58)</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0070 - (15 February 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>FIA inspected version</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0069 - (4 February 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Honda S07A reference mode (Honda S660 Roadster)</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0068 - (30 January 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise General Motors Optispark (ABITS) reference mode</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0067 - (29 January 2019)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #19532: Add Cummins ISB reference mode (Ram 2500)</li>
+            <li>Feature #19541: Add AMC 242 Reference mode (Jeep Cherokee XJ)</li>
+            <li>Feature #19542: Add Honda S07A reference mode (Honda S660 Roadster)</li>
+            <li>Feature #19556: Add Toyota 2ZR reference mode (Lotus Elise 2012-)</li>
+            <li>Feature #19558: decode: SENT protocol: add support for secure serial sensors with 18usec tick period (eg Lamborghini EGT)</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #19303: SDK: Calculate Hysteresis(), Between(), Beyond() assume false on startup</li>
+            <li>Bug #19536: Single Tooth Camshaft: control not working with System >= 01.04.00.0064</li>
+          </ul>
+          <h5>Experimental Reference Modes are now documented in help</h5>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0066 - (21 November 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise General Motors LLR reference mode</li>
+            <li>Finalise Volkswagen EA189 reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #19398: reference: an Error may be occasionally detected resulting in Engine Stall when valid teeth rejected due to excessive Pin Debounce at high engine speed</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Nano</li>
+            <li>General Motors Optispark</li>
+            <li>Honda J35A</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0065 - (7 November 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #19394: SDK: Increase CANBlock reception priority to support 200Hz (was 50Hz)</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18345: Synchronous DI Fuel Pump: occasional output glitch resulting in pressure exceeding aim</li>
+            <li>Bug #19330: alternate reference: Engine Speed held indefinitely when switching to an input that is not detecting edges</li>
+            <li>Bug #19393: SDK: previous data not preserved if CanComms.RxMessage returned false (behaviour changed in 1.04.00.0060)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Nano</li>
+            <li>General Motors LLR</li>
+            <li>General Motors Optispark</li>
+            <li>Honda J35A</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0064 - (16 October 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #12860: Replace Camshaft phase filtering with edge learning for faster response</li>
+            <li>Feature #19229: Add General Motors LLR reference mode: 5-cylinder 3.7L in H3 Hummer</li>
+            <li>Feature #19321: Add Ford Nano reference mode: 2.7L V6 Turbo GDI (also branded Ecoboost)</li>
+            <li>Finalise Honda CBR250RR reference mode</li>
+            <li>Finalise Gibson (Zytek) ZA348 reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #19248: SDK generates Hard Float warnings (introduced in 1.4.0.62)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Nano</li>
+            <li>General Motors LLR</li>
+            <li>General Motors Optispark</li>
+            <li>Honda J35A</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0063 - (7 September 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Production update only so far</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>General Motors Optispark</li>
+            <li>Honda J35A</li>
+            <li>Honda CBR250RR</li>
+            <li>Gibson (Zytek) ZA348</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0062 - (31 August 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #18976: Add VR30DETT Reference Mode</li>
+            <li>Feature #19159: M130 and M170: Support 12 cylinders (high impedance injectors and wasted spark)</li>
+            <li>Finalise Suzuki K6A reference mode</li>
+            <li>Finalise Nissan MR16DDT reference mode</li>
+            <li>Adjust Rover K Series reference mode and document Lotus Elise reference offset</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>General Motors Optispark</li>
+            <li>Honda J35A</li>
+            <li>Honda CBR250RR</li>
+            <li>Gibson (Zytek) ZA348</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0061 - (2 July 2018)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18825: M14x: "Low Side Injection" should be "Low Side Injector"</li>
+            <li>Bug #18864: evenly spaced camshaft teeth not supported for DI fuel pumps (Fix MR16DDT)</li>
+            <li>Bug #18881: SDK: RxMessage behaviour changed (introduced in 1.04.00.0060 SDK)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>General Motors Optispark</li>
+            <li>Nissan MR16DDT</li>
+            <li>Suzuki K6A</li>
+            <li>Honda J35A</li>
+            <li>Honda CBR250RR</li>
+            <li>Gibson (Zytek) ZA348</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0060 - (4 June 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #18783: SDK: Add CanComms.RxFindMessage() and RxOpen*Buffered() for improved CAN message processing</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18656: CanComms.GetID() library function help incorrect</li>
+            <li>Fix Ford Coyote GEN3 (M050C) reference mode</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>General Motors Optispark</li>
+            <li>Nissan MR16DDT</li>
+            <li>Suzuki K6A</li>
+            <li>Honda J35A</li>
+            <li>Honda CBR250RR</li>
+            <li>Gibson (Zytek) ZA348</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0059 - (1 May 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #18211: Add General Motors Optispark (ABITS) reference mode</li>
+            <li>Feature #18652: Add Ford Coyote GEN3 (M050C) reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Fix Nissan MR16DDT reference mode</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>General Motors Optispark</li>
+            <li>Nissan MR16DDT</li>
+            <li>Suzuki K6A</li>
+            <li>Honda J35A</li>
+            <li>Honda CBR250RR</li>
+            <li>Gibson (Zytek) ZA348</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0058 - (21 March 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #18489: decode: SENT protocol: add support for secure serial sensors and improve decoding performance on UDIG pins</li>
+            <li>Feature #18497: Add Honda CBR250RR reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18458: alternate reference: can lock to wrong position in cycle</li>
+            <li>Bug #18472: SDK: compound receive incorrectly restricted to multiple of 8 CAN base address</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Suzuki K6A</li>
+            <li>Honda J35A</li>
+            <li>Honda CBR250RR</li>
+            <li>Gibson (Zytek) ZA348</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0057 - (27 February 2018)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #6957: Bridge outputs: Add Absolute Voltage measurement support (see channel help)</li>
+            <li>Feature #16606: Add Suzuki K6A reference mode</li>
+            <li>Feature #17780: SDK: alternate reference: report engine speed once per revolution for stable measurement with uneven teeth</li>
+            <li>Feature #18100: Support Ford 2017 6.7L Power Stroke Diesel (adjust PSA EP6DTS reference mode)</li>
+            <li>Feature #18381: Add Honda J35A reference mode</li>
+            <li>Feature #18382: Add Nissan MR16DDT reference mode</li>
+            <li>Feature #18424: Add Gibson (Zytek) ZA348 reference mode</li>
+            <li>Feature #18432: Update GPS Venues</li>
+            <li>Finalise Corvette C4 ZR1 reference mode</li>
+            <li>Document Subaru Forester EJ253 engine support</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18300: SENT: spurious Serial Format diagnostic reported after CRC diagnostic</li>
+            <li>Bug #18413: decode: SENT protocol: pause pulse could trigger CRC Diagnostic</li>
+            <li>Bug #18433: GPS track help missing -ve sign on small angles (eg Valencia Longitude)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Suzuki K6A</li>
+            <li>Honda J35A</li>
+            <li>Gibson (Zytek) ZA348</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0056 - (5 December 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #18076: decode: SENT protocol: add support for pause pulse (eg VW fuel pressure sensor)</li>
+            <li>Feature #18201: decode: add Hella Oil Level sensor support (eg VW and Honda)</li>
+            <li>Feature #18232: Improve Diagnostic reporting to show Injector Supply Voltage = 0 also disables ignition current source</li>
+            <li>Feature #18256: Add Bosch 140 40 36M1 reference mode (eg Polaris Rebel)	</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18259: SDK: J1939.RxTicks(): loss of precision in usec to tick conversion</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0055 - (27 November 2017)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>SDK: J1939: fix dm22 handling</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0054 - (16 November 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #18172: SDK: J1939: Change DTC integration to handle duplicate SPNs</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0053 - (3 November 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #18072: Add Honda Civic 2016+ L15B7 reference mode 98</li>
+            <li>Feature #18073: Add Rover K Series reference mode 97</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #18083: port injection hardware: Incorrect ignition output operation (charge time not set - introduced in System 01.04.00.0052)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0052 - (2 November 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #17624: Add Lamborghini LP520 GT3 reference mode</li>
+            <li>Feature #17869: SDK: Add support for J1939 CAN protocol</li>
+            <li>Feature #17870: SDK: Add support for forwarding messages between CAN busses</li>
+            <li>Feature #18065: Add Private 5 and Private 6 reference modee</li>
+            <li>Feature #18061: sync: Add Bad Sensor detection to remaining reference modes:</li>
+            <ul>
+              <li>Fiat TwinAir</li>
+              <li>Honda Bike Synchronisation</li>
+              <li>Honda K20</li>
+              <li>Nissan RB26</li>
+              <li>Nissan RB30</li>
+              <li>Nissan SR20</li>
+              <li>Private 3</li>
+              <li>Scania DC16</li>
+              <li>Subaru EJ20G</li>
+            </ul>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #17598: Periodic measurement: timeout from low frequency may report a high frequency glitch when Sample Teeth > 1 (introduced in System 01.04.00.0046)</li>
+            <li>Bug #18019: SDK: CanComms.SetInteger(): negative values clobber preceeding data in message</li>
+            <li>Bug #18022: SDK: CanComms.SetBit() does not clear the bit when val = false</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0051 - (24 July 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #17600: SDK: Add special purpose torque control functions</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #17349: CAN capture message timestamps 2.4% fast when using M1 gateway</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0050 - (28 June 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Volvo B5244S reference mode 92</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0049 - (23 June 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #10438: SDK: Add Incremental Encoder hardware class</li>
+            <li>Feature #17408: SDK: Add Nissan VQ35 Custom reference mode 93</li>
+            <li>Feature #17429: Ethernet: Improve detection of bad packets and recovery from missing packets</li>
+            <li>Finalise Ford Cosworth YB reference mode 91</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #17433: can bus: reconfiguration could wait forever and trigger a watchdog reset</li>
+            <li>fix typo in version 01.04.00.0048: "Incrememtal" in Incremental Encoder hardware class name</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+            <li>Volvo B5244S</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0047 - (8 June 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #17344: SDK: Isuzu 4JK1 reference mode: faster cycle lock and document support for Mitsubishi Triton 4N15</li>
+            <li>Feature #17345: SDK: Add Volkswagen EA189 reference mode 90 (eg VW Jetta CJAA)</li>
+            <li>Feature #17346: SDK: Add Nissan YS23DDT reference mode 89 (eg Diesel Navara)</li>
+            <li>Feature #17347: SDK: Add Ford Cosworth YB reference mode 91</li>
+            <li>Feature #17348: SDK: Add Volvo B5244S reference mode 92</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #17285: System.SerialNumber() reports 0 when firmware starts (VCS sync messages report serial number 0)</li>
+            <li>Bug #17295: Reference Modes: fractional tooth counts (eg 32 / 360) do not get Cycle Lock (introduced in 01.04.00.0035)</li>
+            <li>Bug #17327: FPGA image does not start correctly if sent again when already running (symptom of M1 Tune Bug #17326)</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Volkswagen EA189</li>
+            <li>Nissan YS23DDT</li>
+            <li>Ford Cosworth YB</li>
+            <li>Volvo B5244S</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0046 - (25 May 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15089: INJ_D: support using B outputs to drive piezo injectors</li>
+            <li>Feature #17176: Reference: reduce Stall detection engine speed from 60rpm to 20rpm</li>
+            <li>Feature #17265: SDK: Add LTC.VS() library function (requires latest LTC-N firmware)</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16907: Periodic measurement: infinite pulse width still reported if pin transitions to inactive after timeout with pin active</li>
+            <li>Bug #16926: Periodic measurement: erratic frequency reported below 100Hz with missing teeth and Sample teeth > 1</li>
+            <li>Bug #17039: LIN communication may not recover from noise in some cases</li>
+            <li>Bug #17072: SDK: table reverse lookup does not honour extrapolation settings</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0045 - (10 April 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #16893: SDK: M181 / M141: Adjust Injector supply validation limits to reflect hardware capability</li>
+            <li>Feature #17056: SDK: Add 100k CAN bus speed</li>
+            <li>Finalise Ford Duratec reference mode Bank2 support (eg Ford 3.7 Cyclone)</li>
+            <li>Aston Martin AJ37 reference mode: document Ford 5.4L 3-valve v8 support</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16967: ref: Multi Tooth Two Stroke mode not working (broken in 01.04.00.0035)</li>
+            <li>Bug #17059: gateway: timeout during short examine command</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0044 - (20 February 2017)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16668 Large log setup may not work (M1 Tune could exceed maximum log packet entries)</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0043 - (17 January 2017)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Chrysler FCA / 3.6L Pentastar reference mode</li>
+	  </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16586: Crash in CAN gateway and CAN inspector time scaling 0.25 of actual (introduced in 01.04.00.0041)</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0042 - (6 December 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #16522: INJ_D: support more than one DI injector per cylinder</li>
+            <li>Feature #16540: SDK: Allow faster scheduling for Alternate Reference selection</li>
+	  </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16542: SDK: crc8() offset calculation wrong for little-endian messages</li>
+            <li>Bug #16549: sync: most appropriate diagnostic is sometimes not displayed</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Chrysler Pentastar</li>
+          </ul>
+        </div>
+	<div class="revision">
+          <h4>Version 01.04.00.0041 - (30 November 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #16513: SDK: Optimise IsNan() to reduce CPU usage</li>
+            <li>Finalise Honda K24Z7 reference mode</li>
+            <li>Finalise Aston Martin AJ37 reference mode</li>
+	  </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16424: CAN Capture Tool: message timestamp incorrect when M1 used as gateway</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Chrysler Pentastar</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0040 - (11 November 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Nissan VK56DE reference mode</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Honda K24Z7</li>
+            <li>Aston Martin AJ37</li>
+            <li>Chrysler Pentastar</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0039 - (28 October 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #16267: SDK: Add Aston Martin AJ37 reference mode</li>
+            <li>Feature #16268: SDK: Add Chrysler FCA / 3.6L Pentastar reference mode</li>
+            <li>Feature #16344: SDK: Increase INJ_D Peak Maximum Current for Inductive with Boost drive strategy</li>
+	  </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Honda K24Z7</li>
+            <li>Aston Martin AJ37</li>
+            <li>Chrysler Pentastar</li>
+	  </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0038 - (12 October 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Toyota 1GD-FTV reference mode</li>
+            <li>Finalise Volvo B4204T reference mode</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Honda K24Z7</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0037 - (7 October 2016)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16238: Wrong Cycle Lock position for redundant Bank 1 camshafts on "One Missing" and "Two Missing" reference modes (introduced in 1.4.0.35)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Toyota 1GD-FTV</li>
+            <li>Volvo B4204T</li>
+            <li>Honda K24Z7</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0036 - (22 September 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15693: SDK: Add Volvo B4204T reference mode</li>
+            <li>Feature #16187: SDK: Add Honda K24Z7 reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16164: SDK: E8xx PWM outputs may not be enabled (disable field byte[4] in CAN message was not initialised to 0)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Toyota 1GD-FTV</li>
+            <li>Volvo B4204T</li>
+            <li>Honda K24Z7</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0035 - (12 September 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15189: Add Bad Sensor detection to one tooth sync</li>
+            <li>Feature #16066: SDK: Add Mercury Mercruiser 1075 reference mode</li>
+            <li>Feature #16128: Change 'Pulse Buffer' Pulse channel to indicate the most recently updated pulse</li>
+            <li>Feature #16151: Ref: add automatic multi-tooth camshaft support to generic modes (eg BMW S50B30)</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #16129: SDK: NMEA 0183 decode only accepted GPS satellite system identifier. Change to accept all (eg GNSS and GLONASS)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Toyota 1GD-FTV</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0034 - (10 August 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Bosch 60 120 180 reference mode (eg BMW S63). Note replaces S1000RR</li>
+            <li>Feature #15952: Add digital decode support to Digital Input (DIG) pins</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Toyota 1GD-FTV</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0033 - (27 July 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15819: Support DI pump on INJ_D outputs</li>
+            <li>Feature #15859: Fuel: change to Pulse Angle 1 priority instead of Limit Angle priority when Timing Edge is End of Injection.
+	      <b>This may affect fuel timing if Limit Angle was incorrectly set, but the result is now more obvious when there are conflicting settings.</b></li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #13859: Fuel: first fuel pulse may be delayed if start of first pulse and end of last pulse cover more than one cycle</li>
+            <li>Bug #15786: Reference Tooth Count > 255 does not work</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Bosch 60 120 180 (if inlet / exhaust camshaft position is used)</li>
+            <li>Toyota 1GD-FTV</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0032 - (28 June 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Toyota 1KD-FTV diesel Reference mode</li>
+            <li>Pulse Buffer / dual edge camshafts: detect missing pulses in 1 cycle (was 1.5 cycles)</li>
+            <li>Feature #15619: SDK: Add more "Delay.Signal" functions. Update to properly model a variable transport delay.</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Bosch 60 120 180 (if inlet / exhaust camshaft position is used)</li>
+            <li>Toyota 1GD-FTV</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0031 - (17 June 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15422: SDK: Add Private 4 reference mode</li>
+            <li>Feature #15550: SDK: Add Kia G4TH reference mode</li>
+            <li>Feature #15551: SDK: Add Toyota 1KD-FTV diesel Reference mode</li>
+            <li>Feature #15552: SDK: Add Bosch 60 120 180 reference mode (eg BMW S63). Note replaces S1000RR</li>
+            <li>Feature #15584: SDK: Add Crankshaft 12P15 Two Stroke reference mode</li>
+            <li>Feature #15586: SDK: Add Toyota 1GD-FTV diesel Reference mode</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Toyota 1KD-FTV</li>
+            <li>Bosch 60 120 180 (if inlet / exhaust camshaft position is used)</li>
+            <li>Toyota 1GD-FTV</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0030 - (17 May 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15263: Input Capture: increase minimum sample rate to accommodate narrow crank pulses</li>
+            <li>Feature #15301: SDK: Add CanComm.SetFixed7DP library function</li>
+            <li>Feature #15317: SDK: Hybrid input: support Hitachi combined common rail fuel pressure and temperature sensor</li>
+            <li>Feature #15365: Alternate reference: improve diagnostic speed measurement with missing / additional tooth modes</li>
+            <li>Feature #15368: SDK: Hybrid input: Add Hella OILP+T sensor support</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #15297: Campump: reduction pump pulse generation erratic with some pulse positions</li>
+            <li>Bug #15329: flash memory corruption prevented sending package</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0029 - (22 April 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15220: SDK: Add Isuzu 4JK1 reference mode</li>
+            <li>Feature #15221: SDK: Add Bosch 140 40 Alternate reference mode (eg EcoBoost 1.0 M-Sport cams)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0028 - (18 April 2016)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #15187: Incorrectly calculated scrutineering hash in System file (regression in 01.04.00.0020)</li>
+            <li>Piezo injector support: suppress spurious output diagnostics</li>
+            <li>Piezo injector support: temporarily prevent using INJ_DxB outputs</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0026 - (15 April 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Denso 270 90 Magnetic reference mode (eg Port Injected AJ41 AJ-V8)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0025 - (12 April 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15154: Add Universal Switch measurement support to OUT_HB and OUT_LS resources (for driver switch support)</li>
+            <li>Feature #15157: SDK: Add Denso 270 90 Magnetic reference mode (eg Port Injected Jaguar AJ-V8 AJ41)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+            <li>Denso 270 90 Magnetic</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0024 - (8 April 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #15109: Add Absolute measurement support to UDIG, CAN, E8XX and FIRMWARE resources (for rotary switch support)</li>
+            <li>Feature #15110: SDK: Add combined frequency and pulse width measurement type to decoded inputs (for Flex-fuel sensor temperature)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0023 - (31 March 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Subaru EZ30 reference mode</li>
+            <li>Feature #15064: Ignore Narrow Pitch Threshold and Wide Pitch Threshold for multi-tooth modes</li>
+            <li>Minor changes that may change behaviour of the following reference modes:</li>
+            <ul>
+              <li>Toyota 2JZ_GE</li>
+              <li>Toyota 1FZ_FE</li>
+              <li>Mazda L3</li>
+              <li>Chrysler SRT8 2011</li>
+              <li>Mazda MX5 2006</li>
+              <li>Mercedes M120</li>
+              <li>Mazda RX8 (13B-MSP)</li>
+              <li>Mitsubishi 4B11 (Evo X)</li>
+              <li>Subaru FA20 DIT</li>
+              <li>Subaru FA20D</li>
+              <li>Subaru EJ207AVCS</li>
+              <li>Subaru EJ20G</li>
+            </ul>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0022 - (17 March 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #14989 SDK: Extend validation range for Camshaft Offset</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Subaru EZ30</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0021 - (4 March 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Mercedes M120 reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #14884: Small time discrepancy between logging and ECU outputs</li>
+            <li>Bug #14915: Glitch in sensor / diagnostic values after data reverted due to Ethernet disconnect</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Subaru EZ30</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0020 - (22 February 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #14842: ref: add redundant "Bank 1" camshaft inputs to "One Missing" and "Two Missing" reference modes</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #14840: SDK: Learning table Adjust() has no effect with some specific input values</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Mercedes M120</li>
+            <li>Subaru EZ30</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0019 - (4 February 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #14694: Add CanComms.CRC8 library function</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Mercedes M120</li>
+            <li>Subaru EZ30</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0018 - (22 January 2016)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #14647: SDK: add configuration to 'Pulse Buffer' hardware class</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #14632: firmware with extra channels may result in channel displaying 0 in M1 Tune</li>
+            <li>Bug #14633: Occasional data logging file corruption after power-cycle</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Mercedes M120</li>
+            <li>Subaru EZ30</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0017 - (18 December 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #13984: SDK: add INJ_D 'Boost Hold Time' to optionally maintain Peak Maximum Current</li>
+            <li>Feature #14547: SDK: add INJ_D 'Open Time' for finer control of diagnostic detection</li>
+            <li>Feature #14436: SDK: Extend Library.Switch array size</li>
+            <li>Feature #14452: SDK: Add CAN message statistics</li>
+            <li>Feature #14526: SDK: Add 'Pulse Buffer' hardware class for engine synchronous pulse measurement</li>
+            <li>Feature #14530: SDK: Add Private 2 reference mode</li>
+            <li>Feature #14531: SDK: Add Private 3 reference mode</li>
+            <li>Feature #14532: SDK: Add Subaru EZ30 reference mode</li>
+            <li>Feature #14533: SDK: Add Corvette C4 ZR1 reference mode</li>
+            <li>Feature #14539: SDK: Add CanComms.Parity() library function</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Mercedes M120</li>
+            <li>Subaru EZ30</li>
+            <li>Corvette C4 ZR1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0016 - (20 November 2015)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Finalise Chrysler SRT8 2005 reference mode</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Honda K20C1</li>
+            <li>Mercedes M120</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0015 - (19 November 2015)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Chrysler SRT8 2005 experimental reference mode was based on incorrect information</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Honda K20C1</li>
+            <li>Mercedes M120</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0014 - (18 November 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise early Dodge Viper reference mode</li>
+            <li>Finalise General Motors LS1 reference mode</li>
+            <li>Feature #14410: SDK: Add Mazda Skyactiv G reference mode 69</li>
+            <li>Feature #14411: SDK: Add Honda K20C1 reference mode 70</li>
+            <li>Feature #14412: SDK: Add Mercedes M120 reference mode 71</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #11822: Error erasing flash when sending system to new ECU prevented subsequent attempts to send</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+            <li>Nissan VK56DE if inlet camshaft position is used</li>
+            <li>Mazda SkyActiv G</li>
+            <li>Honda K20C1</li>
+            <li>Mercedes M120</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0013 - (14 October 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise BMW S50 reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #14185: CAN gateway: memory leak could crash system</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+            <li>General Motors LS1</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0012 - (23 September 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Toyota 1UZ FE reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #14143: periodic input: large frequency reported on startup with dynamic sample teeth (introduced in 01.04.00.0010)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+            <li>General Motors LS1</li>
+            <li>BMW S50B32</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0011 - (18 September 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #10443: SDK: Add General Motors LS1 (gen 3) reference mode</li>
+            <li>Feature #11993: SDK: add BMW S50B32 reference mode</li>
+            <li>Feature #12458: RB26, RB30, SR20 reference modes: smooth instantaneous engine speed and disable tooth ratio diagnostics</li>
+            <li>Feature #14124: SDK: Add Toyota 1UZ FE reference mode</li>
+            <li>Feature #14125: SDK: Add Mitsubishi 6M60 reference mode</li>
+            <li>Feature #14129: BMW N55 reference mode: add Bank 2 camshafts to support N74 V12</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+            <li>General Motors LS1</li>
+            <li>BMW S50B32</li>
+            <li>Toyota 1UZ FE</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0010 - (31 August 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Hyundai Lambda II reference mode</li>
+            <li>Feature #4356: periodic input: Dynamic sample teeth for better speed prediction</li>
+            <li>Feature #13692: SDK: Add Hyundai Lambda II reference mode</li>
+            <li>Feature #13811: SDK: Allow Universal Switch to update at higher rates</li>
+            <li>Feature #13958: fuel injector: support 100% duty when off_time > 0</li>
+            <li>Feature #14065: CAN: reduce transmit CPU usage</li>
+            <li>Feature #14066: Data Logging and flash memory performance and stability improvements</li>
+            <li>Feature #14067: INJ_D: improve current threshold management to prevent occasional miss fire and Diagnostic with some injectors</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #13780: Logging does not start if a log sector is corrupt (needed to erase logging) Requires M1 Tune >= 1.4.0.41</li>
+            <li>Bug #13783: Ethernet driver reports errors with some hardware behaviours</li>
+            <li>Bug #13905: periodic input: occasional high frequency glitch when period exceeds timeout</li>
+            <li>Bug #13931: periodic input: edge ticks changes every 4 seconds when input is stable</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0009 - (30 June 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Feature #13692: Add Hyundai Lambda II reference mode</li>
+            <li>Revert #13652 to suit M1 Build 1.4.0.18</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+            <li>Hyundai Lambda II</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0008 - (25 June 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Rename comms resources from Custom to Firmware</li>
+            <li>SDK: Rename CanBlock.SetCustom() to System.SetFirmwareResource()</li>
+            <li>Improve injector behaviour when subjected to severe electrical noise</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0007 - (24 June 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Mazda L3 reference mode</li>
+            <li>Feature #13652: SDK: Rework firmware startup - now run all events in reverse priority order before starting periodic events</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0006 - (15 June 2015)</h4>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>adjust ratiometric input validation limits</li>
+            <li>CAN gateway fixes for SIM3</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda L3 reference mode for Mazda 2.3L</li>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0005 - (4 June 2015)</h4>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>Finalise Toyota 2UR-GSE reference mode</li>
+          </ul>
+          <h5>Fixed in this version:</h5>
+          <ul>
+            <li>Bug #13509: Duplicate "CAN 0 Offset 2" resource name</li>
+            <li>Bug #13536: crash when Reference Tooth Count is invalid (introduced in 1.4.0.0003)</li>
+            <li>Bug #13537: Synchronisation / Camshaft position influenced by Reference Pin Debounce (introduced in 1.3.14.0001)</li>
+          </ul>
+          <h5>The following Reference Modes are experimental (logged data is required):</h5>
+          <ul>
+            <li>Mazda L3 reference mode for Mazda 2.3L</li>
+            <li>early Dodge Viper reference mode</li>
+            <li>Ford Duratec if Bank2 used (eg Ford 3.7 Cyclone)</li>
+            <li>Chrysler SRT8 2005</li>
+          </ul>
+        </div>
+        <div class="revision">
+          <h4>Version 01.04.00.0004 - (25 May 2015)</h4>
+          <p>Up to date with Version 1.3.16.0101</p>
+          <h5>New in this version:</h5>
+          <ul>
+            <li>internal version</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

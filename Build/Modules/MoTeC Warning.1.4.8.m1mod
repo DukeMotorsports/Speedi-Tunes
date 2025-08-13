@@ -1,0 +1,1147 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Warning" VersionMajor="1" VersionMinor="4" BuildNumber="8">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0016"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version (01.04.0008)</h4>
+<ul class="device_help">
+<li class="device_help">Hysteresis Quantity and&nbsp;Display Unit can be set independent of Minimum and Maximum.</li>
+<li class="device_help">Warning Minimum Hysteresis validation bug fixed</li></ul>
+<h4 class="device_help">01.04.0004</h4>
+<ul>
+<li>Change Warning with torque limit to Warning with Limits </li>
+<li>
+<div class="device_help">Add Throttle Limit option to warning. </div></li>
+<li>
+<div class="device_help">Fixed behaviour if warning reactives before the reset delay expires (stays in Limit) </div></li>
+<li>
+<div class="device_help">Changed behaviour, the actiavte and limit delays are applied only after the system is enabled.</div></li></ul>
+<h4 class="device_help">01.04.0000</h4>
+<ul class="device_help">
+<li class="device_help">Value inputs refined.</li></ul>
+<h4 class="device_help">01.03.0003</h4>
+<ul class="device_help">
+<li class="device_help">System changed to 01.04.</li>
+<li class="device_help">Tags added.</li>
+<li class="device_help">Make State channels the default value for the warning.</li></ul>
+<h4 class="device_help">01.01.0010</h4>
+<ul class="device_help">
+<li class="device_help">Make Engine Speed Limit a value input.</li>
+<li class="device_help">Introduce Delay Enable.</li>
+<li class="device_help">Expose Delays.</li>
+<li class="device_help">Add 'Minimum Maximum Warning with Torque Limit' class.</li></ul>
+<h4 class="device_help">01.01.0003</h4>
+<ul class="device_help">
+<li class="device_help">Initial release.</li></ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="Warning Enumeration" Storage="enum" Default="OK">
+   <Enum Name="Active" ContainerOrder="1" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The warning is active.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="OK" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">The warning is not active.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Disabled" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The warning is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Limit" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The warning is requesting an engine speed limit or torque limit.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Warning"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Warning.Minimum Maximum Warning">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements a generic minimum/maximum warning. A defined input value is monitored in terms of a
+              minimum and maximum threshold. A warning is generated and an engine speed limit can be applied if the
+              thresholds are exceeded.</p>
+            <h2 class="device_help">Integration</h2>
+            <p class="device_help">The warning class has no scheduled methods. It responds only to external requests.</p>
+            <p class="device_help">When a measurement is made the warning class can be updated as follows:</p>
+<pre class="device_help">local override = false;
+Warning.Update(
+	Sensor,
+	override,
+	Sensor.Diagnostic eq Sensor.Diagnostic.OK and Engine.State eq Engine.State.Run
+);</pre>
+            <p class="device_help">The IsActive method returns true when the warning is <em class="device_enum">Active</em> or <em class="device_enum">Limit</em>. Call the IsActive method
+              to determine the current warning state, for example if countermeasures have to be defined as a reaction to
+              a warning or fault:</p>
+<pre class="device_help">if (Warning.IsActive())
+{
+	// Take some action
+}</pre>
+            <p class="device_help">The GetEngineSpeedLimit method returns the value of 'Engine Speed Limit' when the warning is <em class="device_enum">Limit</em>,
+              otherwise infinity is returned. Call the GetEngineSpeedLimit method to determine the current engine speed
+              limit request and integrate that request into the engine speed limit calculation:</p>
+<pre class="device_help">local limit = Maximum;
+
+if (limit &lt; Warning.GetEngineSpeedLimit())
+{
+	limit = Warning.GetEngineSpeedLimit();
+}
+
+// Set the current engine speed limit to 'limit'</pre>
+            <p class="device_help">See the help on methods below for further details.</p>
+            <p class="device_help">Because of the 'Warning' indicator on warning = <em class="device_enum">Active</em> if M1 Tune is connected the warning status
+              will flash (status line at the bottom of the M1 Tune window). Pressing F3 will open a dialog box showing
+              all current warnings.</p>
+            <p class="device_help">Additional integrations of the warning may include to turn on a warning light or activating an SLM LED
+              via CAN (if available). These additional integrations should be mentioned in the project-specific help on
+              the warning class.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Mode Input Object</h3>
+            <p class="device_help">Controls the overall operation of the class.</p>
+            <p class="device_help">When <em class="device_enum">Enabled</em> warnings can be generated. Usually a parameter.</p>
+            <h3 class="device_help">Minimum Input Object</h3>
+            <p class="device_help">Controls the minimum warning threshold. All input types can be chosen.</p>
+            <p class="device_help">When the monitored value falls below this value a warning can be generated.</p>
+            <h3 class="device_help">Maximum Input Object</h3>
+            <p class="device_help">Controls the maximum warning threshold. All input types can be chosen.</p>
+            <p class="device_help">When the monitored value rises above this value a warning can be generated.</p>
+            <h3 class="device_help">Hysteresis Input Object</h3>
+            <p class="device_help">Controls the warning hysteresis. Usually a parameter.</p>
+            <p class="device_help">The monitored value must be within the range defined by the 'Minimum' and 'Maximum' by this value before
+              the warning can reset.</p>
+            <h3 class="device_help">Engine Speed Limit</h3>
+            <p class="device_help">When the warning is <em class="device_enum">Active</em> for longer than 'Delay Limit', the warning value becomes <em class="device_enum">Limit</em> and the
+              GetEngineSpeedLimit() method returns this value. Usually a parameter.</p>
+            <h3 class="device_help">Delay Enable</h3>
+            <p class="device_help">Enabling the value monitoring is delayed by this value after in.enable of the Update method becomes true.
+              Usually a parameter, but can be set to a constant of 0 if not required.</p>
+            <h3 class="device_help">Delay Activate</h3>
+            <p class="device_help">When the monitored value leaves the range defined by Minimum and Maximum, the activation of the warning
+              (the warning becoming <em class="device_enum">Active</em>) is delayed by this value. Usually a parameter.</p>
+            <h3 class="device_help">Delay Reset</h3>
+            <p class="device_help">When the monitored value returns into the range defined by Minimum, Maximum and Hysteresis, the
+              deactivation of the warning (the warning returning from <em class="device_enum">Active</em> to <em class="device_enum">OK</em>) is delayed by this value.
+              Usually a parameter.</p>
+            <h3 class="device_help">Delay Limit</h3>
+            <p class="device_help">Controls the warning engine speed limit delay. Usually a parameter.</p>
+            <p class="device_help">When the warning is <em class="device_enum">Active</em> for longer than this value it will change to <em class="device_enum">Limit</em>.</p>
+            <h2 class="device_help">Quantity, Display Unit and DPS</h2>
+            <p class="device_help">The quantity, display unit and DPS settings apply to the 'Minimum', 'Maximum' and 'Hysteresis' value
+              inputs.</p>
+            <p class="device_help">These settings should be set to match the monitored value.</p>
+            <h2 class="device_help">Validation</h2>
+            <p class="device_help">The validation settings apply to the 'Minimum' and 'Maximum' value inputs.</p>
+            <h2 class="device_help">Methods</h2>
+            <h3 class="device_help">Update</h3>
+            <table class="device_help">
+              <tbody><tr class="device_help">
+                <th class="device_help">Parameter</th>
+                <th class="device_help">Type</th>
+                <th class="device_help">Description</th>
+              </tr>
+              <tr class="device_help">
+                <td class="device_help">measurement</td>
+                <td class="device_help">Floating Point</td>
+                <td class="device_help">The monitored value.</td>
+              </tr>
+              <tr class="device_help">
+                <td class="device_help">override</td>
+                <td class="device_help">Boolean</td>
+                <td class="device_help">Set to true to explicitly activate the warning.</td>
+              </tr>
+              <tr class="device_help">
+                <td class="device_help">enable</td>
+                <td class="device_help">Boolean</td>
+                <td class="device_help">Set to true to enable the warning.</td>
+              </tr>
+            </tbody></table>
+            <p class="device_help">Updates the state of the warning.</p>
+            <p class="device_help">If 'enable' is true for 'Delay Enable' the warning can become active. This requires 'measurement' to be outside
+            of the range ('Minimum',
+              'Maximum') or 'override' to be true for a time of 'Delay Activate'.</p>
+            <p class="device_help">If the warning is active for 'Delay Limit' an engine speed limit will be requested.</p>
+            <p class="device_help">If 'measurement' has been within the range ('Minimum' + 'Hysteresis', 'Maximum' - 'Hysteresis') for 'Delay Reset'
+              second and 'override' has been false for 'Delay Reset' the warning will reset.</p>
+            <p class="device_help">Note that warning updates and range checks are only be processed when the method is called.</p>
+            <h3 class="device_help">GetEngineSpeedLimit</h3>
+            <p class="device_help">Returns the calibrated 'Engine Speed Limit' when the warning is <em class="device_enum">Limit</em> or infinity if there is no
+              engine speed limit requested.</p>
+            <h3 class="device_help">IsActive</h3>
+            <p class="device_help">Returns true if the warning is <em class="device_enum">Active</em> or <em class="device_enum">Limit</em>.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DPS" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Locale.Default.DPS" DisplayName="DPS"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Hysteresis Display Unit" Creation="Custom" Visible="1" TargetCpt="This.Hysteresis" TargetRef="Locale.Default.Unit" DisplayName="Hysteresis Display Unit"/>
+         <Property Name="Hysteresis Quantity" Creation="Custom" Visible="1" TargetCpt="This.Hysteresis" TargetRef="Qty" DisplayName="Hysteresis Quantity"/>
+         <Property Name="Maximum" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValClampMax" DisplayName="Maximum"/>
+         <Property Name="Maximum Tags" Creation="Custom" Visible="1" TargetCpt="This.Maximum" TargetRef="UserTags" DisplayName="Maximum Tags"/>
+         <Property Name="Maximum Value" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValMax" DisplayName="Maximum Value"/>
+         <Property Name="Minimum" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValClampMin" DisplayName="Minimum"/>
+         <Property Name="Minimum Tags" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="UserTags" DisplayName="Minimum Tags"/>
+         <Property Name="Minimum Value" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValMin" DisplayName="Minimum Value"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Quantity" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Qty" DisplayName="Quantity"/>
+         <Property Name="Type" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Validation" DisplayName="Type"/>
+         <Property Name="Unit" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Locale.Default.Unit" DisplayName="Unit"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Hysteresis" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Activate" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Reset" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">If M1 Tune is connected the warning status will flash (status line at the bottom of the M1 Tune
+                    window). Pressing F3 will open a dialog box showing all current warnings.</p>
+                  <h2 class="device_help">Warning Setup</h2>
+                  <p class="device_help">
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Mode</em> must be <em class="device_enum">Enabled</em>.</li>
+                      <li class="device_help">The warning system enable conditions must be true for <em class="device_item">Delay Enable</em> seconds (if
+                        visible).</li>
+                      <li class="device_help">If the monitored value is equal to or falls below <em class="device_table">Minimum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>.</li>
+                      <li class="device_help">If the monitored value exceeds <em class="device_table">Minimum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset</em>
+                        seconds (if visible) the warning returns to <em class="device_enum">OK</em>.</li>
+                      <li class="device_help">If the monitored value is equal to or rises above <em class="device_table">Maximum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>.</li>
+                      <li class="device_help">If the monitored value falls below <em class="device_table">Maximum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset
+                        </em> seconds (if visible) the warning returns to <em class="device_enum">OK</em>.</li>
+                        <li class="device_help">The monitored value will be ignored when its value is NAN (not a number).</li>
+                      <li class="device_help">Additional conditions to activate or deactivate the warning may apply. See the system help.
+                      </li>
+                    </ul>
+                  <p></p>
+                  <p class="device_help">An engine speed limit will be requested if this warning is <em class="device_enum">Active</em> for <em class="device_param">Delay Limit</em>
+                    seconds.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props Type="::This.Warning Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Count">
+        <Props Type="u32" Storage="Flash">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Number of times the warning has been activated. This value is flash backed.
+                    <ul class="device_help">
+                      <li class="device_help">This value is set to 0 when <em class="device_param">Mode</em> changes to <em class="device_enum">Disabled</em>.</li>
+                      <li class="device_help">This value is set to 0 when firmware is sent.</li>
+                      <li class="device_help">This value increases by 1 each time the warning transitions to <em class="device_enum">Active</em>.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Controls operation of this warning.</p>
+                  <p class="device_help"><em class="device_chan">Count</em> is set to 0 when this value is <em class="device_enum">Disabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Minimum">
+        <Props TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Minimum warning threshold.</p>
+                  <p class="device_help">If the monitored value is equal to or falls below <em class="device_table">Minimum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>. If the monitored value exceeds 
+                        <em class="device_table">Minimum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset</em>
+                        seconds (if visible) the warning returns to <em class="device_enum">OK</em>.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Maximum">
+        <Props Qty="$(Parent.Minimum:Qty)" Validation="$(Parent.Minimum:Validation)" ValClampMin="$(Parent.Minimum:ValClampMin)" ValMin="$(Parent.Minimum:ValMin)" ValClampMax="$(Parent.Minimum:ValClampMax)" ValMax="$(Parent.Minimum:ValMax)" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="$(Parent.Minimum:Locale.Default.Unit)" DPS="$(Parent.Minimum:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Maximum warning threshold.</p>
+                  <p class="device_help">If the monitored value is equal to or rises above <em class="device_table">Maximum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>. If the monitored value falls below 
+                        <em class="device_table">Maximum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset
+                        </em> seconds (if visible) the warning returns to <em class="device_enum">OK</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Activate">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When the monitored value gets equal to or exceeds <em class="device_table">Minimum</em> or <em class="device_table">Maximum</em>, the
+                    activation of the warning (the warning becoming <em class="device_enum">Active</em>) is delayed by this value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Delay.Activate.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Reset">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When the monitored value returns into the range defined by <em class="device_table">Minimum</em>, <em class="device_table">Maximum</em> and <em class="device_param">
+                    Hysteresis</em>, the deactivation of the warning (the warning returning from <em class="device_enum">Active</em> to <em class="device_enum">OK
+                    </em>) is delayed by this value.</p><p class="device_help">Set to 0s to latch the warning <em class="device_enum">Active</em> (or <em class="device_enum">Limit</em>) until the warning is <em class="device_enum">Disabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Delay.Reset.Value">
+        <Props Value="1.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Update">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="measurement" Type="f32" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+          <Param Name="override" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+          <Param Name="enable" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZW5hYmxlZCA9IExpYnJhcnkuRGVsYXkuUmlzaW5nKGluLmVuYWJsZSwgVGhpcy5EZWxheS5FbmFibGUpOwpsb2NhbCBkaXNhYmxlZCA9IG5vdCBlbmFibGVkOwpsb2NhbCBtZWFzdXJlbWVudCA9IGluLm1lYXN1cmVtZW50Owpsb2NhbCBvdmVycmlkZSA9IGluLm92ZXJyaWRlOwpsb2NhbCB2YWxpZCA9IG5vdCBDYWxjdWxhdGUuSXNOQU4obWVhc3VyZW1lbnQpOwpsb2NhbCBoaWdoID0gQ2FsY3VsYXRlLkh5c3RlcmVzaXMobWVhc3VyZW1lbnQsIE1heGltdW0gLSBIeXN0ZXJlc2lzLCBNYXhpbXVtLCAwLjApOwoKc3RhdGljIGxvY2FsIGxvdyA9IGZhbHNlOwppZiAobWVhc3VyZW1lbnQgPCBNaW5pbXVtKSAvL3JlcGxhY2VzIENhbGN1YWx0ZS5IeXN0ZXJlc2lzCnsKCWxvdyA9IHRydWU7Cn0KZWxzZSBpZiAobWVhc3VyZW1lbnQgPiAoTWluaW11bSArIEh5c3RlcmVzaXMpKQp7Cglsb3cgPSBmYWxzZTsKfQoKbG9jYWwgYWN0aXZlID0gTGlicmFyeS5EZWxheS5SaXNpbmcoKChoaWdoIG9yIGxvdykgYW5kIHZhbGlkIGFuZCBlbmFibGVkKSBvciBvdmVycmlkZSwgVGhpcy5EZWxheS5BY3RpdmF0ZSk7CmxvY2FsIGVkZ2UgPSBDaGFuZ2UuVG8oYWN0aXZlIGVxIHRydWUgYW5kIGRpc2FibGVkIGVxIGZhbHNlKTsKbG9jYWwgY2xlYXIgPSBDaGFuZ2UuVG8oTW9kZSBlcSBNb2RlLkRpc2FibGVkKTsKbG9jYWwgaW5hY3RpdmUgPSBMaWJyYXJ5LkRlbGF5LlJpc2luZyhub3QgYWN0aXZlLCBUaGlzLkRlbGF5LlJlc2V0KTsKaW5hY3RpdmUgPSBpbmFjdGl2ZSBhbmQgKFRoaXMuRGVsYXkuUmVzZXQgPiAwLjApOwpsb2NhbCBsaW0gPSBMaWJyYXJ5LkRlbGF5LlJpc2luZyhhY3RpdmUsIFRoaXMuRGVsYXkuTGltaXQpOwpsaW0gPSBsaW0gYW5kIChFbmdpbmUgU3BlZWQgTGltaXQgPiAwLjApOwoKd2hlbiAoTW9kZSkKewoJaXMgKEVuYWJsZWQpCgl7CgkJaWYgKGRpc2FibGVkKQoJCXsKCQkJVmFsdWUgPSBWYWx1ZS5EaXNhYmxlZDsKCQl9CgkJZWxzZSBpZiAobGltKQoJCXsKCQkJVmFsdWUgPSBWYWx1ZS5MaW1pdDsKCQl9CgkJZWxzZSBpZiAoYWN0aXZlIGFuZCBWYWx1ZSBuZXEgVmFsdWUuTGltaXQpCS8vIGlmICdMaW1pdCcgYWxyZWFkeSwgZG9uJ3QgZ28gYmFjayB0byAnQWN0aXZlJwoJCXsKCQkJVmFsdWUgPSBWYWx1ZS5BY3RpdmU7CgkJCWlmIChlZGdlKQoJCQl7CgkJCQlDb3VudCArPSAxOwoJCQkJU3lzdGVtLlByZXNlcnZlKCk7CgkJCX0KCQl9CgkJZWxzZSBpZiAoaW5hY3RpdmUpCgkJewoJCQlWYWx1ZSA9IFZhbHVlLk9LOwoJCX0KCX0KCWlzIChEaXNhYmxlZCkKCXsKCQlWYWx1ZSA9IFZhbHVlLkRpc2FibGVkOwoJCWlmIChjbGVhcikKCQl7CgkJCUNvdW50ID0gMDsKCQkJU3lzdGVtLlByZXNlcnZlKCk7CgkJfQoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Limit">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine speed is limited to <em class="device_table">Engine Speed Limit</em> when the warning has been active for <em class="device_param">Delay
+                    Limit</em> seconds.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Delay.Limit.Value"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.GetEngineSpeedLimit">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[b3V0ID0gVmFsdWUgZXEgVmFsdWUuTGltaXQKCT8gRW5naW5lIFNwZWVkIExpbWl0Cgk6IENhbGN1bGF0ZS5JbmZpbml0eSgpOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.IsActive">
+        <Signature Name="" ReturnType="bool">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[b3V0ID0gVmFsdWUuQXNJbnRlZ2VyKCkgPCAwOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Delay">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed Limit">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine speed is limited to this value when the warning has been active for <em class="device_param">Delay Limit</em>
+                    seconds.</p>
+                  <p class="device_help">Set to 0rpm to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Enable">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Enabling the value monitoring is delayed by this value after the enable conditions of the warning
+                    become true.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Delay.Enable.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Engine Speed Limit.Value"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Engine Speed Limit.Value.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Engine Speed Limit.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Engine Speed Limit.Value.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Maximum.Value.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Maximum.Value.Init"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Maximum.Value.Value"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Maximum.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Minimum.Value.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Minimum.Value.Init"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Minimum.Value.Value"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Minimum.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Hysteresis">
+        <Props Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<P class="device_help">Warning hysteresis.</P>
+<P class="device_help">This value applies to both the minimum and maximum thresholds.</P>
+<P class="device_help">See <EM class="device_table">Minimum</EM> and <EM class="device_table">Maximum</EM> for more information.</P>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="Count"/>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Minimum">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Maximum">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Hysteresis">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Engine Speed Limit">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Delay">
+         <Component Name="Enable">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Activate">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reset">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Limit">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Update"/>
+        <Component Name="GetEngineSpeedLimit"/>
+        <Component Name="IsActive"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+    <Module Base="BuiltIn.GroupCompound" Name="Warning.Minimum Maximum Warning with Limits">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements a generic minimum/maximum warning. A defined input value is monitored in terms of a
+              minimum and maximum threshold. A warning is generated and an engine speed limit and an&nbsp;air flow limit (Throttle Limit or Torque Limit)&nbsp;can be
+              applied if the thresholds are exceeded.</p>
+            <h2 class="device_help">Integration</h2>
+            <p class="device_help">The warning class has no scheduled methods. It responds only to external requests.</p>
+            <p class="device_help">When a measurement is made the warning class can be updated as follows:</p>
+<pre class="device_help">local override = false;
+Warning.Update(
+	Sensor,
+	override,
+	Sensor.Diagnostic eq Sensor.Diagnostic.OK and Engine.State eq Engine.State.Run
+);</pre>
+            <p class="device_help">The IsActive method returns true when the warning is <em class="device_enum">Active</em> or <em class="device_enum">Limit</em>. Call the IsActive method
+              to determine the current warning state, for example if countermeasures have to be defined as a reaction to
+              a warning or fault:</p>
+<pre class="device_help">if (Warning.IsActive())
+{
+	// Take some action
+}</pre>
+            <p class="device_help">The GetEngineSpeedLimit method returns the value of 'Engine Speed Limit' when the warning is <em class="device_enum">Limit</em>,
+              otherwise infinity is returned. Call the GetEngineSpeedLimit method to determine the current engine speed
+              limit request and integrate that request into the engine speed limit calculation:</p>
+<pre class="device_help">local limit = Maximum;
+
+if (limit &lt; Warning.GetEngineSpeedLimit())
+{
+	limit = Warning.GetEngineSpeedLimit();
+}
+
+// Set the current engine speed limit to 'limit'</pre>
+            <p class="device_help">Similarly, the GetTorqueLimit method returns the value of 'Torque Limit' or GetThrottleLimit method returns the value of 'Throttle Limit'&nbsp;when the warning is <em class="device_enum">Limit</em>.
+Generally&nbsp;either Throttle Limiting or Torque Limiting will be used, not both. One (or both) of these methods can be ignored (not called by any scheduled function). If this is the case the unused&nbsp;Limit setting should be set to a constant of 0.&nbsp;So for projects with torque limiting, <em class="device_item">Throttle Limit </em>&nbsp;should be set as a constant of 0. And for projects with&nbsp;throttle limiting,<em class="device_item"> Torque Limit</em> should be set as a constant of 0.</p>
+            <p class="device_help">See the help on methods below for further details.</p>
+            <p class="device_help">Because of the 'Warning' indicator on the warning = <em class="device_enum">Active</em> if M1 Tune is connected the warning status
+              will flash (status line at the bottom of the M1 Tune window). Pressing F3 will open a dialog box showing
+              all current warnings.</p>
+            <p class="device_help">Additional integrations of the warning may include to turn on a warning light or activating an SLM LED
+              via CAN (if available). These additional integrations should be mentioned in the project-specific help on
+              the warning class.</p>
+            <h2 class="device_help">Value Inputs</h2>
+            <h3 class="device_help">Mode Input Object</h3>
+            <p class="device_help">Controls the overall operation of the class.</p>
+            <p class="device_help">When <em class="device_enum">Enabled</em> warnings can be generated. Usually a parameter.</p>
+            <h3 class="device_help">Minimum Input Object</h3>
+            <p class="device_help">Controls the minimum warning threshold. All input types can be chosen.</p>
+            <p class="device_help">When the monitored value falls below this value a warning can be generated.</p>
+            <h3 class="device_help">Maximum Input Object</h3>
+            <p class="device_help">Controls the maximum warning threshold. All input types can be chosen.</p>
+            <p class="device_help">When the monitored value rises above this value a warning can be generated.</p>
+            <h3 class="device_help">Hysteresis Input Object</h3>
+            <p class="device_help">Controls the warning hysteresis. Usually a parameter.</p>
+            <p class="device_help">The monitored value must be within the range defined by the 'Minimum' and 'Maximum' by this value before
+              the warning can reset.</p>
+            <h3 class="device_help">Engine Speed Limit</h3>
+            <p class="device_help">When the warning is <em class="device_enum">Active</em> for longer than 'Delay Limit', the warning becomes <em class="device_enum">Limit</em> and the
+              GetEngineSpeedLimit method returns this value. Usually a parameter.</p>
+            <h3 class="device_help">Torque Limit</h3>
+            <p class="device_help">When the warning is <em class="device_enum">Active</em> for longer than 'Delay Limit', the warning becomes <em class="device_enum">Limit</em> and the
+              GetTorqueLimit method returns this value if it is greater than 0. </p><p class="device_help">For projects with torque limiting this is usually a parameter. If the project uses Throttle Limiting this value should be set to a constant of 0.</p><h3 class="device_help">Throttle Limit</h3><p class="device_help">When the warning is <em class="device_enum">Active</em> for longer than 'Delay Limit', the warning becomes <em class="device_enum">Limit</em> and the              GetThrottleLimit method returns this value if it is greater than 0. </p><p class="device_help">For projects with throttle limiting this is usually a parameter. If the project uses Torque Limiting this value&nbsp;should be set to a constant of 0.</p><h3 class="device_help">Delay Enable</h3>
+            <p class="device_help">Enabling the value monitoring is delayed by this value after in.enable of the Update method becomes true.
+              Usually a parameter, but can be set to a constant of 0 if not required.</p>
+            <h3 class="device_help">Delay Activate</h3>
+            <p class="device_help">When the monitored value leaves the range defined by Minimum and Maximum, the activation of the warning
+              (the warning becoming <em class="device_enum">Active</em>) is delayed by this value. Usually a parameter.</p>
+            <h3 class="device_help">Delay Reset</h3>
+            <p class="device_help">When the monitored value returns into the range defined by Minimum, Maximum and Hysteresis, the
+              deactivation of the warning (the warning returning from <em class="device_enum">Active</em> to <em class="device_enum">OK</em>) is delayed by this value.
+              Usually a parameter.</p>
+            <h3 class="device_help">Delay Limit</h3>
+            <p class="device_help">Controls the warning engine speed limit and torque limit delay. Usually a parameter.</p>
+            <p class="device_help">When the warning is <em class="device_enum">Active</em> for longer than this value it will change to <em class="device_enum">Limit</em>.</p>
+            <h2 class="device_help">Quantity, Display Unit and DPS</h2>
+            <p class="device_help">The quantity, display unit and DPS settings apply to the 'Minimum', 'Maximum' and 'Hysteresis' value
+              inputs.</p>
+            <p class="device_help">These settings should be set to match the monitored value.</p>
+            <h2 class="device_help">Validation</h2>
+            <p class="device_help">The validation settings apply to the 'Minimum' and 'Maximum' value inputs.</p>
+            <h2 class="device_help">Methods</h2>
+            <h3 class="device_help">Update</h3>
+            <table class="device_help">
+              <tbody><tr class="device_help">
+                <th class="device_help">Parameter</th>
+                <th class="device_help">Type</th>
+                <th class="device_help">Description</th>
+              </tr>
+              <tr class="device_help">
+                <td class="device_help">measurement</td>
+                <td class="device_help">Floating Point</td>
+                <td class="device_help">The monitored value.</td>
+              </tr>
+              <tr class="device_help">
+                <td class="device_help">override</td>
+                <td class="device_help">Boolean</td>
+                <td class="device_help">Set to true to explicitly activate the warning.</td>
+              </tr>
+              <tr class="device_help">
+                <td class="device_help">enable</td>
+                <td class="device_help">Boolean</td>
+                <td class="device_help">Set to true to enable the warning.</td>
+              </tr>
+            </tbody></table>
+            <p class="device_help">Updates the state of the warning.</p>
+            <p class="device_help">If 'enable' is true for 'Delay Enable' the warning can become active. This requires 'measurement' to be outside
+            of the range ('Minimum',
+              'Maximum') or 'override' to be true for a time of 'Delay Activate'.</p>
+            <p class="device_help">If the warning is active for 'Delay Limit' an engine speed limit will be requested.</p>
+            <p class="device_help">If 'measurement' has been within the range ('Minimum' + 'Hysteresis', 'Maximum' - 'Hysteresis') for 'Delay Reset'
+              second and 'override' has been false for 'Delay Reset' the warning will reset.</p>
+            <p class="device_help">Note that warning updates and range checks are only be processed when the method is called.</p>
+            <h3 class="device_help">GetEngineSpeedLimit</h3>
+            <p class="device_help">Returns the calibrated 'Engine Speed Limit' when the warning is <em class="device_enum">Limit</em> or infinity if there is no
+              engine speed limit requested.</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <h3 class="device_help">GetTorqueLimit</h3><p>Returns the calibrate <em class="device_item">Torque Limit</em> or when the warning is&nbsp;<em class="device_enum">Limit</em> or infinity if there is no limit requested.
+</p><p>
+This function is optional and does not need to be called if Torque Limiting is not used by the project. In this case the <em class="device_item">Torque Limit</em> value input should be set as a constant of 0 so it does not appear in the final package.</p><h3 class="device_help">GetThrottleLimit</h3><p>Returns the calibrate <em class="device_item">Throttle Limit</em> or when the warning is&nbsp;<em class="device_enum">Limit</em> or infinity if there is no limit requested.
+</p><p>
+This function is optional and does not need to be called if Throttle Limiting is not used by the project. In this case the <em class="device_item">Throttle Limit</em> value input should be set as a constant of 0 so it does not appear in the final package.
+            </p><h3 class="device_help">IsActive</h3>
+            <p class="device_help">Returns true if the warning is <em class="device_enum">Active</em> or <em class="device_enum">Limit</em>.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <PropVisibility>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DPS" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Locale.Default.DPS" DisplayName="DPS"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Hysteresis Display Unit" Creation="Custom" Visible="1" TargetCpt="This.Hysteresis" TargetRef="Locale.Default.Unit" DisplayName="Hysteresis Display Unit"/>
+         <Property Name="Hysteresis Quantity" Creation="Custom" Visible="1" TargetCpt="This.Hysteresis" TargetRef="Qty" DisplayName="Hysteresis Quantity"/>
+         <Property Name="Maximum" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValClampMax" DisplayName="Maximum"/>
+         <Property Name="Maximum Tags" Creation="Custom" Visible="1" TargetCpt="This.Maximum" TargetRef="UserTags" DisplayName="Maximum Tags"/>
+         <Property Name="Maximum Value" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValMax" DisplayName="Maximum Value"/>
+         <Property Name="Minimum" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValClampMin" DisplayName="Minimum"/>
+         <Property Name="Minimum Tags" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="UserTags" DisplayName="Minimum Tags"/>
+         <Property Name="Minimum Value" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="ValMin" DisplayName="Minimum Value"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Quantity" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Qty" DisplayName="Quantity"/>
+         <Property Name="Type" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Validation" DisplayName="Type"/>
+         <Property Name="Unit" Creation="Custom" Visible="1" TargetCpt="This.Minimum" TargetRef="Locale.Default.Unit" DisplayName="Unit"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="0"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Hysteresis" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Minimum" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Maximum" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Engine Speed Limit" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Enable" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Activate" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Reset" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Delay.Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Torque Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Torque Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Torque Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Torque Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Torque Limit" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Torque Limit" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.X"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Y"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="Cat" MatchPropTarget="Table.Axis.Z"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Throttle Limit" MatchPropType="CLSID" MatchPropTarget="TableNumAxes"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">If M1 Tune is connected the warning status will flash (status line at the bottom of the M1 Tune
+                    window). Pressing F3 will open a dialog box showing all current warnings.</p>
+                  <h2 class="device_help">Warning Setup</h2>
+                  <p class="device_help">
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_param">Mode</em> must be <em class="device_enum">Enabled</em>.</li>
+                      <li class="device_help">The warning system enable conditions must be true for <em class="device_item">Delay Enable</em> seconds (if
+                        visible).</li>
+                      <li class="device_help">If the monitored value is equal to or falls below <em class="device_table">Minimum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>.</li>
+                      <li class="device_help">If the monitored value exceeds <em class="device_table">Minimum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset</em>
+                        seconds (if visible) the warning returns to <em class="device_enum">OK</em>.</li>
+                      <li class="device_help">If the monitored value is equal to or rises above <em class="device_table">Maximum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>.</li>
+                      <li class="device_help">If the monitored value falls below <em class="device_table">Maximum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset
+                        </em> seconds (if visible) the warning returns to <em class="device_enum">OK</em>.</li>
+                        <li class="device_help">The monitored value will be ignored when its value is NAN (not a number).</li>
+                        <li class="device_help">Additional conditions to activate or deactivate the warning may apply. See the system help.
+                      </li>
+                    </ul>
+                  <p></p>
+                  <p class="device_help">An engine speed limit and&nbsp;air flow&nbsp;limit (torque or throttle) will be requested if this warning is <em class="device_enum">Active</em> for <em class="device_param">
+                    Delay Limit</em> seconds.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Value">
+        <Props Type="::This.Warning Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Count">
+        <Props Type="u32" Storage="Flash">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Number of times the warning has been activated. This value is flash backed.
+                    <ul class="device_help">
+                      <li class="device_help">This value is set to 0 when <em class="device_param">Mode</em> changes to <em class="device_enum">Disabled</em>.</li>
+                      <li class="device_help">This value is set to 0 when firmware is sent.</li>
+                      <li class="device_help">This value increases by 1 each time the warning transitions to <em class="device_enum">Active</em>.</li>
+                    </ul>
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Mode">
+        <Props Type="MoTeC Types.Mode Enumeration" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Controls operation of this warning.</p>
+                  <p class="device_help"><em class="device_chan">Count</em> is set to 0 when this value is <em class="device_enum">Disabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Minimum">
+        <Props TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Minimum warning threshold.</p>
+                  <p class="device_help">If the monitored value is equal to or falls below <em class="device_table">Minimum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>. If the monitored value exceeds 
+                        <em class="device_table">Minimum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset</em>
+                        seconds (if visible) the warning returns to <em class="device_enum">OK</em>.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Maximum">
+        <Props Qty="$(Parent.Minimum:Qty)" Validation="$(Parent.Minimum:Validation)" ValClampMin="$(Parent.Minimum:ValClampMin)" ValMin="$(Parent.Minimum:ValMin)" ValClampMax="$(Parent.Minimum:ValClampMax)" ValMax="$(Parent.Minimum:ValMax)" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="$(Parent.Minimum:Locale.Default.Unit)" DPS="$(Parent.Minimum:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Maximum warning threshold.</p>
+                  <p class="device_help">If the monitored value is equal to or rises above <em class="device_table">Maximum</em> for <em class="device_item">Delay Activate</em> seconds (if
+                        visible) the warning will transition to <em class="device_enum">Active</em>. If the monitored value falls below 
+                        <em class="device_table">Maximum</em> by at least <em class="device_param">Hysteresis</em> for <em class="device_item">Delay Reset
+                        </em> seconds (if visible) the warning returns to <em class="device_enum">OK</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Activate">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When the monitored value gets equal to or exceeds <em class="device_table">Minimum</em> or <em class="device_table">Maximum</em>, the
+                    activation of the warning (the warning becoming <em class="device_enum">Active</em>) is delayed by this value.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Delay.Activate.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Reset">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">When the monitored value returns into the range defined by <em class="device_table">Minimum</em>, <em class="device_table">Maximum</em> and <em class="device_param">
+                    Hysteresis</em>, the deactivation of the warning (the warning returning from <em class="device_enum">Active</em> to <em class="device_enum">OK
+                    </em>) is delayed by this value.</p><p class="device_help">Set to 0s to latch the warning <em class="device_enum">Active</em> (or <em class="device_enum">Limit</em>) until the warning is <em class="device_enum">Disabled</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Delay.Reset.Value">
+        <Props Value="1.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.Update">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="measurement" Type="f32" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+          <Param Name="override" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+          <Param Name="enable" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZW5hYmxlZCA9IExpYnJhcnkuRGVsYXkuUmlzaW5nKGluLmVuYWJsZSwgVGhpcy5EZWxheS5FbmFibGUpOwpsb2NhbCBkaXNhYmxlZCA9IG5vdCBlbmFibGVkOwpsb2NhbCBtZWFzdXJlbWVudCA9IGluLm1lYXN1cmVtZW50Owpsb2NhbCBvdmVycmlkZSA9IGluLm92ZXJyaWRlOwpsb2NhbCB2YWxpZCA9IG5vdCBDYWxjdWxhdGUuSXNOQU4obWVhc3VyZW1lbnQpOwpsb2NhbCBoaWdoID0gQ2FsY3VsYXRlLkh5c3RlcmVzaXMobWVhc3VyZW1lbnQsIE1heGltdW0gLSBIeXN0ZXJlc2lzLCBNYXhpbXVtLCAwLjApOwoKc3RhdGljIGxvY2FsIGxvdyA9IGZhbHNlOwppZiAobWVhc3VyZW1lbnQgPCBNaW5pbXVtKSAvL3JlcGxhY2VzIENhbGN1YWx0ZS5IeXN0ZXJlc2lzCnsKCWxvdyA9IHRydWU7Cn0KZWxzZSBpZiAobWVhc3VyZW1lbnQgPiAoTWluaW11bSArIEh5c3RlcmVzaXMpKQp7Cglsb3cgPSBmYWxzZTsKfQoKbG9jYWwgYWN0aXZlID0gTGlicmFyeS5EZWxheS5SaXNpbmcoKChoaWdoIG9yIGxvdykgYW5kIHZhbGlkIGFuZCBlbmFibGVkKSBvciBvdmVycmlkZSwgVGhpcy5EZWxheS5BY3RpdmF0ZSk7CmxvY2FsIGVkZ2UgPSBDaGFuZ2UuVG8oYWN0aXZlIGVxIHRydWUgYW5kIGRpc2FibGVkIGVxIGZhbHNlKTsKbG9jYWwgY2xlYXIgPSBDaGFuZ2UuVG8oTW9kZSBlcSBNb2RlLkRpc2FibGVkKTsKbG9jYWwgaW5hY3RpdmUgPSBMaWJyYXJ5LkRlbGF5LlJpc2luZyhub3QgYWN0aXZlLCBUaGlzLkRlbGF5LlJlc2V0KTsKaW5hY3RpdmUgPSBpbmFjdGl2ZSBhbmQgKFRoaXMuRGVsYXkuUmVzZXQgPiAwLjApOwpsb2NhbCBsaW0gPSBMaWJyYXJ5LkRlbGF5LlJpc2luZyhhY3RpdmUsIFRoaXMuRGVsYXkuTGltaXQpOwpsaW0gPSBsaW0gYW5kICgoRW5naW5lIFNwZWVkIExpbWl0ID4gMC4wKSBvciAoVG9ycXVlIExpbWl0ID4gMC4wKSBvciAoVGhyb3R0bGUgTGltaXQgPiAwLjApKTsKCndoZW4gKE1vZGUpCnsKCWlzIChFbmFibGVkKQoJewoJCWlmIChkaXNhYmxlZCkKCQl7CgkJCVZhbHVlID0gVmFsdWUuRGlzYWJsZWQ7CgkJfQoJCWVsc2UgaWYgKGxpbSkKCQl7CgkJCVZhbHVlID0gVmFsdWUuTGltaXQ7CgkJfQoJCWVsc2UgaWYgKGFjdGl2ZSBhbmQgVmFsdWUgbmVxIFZhbHVlLkxpbWl0KQkvLyBpZiAnTGltaXQnIGFscmVhZHksIGRvbid0IGdvIGJhY2sgdG8gJ0FjdGl2ZScuIAoJCXsKCQkJVmFsdWUgPSBWYWx1ZS5BY3RpdmU7CgkJCWlmIChlZGdlKQoJCQl7CgkJCQlDb3VudCArPSAxOwoJCQkJU3lzdGVtLlByZXNlcnZlKCk7CgkJCX0KCQl9CgkJZWxzZSBpZiAoaW5hY3RpdmUpCgkJewoJCQlWYWx1ZSA9IFZhbHVlLk9LOwoJCX0KCX0KCWlzIChEaXNhYmxlZCkKCXsKCQlWYWx1ZSA9IFZhbHVlLkRpc2FibGVkOwoJCWlmIChjbGVhcikKCQl7CgkJCUNvdW50ID0gMDsKCQkJU3lzdGVtLlByZXNlcnZlKCk7CgkJfQoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Limit">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The warning limits are applied to the respective subsystem when the warning has been active for <em class="device_param">Delay
+                    Limit</em> seconds.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Delay.Limit.Value"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.GetEngineSpeedLimit">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[b3V0ID0gKChWYWx1ZSBlcSBWYWx1ZS5MaW1pdCkgYW5kIChFbmdpbmUgU3BlZWQgTGltaXQgPiAwLjApKQoJPyBFbmdpbmUgU3BlZWQgTGltaXQKCTogQ2FsY3VsYXRlLkluZmluaXR5KCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.IsActive">
+        <Signature Name="" ReturnType="bool">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[b3V0ID0gVmFsdWUuQXNJbnRlZ2VyKCkgPCAwOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Delay">
+        <Comment>
+<![CDATA[]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Engine Speed Limit">
+        <Props Qty="rad/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoTable" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="rpm"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine speed is limited to this value when the warning has been active for <em class="device_param">Delay Limit</em>
+                    seconds.</p>
+                  <p class="device_help">Set to 0rpm to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Delay.Enable">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoConst" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Enabling the value monitoring is delayed by this value after the enable conditions of the warning
+                    become true.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Constant" Name="Base.Delay.Enable.Value">
+        <Props Value="0.00000000000000000e+000"/>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Torque Limit">
+        <Props Qty="N.m" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Engine torque is limited to this value when the warning has been active for <em class="device_param">Delay Limit</em>
+                    seconds.</p>
+                  <p class="device_help">Set to 0N to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Torque Limit.Value"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.GetTorqueLimit">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[b3V0ID0gKChWYWx1ZSBlcSBWYWx1ZS5MaW1pdCkgYW5kIChUb3JxdWUgTGltaXQgPiAwLjApKQoJPyBUb3JxdWUgTGltaXQKCTogQ2FsY3VsYXRlLkluZmluaXR5KCk7Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Table" Name="Base.Minimum.Value"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Engine Speed Limit.Value.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Engine Speed Limit.Value.Init"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Engine Speed Limit.Value.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Maximum.Value.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Maximum.Value.Init"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Maximum.Value.Value"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Maximum.Value"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Lookup" Caps="AutoCreated" Name="Base.Minimum.Value.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.Table.Init" Caps="AutoCreated" Name="Base.Minimum.Value.Init"/>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Minimum.Value.Value"/>
+       <Component Classname="BuiltIn.Table" Name="Base.Engine Speed Limit.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Throttle Limit">
+        <Props Qty="ratio" Validation="MinMax" ValMin="0.00000000000000000e+000" ValMax="1.00000000000000000e+000" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="%"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Throttle Aim&nbsp;is limited to this value when the warning has been active for <em class="device_param">Delay Limit</em>
+                    seconds.</p>
+                  <p class="device_help">Set to 0% to disable.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Throttle Limit.Value"/>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.GetThrottleLimit">
+        <Signature Name="" ReturnType="f32">
+         <Params/>
+         <Description>
+<![CDATA[]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[b3V0ID0gKChWYWx1ZSBlcSBWYWx1ZS5MaW1pdCkgYW5kIChUaHJvdHRsZSBMaW1pdCA+IDAuMCkpCgk/IFRocm90dGxlIExpbWl0Cgk6IENhbGN1bGF0ZS5JbmZpbml0eSgpOwo=]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.Hysteresis">
+        <Props Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="$(Parent.Minimum:Locale.Default.DPS)"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Warning hysteresis.</p>
+                  <p class="device_help">This value applies to both the minimum and maximum thresholds.</p>
+                  <p class="device_help">See <em class="device_table">Minimum</em> and <em class="device_table">Maximum</em> for more information.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Value"/>
+        <Component Name="Count"/>
+        <Component Name="Mode">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Minimum">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Maximum">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Hysteresis">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Engine Speed Limit">
+         <Component Name="Value">
+          <Component Name="Value"/>
+          <Component Name="Init"/>
+          <Component Name="Update"/>
+         </Component>
+        </Component>
+        <Component Name="Torque Limit">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Throttle Limit">
+         <Component Name="Value"/>
+        </Component>
+        <Component Name="Delay">
+         <Component Name="Enable">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Activate">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Reset">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Limit">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="Update"/>
+        <Component Name="GetEngineSpeedLimit"/>
+        <Component Name="GetTorqueLimit"/>
+        <Component Name="GetThrottleLimit"/>
+        <Component Name="IsActive"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Warning">
+     <Module Name="Minimum Maximum Warning"/>
+     <Module Name="Minimum Maximum Warning with Limits"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>

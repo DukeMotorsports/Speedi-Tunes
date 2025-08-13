@@ -1,0 +1,3506 @@
+<?xml version="1.0"?>
+<MoTecM1BuildModuleSet Locale="English_Australia.1252" DefaultLocale="C" FileFormat="10103" Name="MoTeC Lap Time" VersionMajor="1" VersionMinor="9" BuildNumber="8">
+ <System VersionMajor="1" VersionMinor="4" VersionRelease="0" VersionBuild="0061"/>
+ <BuildHelp>
+<![CDATA[<h4 class="device_help">Current Version (01.09.0008)</h4><ul><li><div class="device_help">GPS Valid check replaced with GPS Diagnostic to match updated GPS module v1.7.9.</div></li></ul><h4 class="device_help">01.09.0005</h4><ul><li><div class="device_help">Change ignore time to no longer&nbsp;affect Beacon Ticks and Beacon Number</div></li></ul><h4 class="device_help">01.09.0004</h4><ul><li>Fix false GPS beacons at tracks with multiple main beacons</li></ul><h4 class="device_help">01.09.0003</h4>
+<ul class="device_help">
+<li class="device_help">System updated to version 1.4.0.61.</li>
+<li class="device_help">Modules Updated</li></ul>
+<h4 class="device_help">01.09.0002</h4>
+<ul class="device_help">
+<li class="device_help">Tags refined.</li></ul>
+<h4 class="device_help">01.07.0003</h4>
+<ul class="device_help">
+<li class="device_help">Add GPS beacon support.</li>
+<li class="device_help">Update to system 01.04.</li>
+<li class="device_help">Tags added.</li></ul>
+<h4 class="device_help">01.05.05</h4>
+<ul class="device_help">
+<li class="device_help">Update to system 01.03.16.0031</li></ul>
+<h4 class="device_help">01.04.0000</h4>
+<ul class="device_help">
+<li class="device_help">Rewrite Lap time calculations</li>
+<li class="device_help">Add Lap Number</li>
+<li class="device_help">Add Lap Section time</li>
+<li class="device_help">Add Lap.Reset()</li></ul>
+<h4 class="device_help">01.03.0005</h4>
+<ul class="device_help">
+<li class="device_help">Start adding release notes</li></ul>]]>
+ </BuildHelp>
+ <RequiredModules>
+  <File Name="MoTeC Types" VersionMajor="1" VersionMinor="6" VersionBuild="0"/>
+  <File Name="MoTeC GPS" VersionMajor="1" VersionMinor="7" VersionBuild="11"/>
+ </RequiredModules>
+ <DataTypes>
+  <Type Name="BR2 Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="OK" ContainerOrder="4">
+    <Help>
+<![CDATA[<p class="device_help">Normal BR2 operation</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Configuration Version" ContainerOrder="6" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Configuration CRC" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Hardware" ContainerOrder="8" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Warning" ContainerOrder="5" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="EE Write Failure" ContainerOrder="9" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Output Diagnostic" ContainerOrder="10" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Receiver Noise" ContainerOrder="11" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Internal Error" ContainerOrder="1" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">Internal BR2 error.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="CAN Bus Timeout" ContainerOrder="2" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">No BR2 CAN messages have been received for longer than 1 second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Invalid CAN Bus" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">The specified can bus is not configured on the ECU. An ECU power cycle may be necessary to resolve this
+              condition.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">The BR2 is not configured.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="Lap State Enumeration" Storage="enum" Default="Disabled">
+   <Enum Name="Disabled" ContainerOrder="0">
+    <Help>
+<![CDATA[<p class="device_help">Lap time calculation is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Pit" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">When vehicle speed is 0 for 2 seconds.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Out Lap" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">When vehicle speed is &gt; 0 until the first lap beacon.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Timed Lap" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">When performing normal lap timing after the first lap beacon.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+  <Type Name="GPS Lap Calculation Diagnostic Enumeration" Storage="enum" Default="Not in Use">
+   <Enum Name="OK" ContainerOrder="2">
+    <Help>
+<![CDATA[<p class="device_help">GPS lap detection system is working correctly.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Latitude Out of Range" ContainerOrder="5" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Latitude is out of range [-85°, 85°].</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="No Beacon Within 1km" ContainerOrder="6">
+    <Help>
+<![CDATA[<p class="device_help">No beacon detected within a 1km radius.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Bad Configuration" ContainerOrder="0" Tags="Fault">
+    <Help>
+<![CDATA[<p class="device_help">Invalid detection radius or custom beacon locations.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Not in Use" ContainerOrder="1">
+    <Help>
+<![CDATA[<p class="device_help">GPS lap detection system is disabled.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Longitude Out of Range" ContainerOrder="4" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">Longitude is outside of the range [-180°, 180°].</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Slow Update" ContainerOrder="7" Tags="Warning">
+    <Help>
+<![CDATA[<p class="device_help">The time between gps updates exceeded 1 second.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Too Fast" ContainerOrder="8">
+    <Help>
+<![CDATA[<p class="device_help">Location changed by more than 10km in last GPS update.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Too Slow" ContainerOrder="9">
+    <Help>
+<![CDATA[<p class="device_help">Location changed by less than 1cm in last GPS update.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="No Intersection" ContainerOrder="10">
+    <Help>
+<![CDATA[<p class="device_help">No beacon intersection detected in last GPS update.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Intersection Outside Radius" ContainerOrder="11">
+    <Help>
+<![CDATA[<p class="device_help">Beacon intersection detected outside detection radius.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="Beacon Detected" ContainerOrder="12">
+    <Help>
+<![CDATA[<p class="device_help">Beacon intersection detected within detection radius.</p>]]>
+    </Help>
+   </Enum>
+   <Enum Name="No Update" ContainerOrder="3">
+    <Help>
+<![CDATA[<p class="device_help">Duplicate GPS sample detected.</p>]]>
+    </Help>
+   </Enum>
+  </Type>
+ </DataTypes>
+ <Modules>
+  <ModuleStream>
+   <List>
+    <ModuleGroup Name="Calculations"/>
+    <Module Base="BuiltIn.GroupCompound" Name="Calculations.Lap Time">
+     <BuildHelp>
+<![CDATA[<p class="device_help">This class implements a lap time calculation using a MoTeC BR2, switched inputs or a GPS.</p>
+            <p class="device_help">Usage:
+              <ol class="device_help">
+                <li class="device_help">Add this class to the root level of a project with the name 'Lap'.</li>
+                <li class="device_help">Call the 'SetEnable' method to enable and disable the lap time calculation as appropriate.</li>
+              </ol>
+            <p></p>
+            <h2 class="device_help">Value Inputs</h2>
+            <p class="device_help">All value inputs are normally set as parameters, with the exception of:</p>
+            <h3 class="device_help">Vehicle Speed</h3>
+            <p class="device_help">Must be connected to a vehicle speed channel.</p>
+            <h3 class="device_help">GPS inputs</h3>
+            <p class="device_help">If no GPS is included in the project these can
+            be set to constants instead of parameters.</p>
+            <h3 class="device_help">GPS Valid, GPS Latitude, GPS Longitude, GPS Ticks</h3>
+            <p class="device_help">These channels are provided by the GPS class. If no GPS is included in the project these can
+            be set to constants.</p>
+            <h2 class="device_help">Attributes</h2>
+            <h3 class="device_help">Main Voltage Update Event</h3>
+            <p class="device_help">Typically 100Hz.</p>]]>
+     </BuildHelp>
+     <ComponentStream>
+      <List>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Vehicle"/>
+         </List.UserTags>
+        </Props>
+        <PropVisibility>
+         <Property Name="Beacon Number Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Beacon Number" TargetRef="DiagnosticLogRate" DisplayName="Beacon Number Diagnostic Log Rate"/>
+         <Property Name="Beacon Number Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Beacon Number" TargetRef="DiagnosticLog" DisplayName="Beacon Number Diagnostic Logging"/>
+         <Property Name="Beacon Number Main Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Beacon Number Main" TargetRef="DiagnosticLogRate" DisplayName="Beacon Number Main Diagnostic Log Rate"/>
+         <Property Name="Beacon Number Main Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Beacon Number Main" TargetRef="DiagnosticLog" DisplayName="Beacon Number Main Diagnostic Logging"/>
+         <Property Name="Beacon Ticks Diagnostic Log Rate" Creation="Custom" Visible="1" TargetCpt="This.Beacon Ticks" TargetRef="DiagnosticLogRate" DisplayName="Beacon Ticks Diagnostic Log Rate"/>
+         <Property Name="Beacon Ticks Diagnostic Logging" Creation="Custom" Visible="1" TargetCpt="This.Beacon Ticks" TargetRef="DiagnosticLog" DisplayName="Beacon Ticks Diagnostic Logging"/>
+         <Property Name="CLSID" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="DefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="Name" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="OldName" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UseDefValue" Creation="Builtin.Default" Visible="0"/>
+         <Property Name="UserTags" Creation="Builtin.Default" Visible="1"/>
+         <Property Name="Vehicle Speed Input Object" Creation="Custom" Visible="1" TargetCpt="This.Vehicle Speed" TargetRef="Target" DisplayName="Vehicle Speed Input Object"/>
+        </PropVisibility>
+        <PropRules>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="General.Value"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Display.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="Validation.All"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="Tags"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="ChanelStorage"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="UpdateRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogging"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="CLSID" MatchPropTarget="DiagnosticLogRate"/>
+         <Rule Creation="Builtin" Visible="0" MatchCptType="DefVal" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.BR2.CAN Bus" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Main.Voltage" MatchPropType="CLSID" MatchPropTarget="XRefRelEvt"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Beacon.Main" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Beacon.Ignore Time" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Main.Pin" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Split.Pin" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Valid" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Latitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Longitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Ticks" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Mode" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Radius" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 1.Latitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 1.Longitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 1.Number" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 2.Latitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 2.Longitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 2.Number" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 3.Latitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 3.Longitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 3.Number" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 4.Latitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 4.Longitude" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.Beacon 4.Number" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Main.Resource" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.Split.Resource" MatchPropType="Cat" MatchPropTarget="HW.Resource"/>
+         <Rule Creation="User" Visible="1" MatchCptType="Ref" MatchCptTarget="This.GPS.GPS Diagnostic" MatchPropType="Cat" MatchPropTarget="ValueInput.Value"/>
+        </PropRules>
+        <Comment>
+<![CDATA[<p class="device_help">This system calculates lap time and distance by means of beacon and speed channels.</p>
+                  <p class="device_help">A beacon event may be generated by a MoTeC BR2 device on CAN, by a switched input or by a GPS.</p>
+                  <p class="device_help">All configured beacon sources are used to generate beacon information. This means that a BR2 or
+                    switched input can be used as a main beacon source with GPS data providing splits.</p>
+                  <p class="device_help"><em class="device_chan">Time Sector</em> or <em class="device_chan">Time Split</em> will be generated if split beacon(s) are detected.</p>
+                  <p class="device_help"><em class="device_chan">State</em> identifies the current activity, based on <em class="device_ref">Vehicle Speed</em> and <em class="device_group">Beacon</em>
+                    values:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_enum">Disabled</em> when <em class="device_chan">Enable</em> is <em class="device_enum">Disabled</em>.</li>
+                      <li class="device_help"><em class="device_enum">Pit</em> when <em class="device_ref">Vehicle Speed</em> is 0 for 2 seconds.</li>
+                      <li class="device_help"><em class="device_enum">Out Lap</em> when <em class="device_ref">Vehicle Speed</em> is greater than 0 until the first lap beacon.</li>
+                      <li class="device_help"><em class="device_enum">Timed Lap</em> when performing normal lap timing after the first lap beacon.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help"><em class="device_chan">Number</em> reports the number of laps since <em class="device_chan">State</em> changed from <em class="device_enum">Pit</em> to <em class="device_enum">Out Lap
+                    </em>.</p>
+                  <p class="device_help"><em class="device_chan">Number Session</em> reports the number of laps since the ECU was started.</p>
+                  <p class="device_help">For this system to operate <em class="device_param">Mode</em> must be <em class="device_enum">Enabled</em>.
+                  </p>
+                  <p class="device_help">For this system to function with switched inputs the following requirements must be met:
+                    <ul class="device_help">
+                      <li class="device_help">Configure <em class="device_param">Main Input Resource</em>.</li>
+                      <li class="device_help">Set <em class="device_param">Main Pin Pullup Control</em> to <em class="device_enum">On</em> for switch to ground operation.</li>
+                      <li class="device_help">Set <em class="device_param">Main Pin Active Edge</em>.</li>
+                      <li class="device_help">Set <em class="device_param">Main Pin Threshold</em>.</li>
+                      <li class="device_help">Set <em class="device_param">Main Pin Hysteresis</em>.</li>
+                      <li class="device_help">For Lap Time only operation, <em class="device_param">Beacon Main</em> may be set to zero.</li>
+                      <li class="device_help">If split or sector operation is required:
+                        <ul class="device_help">
+                          <li class="device_help"><em class="device_param">Beacon Main</em> must be non-zero.</li>
+                          <li class="device_help">Configure <em class="device_param">Split Input Resource</em>.</li>
+                          <li class="device_help">Set <em class="device_param">Split Pin Pullup Control</em> to <em class="device_enum">On</em> for switch to ground operation.</li>
+                          <li class="device_help">Set <em class="device_param">Split Pin Active Edge</em>.</li>
+                          <li class="device_help">Set <em class="device_param">Split Pin Threshold</em>.</li>
+                          <li class="device_help">Set <em class="device_param">Split Pin Hysteresis</em>.</li>
+                        </ul>
+                      </li>
+                      <li class="device_help">If <em class="device_chan">Distance</em> is required, <em class="device_ref">Vehicle Speed</em> must be non-zero. Inconsistent behaviour
+                        may be observed while Vehicle Speed State is Estimated but this should not be a factor under
+                        normal operation.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">For this system to function with BR2 CAN messaging the following requirements must be met:
+                    <ul class="device_help">
+                      <li class="device_help">To use any detected beacon as the main beacon, <em class="device_param">Beacon Main</em> may be set to zero.</li>
+                      <li class="device_help">To use a single designated beacon as the main beacon, <em class="device_param">Beacon Main</em> should be set to the
+                        required beacon number.</li>
+                      <li class="device_help">Any other beacons within the beacon group (i.e. 400 to 499 for beacon 412) may function as
+                        split beacons.</li>
+                      <li class="device_help">Configure <em class="device_param">BR2 CAN Bus</em>.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">For this system to function with a GPS the following requirements must be met:
+                    <ul class="device_help">
+                      <li class="device_help">Set <em class="device_ref">GPS Mode</em> to <em class="device_enum">Enabled</em>.</li>
+                      <li class="device_help">Set <em class="device_ref">GPS Radius</em> to an appropriate value for the race venue.</li>
+                      <li class="device_help">Optionally configure the <em class="device_group">GPS Beacon N</em> groups to enable custom beacon locations.</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">The GPS system automatically detects beacons at the following locations:
+                    <table class="device_help">
+                      <tr class="device_help">
+                        <th class="device_help">Name</th>
+                        <th class="device_help">Beacon Number</th>
+                        <th class="device_help">Latitude</th>
+                        <th class="device_help">Longitude</th>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">A1-Ring</td>
+                        <td class="device_help">100</td>
+                        <td class="device_help">47.2197720</td>
+                        <td class="device_help">14.7642950</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Adelaide</td>
+                        <td class="device_help">200</td>
+                        <td class="device_help">-34.9303800</td>
+                        <td class="device_help">138.6204960</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Adirondack Intl</td>
+                        <td class="device_help">300</td>
+                        <td class="device_help">43.8532840</td>
+                        <td class="device_help">-75.4531790</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Ahvenisto</td>
+                        <td class="device_help">400</td>
+                        <td class="device_help">61.0037342</td>
+                        <td class="device_help">24.4179526</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Akron</td>
+                        <td class="device_help">500</td>
+                        <td class="device_help">41.0511530</td>
+                        <td class="device_help">-81.4677140</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Alastaro</td>
+                        <td class="device_help">600</td>
+                        <td class="device_help">60.9762265</td>
+                        <td class="device_help">22.6580859</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Albacete</td>
+                        <td class="device_help">700</td>
+                        <td class="device_help">39.0051590</td>
+                        <td class="device_help">-1.7956130</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Albert Park</td>
+                        <td class="device_help">800</td>
+                        <td class="device_help">-37.8499733</td>
+                        <td class="device_help">144.9688260</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Aldo Scribante</td>
+                        <td class="device_help">900</td>
+                        <td class="device_help">-33.8068210</td>
+                        <td class="device_help">25.6458930</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Anderstorp</td>
+                        <td class="device_help">1000</td>
+                        <td class="device_help">57.2615090</td>
+                        <td class="device_help">13.5993440</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Arizona Motorsports Park</td>
+                        <td class="device_help">1100</td>
+                        <td class="device_help">33.5168610</td>
+                        <td class="device_help">-112.3917970</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Arroyo Seco</td>
+                        <td class="device_help">1200</td>
+                        <td class="device_help">32.2368390</td>
+                        <td class="device_help">-107.4296810</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Aspen</td>
+                        <td class="device_help">1300</td>
+                        <td class="device_help">39.2664170</td>
+                        <td class="device_help">-106.8800400</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Assen</td>
+                        <td class="device_help">1400</td>
+                        <td class="device_help">52.9629295</td>
+                        <td class="device_help">6.5252761</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Atlanta Dragway</td>
+                        <td class="device_help">1500</td>
+                        <td class="device_help">34.2637380</td>
+                        <td class="device_help">-83.4724550</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Atlanta MS Oval</td>
+                        <td class="device_help">1600</td>
+                        <td class="device_help">33.3857699</td>
+                        <td class="device_help">-84.3168950</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Autobahn Full</td>
+                        <td class="device_help">1700</td>
+                        <td class="device_help">41.4565580</td>
+                        <td class="device_help">-88.1258950</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Autobahn South</td>
+                        <td class="device_help">1800</td>
+                        <td class="device_help">41.4552110</td>
+                        <td class="device_help">-88.1268740</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Autodromo Hermanos Rodriguez</td>
+                        <td class="device_help">1900</td>
+                        <td class="device_help">19.4061460</td>
+                        <td class="device_help">-99.0928360</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Autodromo Miguel E Abed</td>
+                        <td class="device_help">2000</td>
+                        <td class="device_help">19.0278440</td>
+                        <td class="device_help">-97.9896680</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Autopolis</td>
+                        <td class="device_help">2100</td>
+                        <td class="device_help">33.0374520</td>
+                        <td class="device_help">130.9751660</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Bahia Blanca</td>
+                        <td class="device_help">2200</td>
+                        <td class="device_help">-38.6816870</td>
+                        <td class="device_help">-62.1770650</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Balcarce</td>
+                        <td class="device_help">2300</td>
+                        <td class="device_help">-37.8829620</td>
+                        <td class="device_help">-58.2666970</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Barbagallo</td>
+                        <td class="device_help">2400</td>
+                        <td class="device_help">-31.6641775</td>
+                        <td class="device_help">115.7863923</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Barber</td>
+                        <td class="device_help">2500</td>
+                        <td class="device_help">33.5326919</td>
+                        <td class="device_help">-86.6195130</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Barcelona</td>
+                        <td class="device_help">2600</td>
+                        <td class="device_help">41.5699610</td>
+                        <td class="device_help">-2.2609611</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Baskerville</td>
+                        <td class="device_help">2700</td>
+                        <td class="device_help">-42.7464370</td>
+                        <td class="device_help">147.2943970</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Bathurst</td>
+                        <td class="device_help">2800</td>
+                        <td class="device_help">-33.4393834</td>
+                        <td class="device_help">149.5592218</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">BeaveRun</td>
+                        <td class="device_help">2900</td>
+                        <td class="device_help">40.8507250</td>
+                        <td class="device_help">-80.3477690</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Bedford</td>
+                        <td class="device_help">3000</td>
+                        <td class="device_help">52.2351350</td>
+                        <td class="device_help">0.4743260</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Berlin</td>
+                        <td class="device_help">3100</td>
+                        <td class="device_help">43.0359680</td>
+                        <td class="device_help">-85.8347330</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Bira</td>
+                        <td class="device_help">3200</td>
+                        <td class="device_help">12.9207095</td>
+                        <td class="device_help">101.0085273</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Black Hawk</td>
+                        <td class="device_help">3300</td>
+                        <td class="device_help">42.4878850</td>
+                        <td class="device_help">-89.1174780</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Blue Grass</td>
+                        <td class="device_help">3400</td>
+                        <td class="device_help">38.7646750</td>
+                        <td class="device_help">-84.8035200</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Botnia</td>
+                        <td class="device_help">3500</td>
+                        <td class="device_help">62.6244026</td>
+                        <td class="device_help">22.0152028</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Brainerd</td>
+                        <td class="device_help">3600</td>
+                        <td class="device_help">46.4168620</td>
+                        <td class="device_help">-94.2748079</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Brands Hatch</td>
+                        <td class="device_help">3700</td>
+                        <td class="device_help">51.3602527</td>
+                        <td class="device_help">0.2599997</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Brasilia</td>
+                        <td class="device_help">3800</td>
+                        <td class="device_help">-15.7728170</td>
+                        <td class="device_help">-47.9002510</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Brimley</td>
+                        <td class="device_help">3900</td>
+                        <td class="device_help">46.3712650</td>
+                        <td class="device_help">-84.5759870</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Bristol</td>
+                        <td class="device_help">4000</td>
+                        <td class="device_help">36.5159960</td>
+                        <td class="device_help">-82.2561680</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Brno</td>
+                        <td class="device_help">4100</td>
+                        <td class="device_help">49.2032263</td>
+                        <td class="device_help">16.4439615</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Broadford</td>
+                        <td class="device_help">4200</td>
+                        <td class="device_help">-37.2159070</td>
+                        <td class="device_help">145.0823480</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Buenos Aires</td>
+                        <td class="device_help">4300</td>
+                        <td class="device_help">-34.6942270</td>
+                        <td class="device_help">-58.4613890</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Bushy Park</td>
+                        <td class="device_help">4400</td>
+                        <td class="device_help">13.1386780</td>
+                        <td class="device_help">-59.4669970</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Buttonwillow</td>
+                        <td class="device_help">4500</td>
+                        <td class="device_help">35.4887330</td>
+                        <td class="device_help">-119.5444720</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Cadwell Park</td>
+                        <td class="device_help">4600</td>
+                        <td class="device_help">53.3107205</td>
+                        <td class="device_help">0.0591005</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Calabogie</td>
+                        <td class="device_help">4700</td>
+                        <td class="device_help">45.3017350</td>
+                        <td class="device_help">-76.6723610</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Calder</td>
+                        <td class="device_help">4900</td>
+                        <td class="device_help">-37.6709228</td>
+                        <td class="device_help">144.7538686</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Calder Oval</td>
+                        <td class="device_help">4800</td>
+                        <td class="device_help">-37.6730540</td>
+                        <td class="device_help">144.7600010</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">California Speedway</td>
+                        <td class="device_help">5000</td>
+                        <td class="device_help">34.0860690</td>
+                        <td class="device_help">-117.5005250</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Campo Grande</td>
+                        <td class="device_help">5100</td>
+                        <td class="device_help">-20.4759110</td>
+                        <td class="device_help">-54.4660250</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Carolina Motorsports</td>
+                        <td class="device_help">5200</td>
+                        <td class="device_help">34.4877270</td>
+                        <td class="device_help">-80.5970040</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Cartagena</td>
+                        <td class="device_help">5300</td>
+                        <td class="device_help">37.6451000</td>
+                        <td class="device_help">-1.0357850</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Cascavel</td>
+                        <td class="device_help">5400</td>
+                        <td class="device_help">-24.9805930</td>
+                        <td class="device_help">-53.3827290</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Castle Combe</td>
+                        <td class="device_help">5500</td>
+                        <td class="device_help">51.4927370</td>
+                        <td class="device_help">-2.2160250</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Catalunya</td>
+                        <td class="device_help">5600</td>
+                        <td class="device_help">41.5700299</td>
+                        <td class="device_help">2.2612160</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Chicagoland</td>
+                        <td class="device_help">5700</td>
+                        <td class="device_help">41.4731321</td>
+                        <td class="device_help">-88.0598750</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Chimay</td>
+                        <td class="device_help">5800</td>
+                        <td class="device_help">50.0553100</td>
+                        <td class="device_help">4.3039960</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Chuckwalla Valley</td>
+                        <td class="device_help">5900</td>
+                        <td class="device_help">33.7938560</td>
+                        <td class="device_help">-115.2960520</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Circuit Gilles Villeneuve</td>
+                        <td class="device_help">6000</td>
+                        <td class="device_help">45.5000550</td>
+                        <td class="device_help">-73.5227050</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Circuit Mont-Tremblant</td>
+                        <td class="device_help">6100</td>
+                        <td class="device_help">46.1933190</td>
+                        <td class="device_help">-74.6116410</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Circuito del Jarama</td>
+                        <td class="device_help">6200</td>
+                        <td class="device_help">40.6146530</td>
+                        <td class="device_help">-3.5831600</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Comodoro Rivadavia</td>
+                        <td class="device_help">6300</td>
+                        <td class="device_help">-45.9027350</td>
+                        <td class="device_help">-67.5439019</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Concordia</td>
+                        <td class="device_help">6400</td>
+                        <td class="device_help">-31.3084410</td>
+                        <td class="device_help">-58.0038170</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Consumer Union Track</td>
+                        <td class="device_help">6500</td>
+                        <td class="device_help">41.5240400</td>
+                        <td class="device_help">-72.3598170</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Croft</td>
+                        <td class="device_help">6600</td>
+                        <td class="device_help">54.4555111</td>
+                        <td class="device_help">-1.5555266</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Darlington</td>
+                        <td class="device_help">6700</td>
+                        <td class="device_help">34.2936990</td>
+                        <td class="device_help">-79.9060540</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Darwin</td>
+                        <td class="device_help">6800</td>
+                        <td class="device_help">-12.4483680</td>
+                        <td class="device_help">130.9077400</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Daytona</td>
+                        <td class="device_help">6900</td>
+                        <td class="device_help">29.1876670</td>
+                        <td class="device_help">-81.0727830</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Dijon</td>
+                        <td class="device_help">7000</td>
+                        <td class="device_help">47.3635499</td>
+                        <td class="device_help">4.8981333</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Donington Park</td>
+                        <td class="device_help">7100</td>
+                        <td class="device_help">52.8297521</td>
+                        <td class="device_help">-1.3784046</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Dover</td>
+                        <td class="device_help">7200</td>
+                        <td class="device_help">39.1907590</td>
+                        <td class="device_help">-75.5287470</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Dubai</td>
+                        <td class="device_help">7300</td>
+                        <td class="device_help">25.0474250</td>
+                        <td class="device_help">55.2395810</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Eagles Canyon</td>
+                        <td class="device_help">7400</td>
+                        <td class="device_help">33.3676120</td>
+                        <td class="device_help">-97.4296720</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Eastern Creek</td>
+                        <td class="device_help">7500</td>
+                        <td class="device_help">-33.8037274</td>
+                        <td class="device_help">150.8708936</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Estoril</td>
+                        <td class="device_help">7600</td>
+                        <td class="device_help">38.7494170</td>
+                        <td class="device_help">-9.3929060</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Evergreen</td>
+                        <td class="device_help">7700</td>
+                        <td class="device_help">47.8692300</td>
+                        <td class="device_help">-121.9883590</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Firebird East</td>
+                        <td class="device_help">7800</td>
+                        <td class="device_help">33.2737759</td>
+                        <td class="device_help">-111.9633330</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Firebird Intl</td>
+                        <td class="device_help">7900</td>
+                        <td class="device_help">33.2675260</td>
+                        <td class="device_help">-111.9681430</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Firebird West</td>
+                        <td class="device_help">8000</td>
+                        <td class="device_help">33.2689140</td>
+                        <td class="device_help">-111.9719700</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Ford Test Track</td>
+                        <td class="device_help">8100</td>
+                        <td class="device_help">42.2983789</td>
+                        <td class="device_help">-83.2259279</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Fortaleza</td>
+                        <td class="device_help">8200</td>
+                        <td class="device_help">-3.8823340</td>
+                        <td class="device_help">-38.4587900</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Fuji</td>
+                        <td class="device_help">8300</td>
+                        <td class="device_help">35.3738250</td>
+                        <td class="device_help">138.9297369</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Fundidora Park</td>
+                        <td class="device_help">8400</td>
+                        <td class="device_help">25.6778010</td>
+                        <td class="device_help">-100.2864750</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Gainsville</td>
+                        <td class="device_help">8500</td>
+                        <td class="device_help">28.1514520</td>
+                        <td class="device_help">-81.8913010</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Gateway Intl</td>
+                        <td class="device_help">8600</td>
+                        <td class="device_help">38.6504510</td>
+                        <td class="device_help">-90.1369110</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Gellerasen</td>
+                        <td class="device_help">8700</td>
+                        <td class="device_help">59.3832120</td>
+                        <td class="device_help">14.5136690</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">General Roca</td>
+                        <td class="device_help">8800</td>
+                        <td class="device_help">-39.0764090</td>
+                        <td class="device_help">-67.5804130</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Gingerman</td>
+                        <td class="device_help">8900</td>
+                        <td class="device_help">42.4080390</td>
+                        <td class="device_help">-86.1404619</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Goiania</td>
+                        <td class="device_help">9000</td>
+                        <td class="device_help">-16.7193990</td>
+                        <td class="device_help">-49.1930290</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Goodwood</td>
+                        <td class="device_help">9100</td>
+                        <td class="device_help">50.8579560</td>
+                        <td class="device_help">0.7526280</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">GrandSport Speedway</td>
+                        <td class="device_help">9200</td>
+                        <td class="device_help">29.3247230</td>
+                        <td class="device_help">-95.0462830</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Grattan</td>
+                        <td class="device_help">9300</td>
+                        <td class="device_help">43.0960670</td>
+                        <td class="device_help">-85.3843530</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Guapore</td>
+                        <td class="device_help">9400</td>
+                        <td class="device_help">-28.8445610</td>
+                        <td class="device_help">-51.8526390</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Hallett</td>
+                        <td class="device_help">9500</td>
+                        <td class="device_help">36.2206780</td>
+                        <td class="device_help">-96.5903970</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Harris Hill</td>
+                        <td class="device_help">9600</td>
+                        <td class="device_help">29.9188960</td>
+                        <td class="device_help">-97.8732120</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Heartland</td>
+                        <td class="device_help">9700</td>
+                        <td class="device_help">38.9269460</td>
+                        <td class="device_help">-95.6767240</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">High Plains</td>
+                        <td class="device_help">9800</td>
+                        <td class="device_help">39.7349470</td>
+                        <td class="device_help">-103.8939710</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Holden Performance</td>
+                        <td class="device_help">9900</td>
+                        <td class="device_help">-27.7469180</td>
+                        <td class="device_help">153.2936230</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Homebush</td>
+                        <td class="device_help">10000</td>
+                        <td class="device_help">-33.8437200</td>
+                        <td class="device_help">151.0708090</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Homestead</td>
+                        <td class="device_help">10100</td>
+                        <td class="device_help">25.4537139</td>
+                        <td class="device_help">-80.4097170</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Honda Proving Center</td>
+                        <td class="device_help">10200</td>
+                        <td class="device_help">35.2604080</td>
+                        <td class="device_help">-117.9589710</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Hungaroring</td>
+                        <td class="device_help">10300</td>
+                        <td class="device_help">47.5788830</td>
+                        <td class="device_help">19.2484140</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Imola</td>
+                        <td class="device_help">10400</td>
+                        <td class="device_help">44.3440293</td>
+                        <td class="device_help">11.7163993</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Indianapolis</td>
+                        <td class="device_help">10600</td>
+                        <td class="device_help">39.7931470</td>
+                        <td class="device_help">-86.2389000</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Indianapolis MS</td>
+                        <td class="device_help">10500</td>
+                        <td class="device_help">39.7931490</td>
+                        <td class="device_help">-86.2388700</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Infineon</td>
+                        <td class="device_help">10700</td>
+                        <td class="device_help">38.1615848</td>
+                        <td class="device_help">-122.4547235</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Interlagos GP Circuit</td>
+                        <td class="device_help">10800</td>
+                        <td class="device_help">-23.7040320</td>
+                        <td class="device_help">-46.6998710</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Interlomas</td>
+                        <td class="device_help">10900</td>
+                        <td class="device_help">-38.6207310</td>
+                        <td class="device_help">-72.4670270</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Irwindale</td>
+                        <td class="device_help">11000</td>
+                        <td class="device_help">34.1109899</td>
+                        <td class="device_help">-117.9875460</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Jerez</td>
+                        <td class="device_help">11100</td>
+                        <td class="device_help">36.7096740</td>
+                        <td class="device_help">-6.0324950</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Johor</td>
+                        <td class="device_help">11200</td>
+                        <td class="device_help">1.4800850</td>
+                        <td class="device_help">103.9083349</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Kaeng Krachan</td>
+                        <td class="device_help">11300</td>
+                        <td class="device_help">12.9453232</td>
+                        <td class="device_help">99.7061944</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Kansas Speedway</td>
+                        <td class="device_help">11400</td>
+                        <td class="device_help">39.1165810</td>
+                        <td class="device_help">-94.8338380</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Kemora</td>
+                        <td class="device_help">11500</td>
+                        <td class="device_help">63.4202520</td>
+                        <td class="device_help">23.9832492</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Kentucky Speedway</td>
+                        <td class="device_help">11600</td>
+                        <td class="device_help">38.7125430</td>
+                        <td class="device_help">-84.9184690</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Kia Proving Grounds</td>
+                        <td class="device_help">11700</td>
+                        <td class="device_help">35.0486190</td>
+                        <td class="device_help">-118.0326250</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Knockhill</td>
+                        <td class="device_help">11800</td>
+                        <td class="device_help">56.1308984</td>
+                        <td class="device_help">-3.5065673</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Kyalami</td>
+                        <td class="device_help">11900</td>
+                        <td class="device_help">-25.9987750</td>
+                        <td class="device_help">28.0698990</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Laguna Seca</td>
+                        <td class="device_help">12000</td>
+                        <td class="device_help">36.5864530</td>
+                        <td class="device_help">-121.7566080</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Lakeside</td>
+                        <td class="device_help">12100</td>
+                        <td class="device_help">-27.2284720</td>
+                        <td class="device_help">152.9649060</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">La Plata</td>
+                        <td class="device_help">12200</td>
+                        <td class="device_help">-34.9795260</td>
+                        <td class="device_help">-58.1818520</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Las Flores</td>
+                        <td class="device_help">12300</td>
+                        <td class="device_help">-36.0065460</td>
+                        <td class="device_help">-59.0711390</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Las Vegas MS Inner</td>
+                        <td class="device_help">12400</td>
+                        <td class="device_help">36.2722840</td>
+                        <td class="device_help">-115.0097380</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Las Vegas MS Oval</td>
+                        <td class="device_help">12500</td>
+                        <td class="device_help">36.2745020</td>
+                        <td class="device_help">-115.0126120</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Las Vegas MS Road</td>
+                        <td class="device_help">12600</td>
+                        <td class="device_help">36.2681170</td>
+                        <td class="device_help">-115.0168450</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Lausitzring</td>
+                        <td class="device_help">12700</td>
+                        <td class="device_help">51.5349480</td>
+                        <td class="device_help">13.9275260</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Le Mans</td>
+                        <td class="device_help">12800</td>
+                        <td class="device_help">47.9515270</td>
+                        <td class="device_help">0.2075357</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Lime Rock</td>
+                        <td class="device_help">12900</td>
+                        <td class="device_help">41.9286420</td>
+                        <td class="device_help">-73.3809750</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Long Beach</td>
+                        <td class="device_help">13000</td>
+                        <td class="device_help">33.7622420</td>
+                        <td class="device_help">-118.1871890</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Lowes</td>
+                        <td class="device_help">13100</td>
+                        <td class="device_help">35.3522640</td>
+                        <td class="device_help">-80.6855880</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Lurcy-Levis</td>
+                        <td class="device_help">13200</td>
+                        <td class="device_help">46.7171991</td>
+                        <td class="device_help">2.9525055</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Macau</td>
+                        <td class="device_help">13300</td>
+                        <td class="device_help">22.1986550</td>
+                        <td class="device_help">113.5585940</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Magny-Cours Club</td>
+                        <td class="device_help">13400</td>
+                        <td class="device_help">46.8670652</td>
+                        <td class="device_help">3.1571734</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Magny-Cours F1</td>
+                        <td class="device_help">13500</td>
+                        <td class="device_help">46.8631896</td>
+                        <td class="device_help">3.1621991</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mallala</td>
+                        <td class="device_help">13600</td>
+                        <td class="device_help">-34.4152070</td>
+                        <td class="device_help">138.5058660</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Manfeild</td>
+                        <td class="device_help">13700</td>
+                        <td class="device_help">-40.2357910</td>
+                        <td class="device_help">175.5584390</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mantorp Park</td>
+                        <td class="device_help">13800</td>
+                        <td class="device_help">58.3691120</td>
+                        <td class="device_help">15.2837690</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Manzanita</td>
+                        <td class="device_help">13900</td>
+                        <td class="device_help">33.4046650</td>
+                        <td class="device_help">-112.1323620</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mar de Ajo</td>
+                        <td class="device_help">14000</td>
+                        <td class="device_help">-36.7105660</td>
+                        <td class="device_help">-56.7204140</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mar del Plata</td>
+                        <td class="device_help">14100</td>
+                        <td class="device_help">-37.9947710</td>
+                        <td class="device_help">-57.6387280</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Martinsville</td>
+                        <td class="device_help">14200</td>
+                        <td class="device_help">36.6342320</td>
+                        <td class="device_help">-79.8522730</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Marysville</td>
+                        <td class="device_help">14300</td>
+                        <td class="device_help">39.1371760</td>
+                        <td class="device_help">-121.5579430</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Megara</td>
+                        <td class="device_help">14400</td>
+                        <td class="device_help">37.9870210</td>
+                        <td class="device_help">23.3629060</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Memphis Motorsports</td>
+                        <td class="device_help">14500</td>
+                        <td class="device_help">35.2821790</td>
+                        <td class="device_help">-89.9468410</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Michigan Intl</td>
+                        <td class="device_help">14600</td>
+                        <td class="device_help">42.0676420</td>
+                        <td class="device_help">-84.2447410</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mid America</td>
+                        <td class="device_help">14700</td>
+                        <td class="device_help">41.0245200</td>
+                        <td class="device_help">-95.8213590</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mid-Ohio</td>
+                        <td class="device_help">14800</td>
+                        <td class="device_help">40.6894999</td>
+                        <td class="device_help">-82.6352440</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Miller</td>
+                        <td class="device_help">15100</td>
+                        <td class="device_help">40.5831779</td>
+                        <td class="device_help">-112.3763750</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Miller East</td>
+                        <td class="device_help">14900</td>
+                        <td class="device_help">40.5831510</td>
+                        <td class="device_help">-112.3763930</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Miller Full</td>
+                        <td class="device_help">15000</td>
+                        <td class="device_help">40.5831470</td>
+                        <td class="device_help">-112.3763750</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Miller West</td>
+                        <td class="device_help">15200</td>
+                        <td class="device_help">40.5830940</td>
+                        <td class="device_help">-112.3824330</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Milwakee</td>
+                        <td class="device_help">15300</td>
+                        <td class="device_help">43.0204290</td>
+                        <td class="device_help">-88.0129040</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Misano</td>
+                        <td class="device_help">15400</td>
+                        <td class="device_help">43.9618419</td>
+                        <td class="device_help">12.6840103</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Monaco</td>
+                        <td class="device_help">15500</td>
+                        <td class="device_help">43.7350250</td>
+                        <td class="device_help">7.4212380</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mondello Park</td>
+                        <td class="device_help">15600</td>
+                        <td class="device_help">53.2574300</td>
+                        <td class="device_help">-6.7445430</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Monticello</td>
+                        <td class="device_help">15700</td>
+                        <td class="device_help">41.6198340</td>
+                        <td class="device_help">-74.6974879</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Monza</td>
+                        <td class="device_help">15800</td>
+                        <td class="device_help">45.6177419</td>
+                        <td class="device_help">9.2809437</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Morgan Park</td>
+                        <td class="device_help">15900</td>
+                        <td class="device_help">-28.2620460</td>
+                        <td class="device_help">152.0363919</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Moroso</td>
+                        <td class="device_help">16000</td>
+                        <td class="device_help">26.9207020</td>
+                        <td class="device_help">-80.3058260</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mosport</td>
+                        <td class="device_help">16100</td>
+                        <td class="device_help">44.0543970</td>
+                        <td class="device_help">-78.6744669</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Most</td>
+                        <td class="device_help">16200</td>
+                        <td class="device_help">50.5194370</td>
+                        <td class="device_help">13.6077450</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">MSR Cresson</td>
+                        <td class="device_help">16300</td>
+                        <td class="device_help">32.5231270</td>
+                        <td class="device_help">-97.6152580</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">MSR Houston</td>
+                        <td class="device_help">16400</td>
+                        <td class="device_help">29.2790530</td>
+                        <td class="device_help">-95.4223989</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Mugello</td>
+                        <td class="device_help">16500</td>
+                        <td class="device_help">43.9975940</td>
+                        <td class="device_help">11.3715280</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Myrtle Beach</td>
+                        <td class="device_help">16600</td>
+                        <td class="device_help">33.7459490</td>
+                        <td class="device_help">-78.9525710</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">NakornChaisri</td>
+                        <td class="device_help">16700</td>
+                        <td class="device_help">13.9108890</td>
+                        <td class="device_help">100.1676640</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Nashville Motorsports Speedway</td>
+                        <td class="device_help">16800</td>
+                        <td class="device_help">36.1308390</td>
+                        <td class="device_help">-86.7630000</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Nashville Super Speedway</td>
+                        <td class="device_help">16900</td>
+                        <td class="device_help">36.0462430</td>
+                        <td class="device_help">-86.4096809</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Nazereth</td>
+                        <td class="device_help">17000</td>
+                        <td class="device_help">40.7274030</td>
+                        <td class="device_help">-75.3188830</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Nelson Ledges</td>
+                        <td class="device_help">17100</td>
+                        <td class="device_help">41.3070950</td>
+                        <td class="device_help">-81.0141140</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">New Hampshire Motorspeedway</td>
+                        <td class="device_help">17200</td>
+                        <td class="device_help">43.3630780</td>
+                        <td class="device_help">-71.4620140</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">New Jersey Lighting</td>
+                        <td class="device_help">17300</td>
+                        <td class="device_help">39.3615330</td>
+                        <td class="device_help">-75.0539520</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">New Jersey Thunderbolt</td>
+                        <td class="device_help">17400</td>
+                        <td class="device_help">39.3605150</td>
+                        <td class="device_help">-75.0704170</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">NOLA North Track</td>
+                        <td class="device_help">17500</td>
+                        <td class="device_help">29.8854166</td>
+                        <td class="device_help">-90.1991500</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">No Problem</td>
+                        <td class="device_help">17600</td>
+                        <td class="device_help">30.0183490</td>
+                        <td class="device_help">-91.0807680</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">North Florida Park</td>
+                        <td class="device_help">17700</td>
+                        <td class="device_help">30.5748900</td>
+                        <td class="device_help">-83.1564110</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Nueve de Julio</td>
+                        <td class="device_help">17800</td>
+                        <td class="device_help">-35.4348950</td>
+                        <td class="device_help">-60.9112370</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Nurburgring</td>
+                        <td class="device_help">17900</td>
+                        <td class="device_help">50.3355833</td>
+                        <td class="device_help">6.9475333</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Ocala GP</td>
+                        <td class="device_help">18000</td>
+                        <td class="device_help">29.2280470</td>
+                        <td class="device_help">-82.1901150</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Okayama</td>
+                        <td class="device_help">18100</td>
+                        <td class="device_help">34.9142940</td>
+                        <td class="device_help">134.2189420</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Oporto</td>
+                        <td class="device_help">18200</td>
+                        <td class="device_help">41.1735190</td>
+                        <td class="device_help">-8.6851820</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">OReilly</td>
+                        <td class="device_help">18300</td>
+                        <td class="device_help">39.8125130</td>
+                        <td class="device_help">-86.3418360</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Oschersleben</td>
+                        <td class="device_help">18400</td>
+                        <td class="device_help">52.0275380</td>
+                        <td class="device_help">11.2781340</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Oulton Park</td>
+                        <td class="device_help">18500</td>
+                        <td class="device_help">53.1800337</td>
+                        <td class="device_help">-2.6128610</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Pacific</td>
+                        <td class="device_help">18600</td>
+                        <td class="device_help">47.3206610</td>
+                        <td class="device_help">-122.1437440</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Paul Ricard</td>
+                        <td class="device_help">18700</td>
+                        <td class="device_help">43.2511709</td>
+                        <td class="device_help">5.7930340</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Pembrey</td>
+                        <td class="device_help">18800</td>
+                        <td class="device_help">51.7058670</td>
+                        <td class="device_help">-4.3238440</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Phillip Island</td>
+                        <td class="device_help">18900</td>
+                        <td class="device_help">-38.5013350</td>
+                        <td class="device_help">145.2315488</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Phoenix Intl</td>
+                        <td class="device_help">19000</td>
+                        <td class="device_help">33.3759980</td>
+                        <td class="device_help">-112.3114180</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Pikes Peak</td>
+                        <td class="device_help">19200</td>
+                        <td class="device_help">38.5909460</td>
+                        <td class="device_help">-104.6782120</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Pikes Peak Hill Climb</td>
+                        <td class="device_help">19100</td>
+                        <td class="device_help">38.8226000</td>
+                        <td class="device_help">-105.0089000</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Pocono</td>
+                        <td class="device_help">19300</td>
+                        <td class="device_help">41.0526250</td>
+                        <td class="device_help">-75.5117690</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Portimao</td>
+                        <td class="device_help">19400</td>
+                        <td class="device_help">37.2297999</td>
+                        <td class="device_help">-8.6299166</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Portland</td>
+                        <td class="device_help">19600</td>
+                        <td class="device_help">45.5949830</td>
+                        <td class="device_help">-122.6945170</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Portland Intl</td>
+                        <td class="device_help">19500</td>
+                        <td class="device_help">45.5940750</td>
+                        <td class="device_help">-122.6909140</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Prince George</td>
+                        <td class="device_help">19700</td>
+                        <td class="device_help">-33.0495300</td>
+                        <td class="device_help">27.8698790</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Pukekohe</td>
+                        <td class="device_help">19800</td>
+                        <td class="device_help">-37.2178190</td>
+                        <td class="device_help">174.9166770</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Putnam</td>
+                        <td class="device_help">19900</td>
+                        <td class="device_help">39.5823040</td>
+                        <td class="device_help">-86.7423200</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Qatar</td>
+                        <td class="device_help">20000</td>
+                        <td class="device_help">25.4891830</td>
+                        <td class="device_help">51.4495490</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Queensland Raceway</td>
+                        <td class="device_help">20100</td>
+                        <td class="device_help">-27.6906460</td>
+                        <td class="device_help">152.6546360</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Reno Fernley Raceway</td>
+                        <td class="device_help">20200</td>
+                        <td class="device_help">39.5394040</td>
+                        <td class="device_help">-119.2417810</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Richmond Intl</td>
+                        <td class="device_help">20300</td>
+                        <td class="device_help">37.5910960</td>
+                        <td class="device_help">-77.4196610</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Rijeka</td>
+                        <td class="device_help">20400</td>
+                        <td class="device_help">45.3827519</td>
+                        <td class="device_help">14.5092920</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Road America</td>
+                        <td class="device_help">20600</td>
+                        <td class="device_help">43.7980170</td>
+                        <td class="device_help">-87.9896190</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Road America Short</td>
+                        <td class="device_help">20500</td>
+                        <td class="device_help">43.8031010</td>
+                        <td class="device_help">-87.9924790</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Road Atlanta</td>
+                        <td class="device_help">20700</td>
+                        <td class="device_help">34.1503860</td>
+                        <td class="device_help">-83.8142110</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Rockingham</td>
+                        <td class="device_help">20800</td>
+                        <td class="device_help">34.9758610</td>
+                        <td class="device_help">-79.6108979</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Roebling Road</td>
+                        <td class="device_help">20900</td>
+                        <td class="device_help">32.1670440</td>
+                        <td class="device_help">-81.3228270</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sachsenring</td>
+                        <td class="device_help">21000</td>
+                        <td class="device_help">50.7917130</td>
+                        <td class="device_help">12.6882590</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Salzburgring</td>
+                        <td class="device_help">21100</td>
+                        <td class="device_help">47.8230730</td>
+                        <td class="device_help">13.1690450</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sandia</td>
+                        <td class="device_help">21200</td>
+                        <td class="device_help">35.0205890</td>
+                        <td class="device_help">-106.8588520</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sandown</td>
+                        <td class="device_help">21300</td>
+                        <td class="device_help">-37.9490784</td>
+                        <td class="device_help">145.1643209</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sebring</td>
+                        <td class="device_help">21600</td>
+                        <td class="device_help">27.4502500</td>
+                        <td class="device_help">-81.3537360</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sebring Short 1</td>
+                        <td class="device_help">21400</td>
+                        <td class="device_help">27.4569020</td>
+                        <td class="device_help">-81.3496510</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sebring Short 2</td>
+                        <td class="device_help">21500</td>
+                        <td class="device_help">27.4561170</td>
+                        <td class="device_help">-81.3539690</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Second Creek</td>
+                        <td class="device_help">21700</td>
+                        <td class="device_help">39.8603470</td>
+                        <td class="device_help">-104.7895990</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sendai</td>
+                        <td class="device_help">21800</td>
+                        <td class="device_help">38.2860940</td>
+                        <td class="device_help">140.6218910</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sentul</td>
+                        <td class="device_help">21900</td>
+                        <td class="device_help">-6.5364540</td>
+                        <td class="device_help">106.8563530</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sepang</td>
+                        <td class="device_help">22000</td>
+                        <td class="device_help">2.7607436</td>
+                        <td class="device_help">101.7380675</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Shannonville</td>
+                        <td class="device_help">22100</td>
+                        <td class="device_help">44.2252280</td>
+                        <td class="device_help">-77.1598040</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Silverstone Arena</td>
+                        <td class="device_help">22200</td>
+                        <td class="device_help">52.0787198</td>
+                        <td class="device_help">-1.0174020</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Snetterton</td>
+                        <td class="device_help">22300</td>
+                        <td class="device_help">52.4634064</td>
+                        <td class="device_help">0.9446992</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Spa</td>
+                        <td class="device_help">22400</td>
+                        <td class="device_help">50.4431666</td>
+                        <td class="device_help">5.9661833</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Speed World Oval</td>
+                        <td class="device_help">22500</td>
+                        <td class="device_help">28.3982630</td>
+                        <td class="device_help">-81.5785960</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Spokane</td>
+                        <td class="device_help">22700</td>
+                        <td class="device_help">47.6627470</td>
+                        <td class="device_help">-117.5708780</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Spokane Short</td>
+                        <td class="device_help">22600</td>
+                        <td class="device_help">47.6627430</td>
+                        <td class="device_help">-117.5708450</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Spring Mountain 1 5</td>
+                        <td class="device_help">22800</td>
+                        <td class="device_help">36.1752100</td>
+                        <td class="device_help">-115.9105900</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Spring Mountain 3 4</td>
+                        <td class="device_help">22900</td>
+                        <td class="device_help">36.1686500</td>
+                        <td class="device_help">-115.9100150</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">St Petersburg</td>
+                        <td class="device_help">23000</td>
+                        <td class="device_help">27.7654280</td>
+                        <td class="device_help">-82.6296080</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Stratotech</td>
+                        <td class="device_help">23100</td>
+                        <td class="device_help">53.7363760</td>
+                        <td class="device_help">-113.2339460</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Streets of Willow</td>
+                        <td class="device_help">23200</td>
+                        <td class="device_help">34.8747970</td>
+                        <td class="device_help">-118.2587400</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Sugo</td>
+                        <td class="device_help">23300</td>
+                        <td class="device_help">38.1425139</td>
+                        <td class="device_help">140.7746030</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Summit Point</td>
+                        <td class="device_help">23600</td>
+                        <td class="device_help">39.2351950</td>
+                        <td class="device_help">-77.9690690</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Summit Point Jefferson</td>
+                        <td class="device_help">23400</td>
+                        <td class="device_help">39.2341420</td>
+                        <td class="device_help">-77.9723710</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Summit Point Shenandoah</td>
+                        <td class="device_help">23500</td>
+                        <td class="device_help">39.2412820</td>
+                        <td class="device_help">-77.9797450</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Surfers Paradise</td>
+                        <td class="device_help">23700</td>
+                        <td class="device_help">-27.9861680</td>
+                        <td class="device_help">153.4272720</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Suzuka</td>
+                        <td class="device_help">23800</td>
+                        <td class="device_help">34.8432100</td>
+                        <td class="device_help">136.5404439</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Symmons Plains</td>
+                        <td class="device_help">23900</td>
+                        <td class="device_help">-41.6576961</td>
+                        <td class="device_help">147.2500363</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Talladega GP</td>
+                        <td class="device_help">24000</td>
+                        <td class="device_help">33.5033590</td>
+                        <td class="device_help">-85.9996030</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Talladega Oval</td>
+                        <td class="device_help">24100</td>
+                        <td class="device_help">33.5632630</td>
+                        <td class="device_help">-86.0692120</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Taupo</td>
+                        <td class="device_help">24200</td>
+                        <td class="device_help">-38.6626850</td>
+                        <td class="device_help">176.1469370</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Teretonga</td>
+                        <td class="device_help">24300</td>
+                        <td class="device_help">-46.4409270</td>
+                        <td class="device_help">168.2630720</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Texas Motor Speedway</td>
+                        <td class="device_help">24400</td>
+                        <td class="device_help">33.3729000</td>
+                        <td class="device_help">-97.2842380</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Texas World Speedway</td>
+                        <td class="device_help">24500</td>
+                        <td class="device_help">30.5380070</td>
+                        <td class="device_help">-96.2244270</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">The Glen</td>
+                        <td class="device_help">24600</td>
+                        <td class="device_help">42.3409620</td>
+                        <td class="device_help">-76.9289170</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Thompson Speedway</td>
+                        <td class="device_help">24700</td>
+                        <td class="device_help">41.9817570</td>
+                        <td class="device_help">-71.8255129</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Thruxton</td>
+                        <td class="device_help">24800</td>
+                        <td class="device_help">51.2078060</td>
+                        <td class="device_help">-1.6091975</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">ThunderHill</td>
+                        <td class="device_help">24900</td>
+                        <td class="device_help">39.5384670</td>
+                        <td class="device_help">-122.3311560</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Tokachi</td>
+                        <td class="device_help">25000</td>
+                        <td class="device_help">42.6306340</td>
+                        <td class="device_help">143.2922850</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Toronto Motorsports Park</td>
+                        <td class="device_help">25100</td>
+                        <td class="device_help">42.9028630</td>
+                        <td class="device_help">-79.8579990</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Townsville</td>
+                        <td class="device_help">25200</td>
+                        <td class="device_help">-19.2720600</td>
+                        <td class="device_help">146.8109188</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Tsukuba</td>
+                        <td class="device_help">25300</td>
+                        <td class="device_help">36.1500820</td>
+                        <td class="device_help">139.9193620</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Twin Ring Montegi</td>
+                        <td class="device_help">25400</td>
+                        <td class="device_help">36.5330320</td>
+                        <td class="device_help">140.2267130</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Val de Vienne</td>
+                        <td class="device_help">25500</td>
+                        <td class="device_help">46.1972590</td>
+                        <td class="device_help">0.6356030</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Valencia</td>
+                        <td class="device_help">25600</td>
+                        <td class="device_help">39.4840463</td>
+                        <td class="device_help">0.6300597</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Vallelunga</td>
+                        <td class="device_help">25700</td>
+                        <td class="device_help">42.1577089</td>
+                        <td class="device_help">12.3689960</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Varano</td>
+                        <td class="device_help">25800</td>
+                        <td class="device_help">44.6806980</td>
+                        <td class="device_help">10.0209050</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">VIR</td>
+                        <td class="device_help">26100</td>
+                        <td class="device_help">36.5686420</td>
+                        <td class="device_help">-79.2077890</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Virginia Intl Patriot</td>
+                        <td class="device_help">25900</td>
+                        <td class="device_help">36.5604350</td>
+                        <td class="device_help">-79.2062360</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Virginia Intl South</td>
+                        <td class="device_help">26000</td>
+                        <td class="device_help">36.5339910</td>
+                        <td class="device_help">-79.2066550</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Volvo Proving Grounds</td>
+                        <td class="device_help">26200</td>
+                        <td class="device_help">33.6969470</td>
+                        <td class="device_help">-112.5043590</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Wakefield</td>
+                        <td class="device_help">26300</td>
+                        <td class="device_help">-34.8401540</td>
+                        <td class="device_help">149.6851580</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Warwick Farm</td>
+                        <td class="device_help">26400</td>
+                        <td class="device_help">-33.9111700</td>
+                        <td class="device_help">150.9451960</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Waterford Hills</td>
+                        <td class="device_help">26500</td>
+                        <td class="device_help">42.7085760</td>
+                        <td class="device_help">-83.3912500</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Watkins Glen</td>
+                        <td class="device_help">26600</td>
+                        <td class="device_help">42.3410310</td>
+                        <td class="device_help">-76.9288750</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Welkom</td>
+                        <td class="device_help">26700</td>
+                        <td class="device_help">-27.9047140</td>
+                        <td class="device_help">26.7110550</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">West Palm Beach</td>
+                        <td class="device_help">26800</td>
+                        <td class="device_help">26.9206970</td>
+                        <td class="device_help">-80.3057890</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Willow Springs</td>
+                        <td class="device_help">26900</td>
+                        <td class="device_help">34.8715530</td>
+                        <td class="device_help">-118.2636560</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Winton</td>
+                        <td class="device_help">27000</td>
+                        <td class="device_help">-36.5188820</td>
+                        <td class="device_help">146.0871151</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Zandvoort</td>
+                        <td class="device_help">27100</td>
+                        <td class="device_help">52.3888510</td>
+                        <td class="device_help">4.5407599</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Zhuhai</td>
+                        <td class="device_help">27200</td>
+                        <td class="device_help">22.3668940</td>
+                        <td class="device_help">113.5600980</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Zolder</td>
+                        <td class="device_help">27300</td>
+                        <td class="device_help">50.9890300</td>
+                        <td class="device_help">5.2557240</td>
+                      </tr>
+                      <tr class="device_help">
+                        <td class="device_help">Zwartkops</td>
+                        <td class="device_help">27400</td>
+                        <td class="device_help">-25.8100210</td>
+                        <td class="device_help">28.1124940</td>
+                      </tr>
+                    </table>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Value">
+        <Props DefaultLogRate="1S" Qty="s" Validation="MinMax" ValMin="0.000000e+000" ValClampMax="false">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3" Min="0.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Running">
+        <Props Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The time the vehicle has been moving:
+                    <ul class="device_help">
+                      <li class="device_help">When <em class="device_chan">State</em> is <em class="device_enum">Out Lap</em> this is the time since <em class="device_ref">Vehicle Speed</em> increased from
+                        0</li>
+                      <li class="device_help">When <em class="device_chan">State</em> is <em class="device_enum">Timed Lap</em> this is the time since the last lap beacon</li>
+                      <li class="device_help">When <em class="device_ref">Vehicle Speed</em> drops to 0 the calculation is paused and represents the time for the
+                        "In Lap"</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Split">
+        <Props DefaultLogRate="1S" Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The split time of the current lap. Calculated as follows:
+                    <ul class="device_help">
+                      <li class="device_help">time from the lap beacon to the most recent split beacon, or</li>
+                      <li class="device_help">time from leaving the pit to the most recent split beacon, or</li>
+                      <li class="device_help">time from leaving the pit to the first lap beacon (Out Lap time)</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.State">
+        <Props Type="::This.Lap State Enumeration">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The state of the lap timing system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Vehicle Speed">
+        <Props Qty="m/s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false">
+         <Locale>
+          <Default Unit="km/h"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Beacon Number Main">
+        <Props DefaultLogRate="1S" DiagnosticLog="true" DiagnosticLogRate="1S" Type="s32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The number of the main beacon.</p>
+                  <p class="device_help">Used to identify the main beacon when calculating lap times from data logging. Required by MoTeC i2
+                    lap calculations.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Beacon Ticks">
+        <Props DiagnosticLog="true" DiagnosticLogRate="200MS" Type="u32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The system "ticks" at which the most recent beacon was detected.</p>
+                  <p class="device_help">Used to calculate lap timing in the ECU and data logging. Required by MoTeC i2 lap calculations.
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Beacon Number">
+        <Props DiagnosticLog="true" DiagnosticLogRate="200MS" Type="s32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The number of the most recent beacon.</p>
+                  <p class="device_help">Used to calculate lap and split timing in the ECU and data logging. Required by MoTeC i2 lap
+                    calculations.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Distance.Value">
+        <Props Qty="m" ValMin="0.00000000000000000e+000" ValMax="0.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="km"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Distance.Session">
+        <Props Qty="m" ValMin="0.00000000000000000e+000" ValMax="0.00000000000000000e+000">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="km"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Total Distance travelled in the session:
+                    <ul class="device_help">
+                      <li class="device_help">Starts at 0 when ECU starts</li>
+                      <li class="device_help">Set to 0 when <em class="device_chan">State</em> is <em class="device_enum">Disabled</em></li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Distance">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Distance into the current lap.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Number.Value">
+        <Props DefaultLogRate="1S" Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.MethodUserParam" Name="Base.SetEnable">
+        <Signature Name="" ReturnType="">
+         <Params>
+          <Param Name="Enable" Type="bool" Attrs="0">
+           <Description>
+<![CDATA[<p>Pass the value 'true' to enable the lap time calculation.</p>]]>
+           </Description>
+          </Param>
+         </Params>
+         <Description>
+<![CDATA[<p>Controls whether the lap time calculation is enabled.</p>]]>
+         </Description>
+         <DescriptionFull>
+<![CDATA[<!-- Empty -->]]>
+         </DescriptionFull>
+         <ReturnDescription>
+<![CDATA[<!-- Empty -->]]>
+         </ReturnDescription>
+        </Signature>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgZW5hYiA9CglNYWluLklucHV0LklzQWN0aXZlKCkgb3IKCVRoaXMuQlIyLkNBTiBCdXMgbmVxIFRoaXMuQlIyLkNBTiBCdXMuTm90IGluIFVzZSBvcgoJVGhpcy5HUFMuTW9kZSBlcSBUaGlzLkdQUy5Nb2RlLkVuYWJsZWQ7CgppZiAoaW4uRW5hYmxlIGFuZCBlbmFiIGFuZCBNb2RlIGVxIE1vZGUuRW5hYmxlZCkKewoJRW5hYmxlID0gRW5hYmxlLkVuYWJsZWQ7Cn0KZWxzZQp7CglFbmFibGUgPSBFbmFibGUuRGlzYWJsZWQ7Cn0K]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Sector">
+        <Props DefaultLogRate="1S" Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The time for the most recent sector. Calculated as follows when split beacons are detected:
+                    <ul class="device_help">
+                      <li class="device_help">time between the lap beacon and first split beacon, or</li>
+                      <li class="device_help">time between successive split beacons, or</li>
+                      <li class="device_help">time between the last split beacon and the lap beacon, or</li>
+                      <li class="device_help">time from leaving the pit to the first split beacon</li>
+                    </ul>
+                  <p></p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Enable">
+        <Props Type="MoTeC Types.Mode Enumeration">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Indicates if lap timing is currently enabled. Normally only <em class="device_enum">Disabled</em> for a short time to
+                    reset lap channels.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Number">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Calculated number of laps in outing.</p>
+                  <p class="device_help">Set to 0 when <em class="device_chan">State</em> changes from <em class="device_enum">Pit</em> to <em class="device_enum">Out Lap</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Time.Stopped">
+        <Props Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The time <em class="device_ref">Vehicle Speed</em> has been 0.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Time">
+        <Props UseDefValue="true" DefValue="This.Value"/>
+        <Comment>
+<![CDATA[<p class="device_help">Lap time for the last timed lap.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.Number.Session">
+        <Props DefaultLogRate="1S" Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Normal"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="3"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Number of laps in session.
+                    <ul class="device_help">
+                      <li class="device_help">Starts at 0 when ECU starts</li>
+                      <li class="device_help">Set to 0 when <em class="device_chan">State</em> is <em class="device_enum">Disabled</em>.</li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Beacon.Ignore Time.Value"/>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Beacon">
+        <Comment>
+<![CDATA[<p class="device_help">Settings related to beacon operation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Beacon.Main">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The main (start / finish) beacon number.</p>
+                  <p class="device_help">When:
+                    <ul class="device_help">
+                      <li class="device_help"><em class="device_group">Main</em> = 0: any beacon detected is used as the main beacon</li>
+                      <li class="device_help"><em class="device_group">Main</em> &lt; 100: all beacons are received. Not normally used.</li>
+                      <li class="device_help"><em class="device_group">Main</em> &gt;= 100: only beacons with the same mode are received. For example if Main = 401
+                        then beacons from 400 to 499 can be received and other beacons are rejected</li>
+                    </ul>
+                  </p>
+                  <p class="device_help">When switched inputs <em class="device_group">Main</em> or <em class="device_group">Split</em> are configured:
+                    <ul class="device_help">
+                      <li class="device_help">Main = 0: Only <em class="device_group">Main</em> is used</li>
+                      <li class="device_help">Main &gt; 0:
+                        <ul class="device_help">
+                          <li class="device_help"><em class="device_group">Main</em> will generate a beacon with <em class="device_chan">Beacon Number</em> = <em class="device_group">Main</em></li>
+                          <li class="device_help"><em class="device_group">Split</em> will generate a beacon with <em class="device_chan">Beacon Number</em> = <em class="device_group">Main</em> + 1</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.Beacon.Ignore Time">
+        <Props Qty="s" Validation="MinMax" ValMin="0.00000000000000000e+000" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The minimum time between beacons.</p><p class="device_help">This determines the minimum Lap Time, Lap Time Sector and Lap Time Split but does not influence Beacon Number and Beacon Ticks to ensure all beacons can be logged.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Beacon.Main.Value"/>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Beacon Count">
+        <Props Type="u32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max="255"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Number of unique beacons that have been detected.</p>
+                  <p class="device_help">This includes all known types of beacon transmitters.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Bias">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2" Min="2.00000000000000000e+000" Max="3.00000000000000000e+000"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Detection Time">
+        <Props Qty="s" ValMin="0.000000e+000" ValMax="0.000000e+000">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Unit="ms" DPS="0" Min="0.000000e+000" Max="1.000000e-001"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The amount of time the beacon signal was received.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Detector Background">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Detector Peak">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Error Code">
+        <Props Type="u32" ValMin="0" ValMax="0">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports internal BR2 error codes.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Firmware Version">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports internal BR2 firmware version.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Internal 10V">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Internal 12V">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Internal Temperature">
+        <Props Qty="K">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Temperature inside BR2</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Latest Detector Peak">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Noise Bits">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports internal BR2 noise bits.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Reset Source">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Reports internal BR2 reset source.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Secondary Threshold">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Diagnostic">
+        <Props Type="::This.BR2 Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information for the BR2.</p>
+                  <p class="device_help">This is derived from <em class="device_chan">BR2 Error Code</em>.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Trigger Threshold">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="2"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">BR2 internal voltage for diagnostics</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Valid Receptions">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max="30"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Number of times the beacon pattern was received.</p>
+                  <p class="device_help">This is an indication of the quality of the beacon signal.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.BR2.CAN Bus">
+        <Props Type="MoTeC Types.CAN Bus Enumeration 2" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Defines which of the available CAN busses is used for BR2 messaging.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Main">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the wired main beacon input.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.edge" Name="Base.Main.Input">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Input.Edge Ticks">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Main.Input.Resource">
+        <Props NameTarget="Parent.Parent.Input Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Input.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Input.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Input.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Beacon Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.UDIG_IO" Name="Base.Main.Pin">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the wired main beacon input pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Pin.Diagnostic">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Pullup Control">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Active Edge">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Threshold">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Hysteresis">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Main.Pin.Debounce">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Main.Pin.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Main.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Input.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Pin.Update"/>
+       <Component Classname="_IOMethod.udig_adc" Name="Base.Main.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Information on the maximum and minimum voltage of the wired main beacon input pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Voltage.Absolute">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max=""/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Voltage.Minimum">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Main.Voltage.Maximum">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Main.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Input.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.Update"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Main.Voltage.GetStatistics">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.Split">
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the wired split beacon input.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="_IOMethod.edge" Name="Base.Split.Input">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment/>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Input.Edge Ticks">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Split.Input.Resource">
+        <Props NameTarget="Parent.Parent.Input Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Input.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Input.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Input.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Beacon Calculation:SelectedTrigger)">
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="_IOMethod.UDIG_IO" Name="Base.Split.Pin">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Settings and information related to the wired split beacon input pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Pin.Diagnostic">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Pullup Control">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Pullup Control.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Active Edge">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Active Edge.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Threshold">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Threshold.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Hysteresis">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Hysteresis.Value"/>
+       <Component Classname="BuiltIn.Reference" Caps="AutoCreated" Name="Base.Split.Pin.Debounce">
+        <Props TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Split.Pin.Debounce.Value"/>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Split.Pin.Resource">
+        <Props NameTarget="Parent.Parent.Input.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Initialise"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Pin.Update"/>
+       <Component Classname="_IOMethod.udig_adc" Name="Base.Split.Voltage">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Input"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Information on the maximum and minimum voltage of the wired split beacon input pin.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Voltage.Absolute">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+         <Locale>
+          <Default Min="0" Max=""/>
+         </Locale>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Voltage.Minimum">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Caps="AutoCreated" Name="Base.Split.Voltage.Maximum">
+        <Props>
+         <List.UserTags>
+          <Entry Value="Pin"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Caps="AutoCreated" Name="Base.Split.Voltage.Resource">
+        <Props NameTarget="Parent.Parent.Input.Resource">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.Reserve"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.Release"/>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.Update">
+        <Props SelectedTrigger="$(Parent.Parent.Parent.Main.Voltage.Update:SelectedTrigger)"/>
+       </Component>
+       <Component Classname="BuiltIn.FuncGenerated.IOMethod" Caps="AutoCreated" Name="Base.Split.Voltage.GetStatistics">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.100MS"/>
+         </List.Triggers>
+        </Props>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.GPS">
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings related to the operation of the GPS lap detection system.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.GPS.Diagnostic">
+        <Props Type="::This.GPS Lap Calculation Diagnostic Enumeration">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Diagnostic information about the GPS lap detection calculation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.GPS.Beacon 1">
+        <Comment>
+<![CDATA[<p class="device_help">Custom GPS beacon 1.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.GPS.Beacon 2">
+        <Comment>
+<![CDATA[<p class="device_help">Custom GPS beacon 2.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.GPS.Beacon 3">
+        <Comment>
+<![CDATA[<p class="device_help">Custom GPS beacon 3.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.GPS.Beacon 4">
+        <Comment>
+<![CDATA[<p class="device_help">Custom GPS beacon 4.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Latitude">
+        <Props Type="s32e7" Qty="rad"/>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Longitude">
+        <Props Type="s32e7" Qty="rad"/>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Ticks">
+        <Props Type="u32"/>
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.GroupCompound" Name="Base.BR2">
+        <Comment>
+<![CDATA[<p class="device_help">Information and settings for the MoTeC BR2 beacon receiver</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.BR2.Battery Voltage">
+        <Props Qty="V">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Battery voltage at the BR2</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Startup">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.init"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[QmVhY29uIE51bWJlciBNYWluID0gQmVhY29uLk1haW47CgppZiAoTW9kZSBlcSBNb2RlLkVuYWJsZWQpCnsKCWlmIChUaGlzLkJSMi5DQU4gQnVzIG5lcSBUaGlzLkJSMi5DQU4gQnVzLk5vdCBpbiBVc2UpCgl7CgkJbG9jYWwgb2sgPSBMaWJyYXJ5LkJSMi5Jbml0KFRoaXMuQlIyLkNBTiBCdXMuQXNJbnRlZ2VyKCkgLSAxLCBCZWFjb24uTWFpbik7CgkJaWYgKG5vdCBvaykKCQl7CgkJCVRoaXMuQlIyLkRpYWdub3N0aWMgPSBUaGlzLkJSMi5EaWFnbm9zdGljLkludmFsaWQgQ0FOIEJ1czsKCQl9CgkJZWxzZQoJCXsKCQkJVGhpcy5CUjIuRGlhZ25vc3RpYyA9IFRoaXMuQlIyLkRpYWdub3N0aWMuT0s7CgkJfQoJfQoKCWlmIChUaGlzLkdQUy5Nb2RlIGVxIFRoaXMuR1BTLk1vZGUuRW5hYmxlZCkKCXsKCQlsb2NhbCBvayA9IEdQU0xhcC5Jbml0KAoJCQlUaGlzLkdQUy5SYWRpdXMsCgkJCVRoaXMuR1BTLkJlYWNvbiAxLkxhdGl0dWRlLCBUaGlzLkdQUy5CZWFjb24gMS5Mb25naXR1ZGUsIFRoaXMuR1BTLkJlYWNvbiAxLk51bWJlciwKCQkJVGhpcy5HUFMuQmVhY29uIDIuTGF0aXR1ZGUsIFRoaXMuR1BTLkJlYWNvbiAyLkxvbmdpdHVkZSwgVGhpcy5HUFMuQmVhY29uIDIuTnVtYmVyLAoJCQlUaGlzLkdQUy5CZWFjb24gMy5MYXRpdHVkZSwgVGhpcy5HUFMuQmVhY29uIDMuTG9uZ2l0dWRlLCBUaGlzLkdQUy5CZWFjb24gMy5OdW1iZXIsCgkJCVRoaXMuR1BTLkJlYWNvbiA0LkxhdGl0dWRlLCBUaGlzLkdQUy5CZWFjb24gNC5Mb25naXR1ZGUsIFRoaXMuR1BTLkJlYWNvbiA0Lk51bWJlcik7CgoJCVRoaXMuR1BTLkRpYWdub3N0aWMgPSBvawoJCQk/IFRoaXMuR1BTLkRpYWdub3N0aWMuT0sKCQkJOiBUaGlzLkdQUy5EaWFnbm9zdGljLkJhZCBDb25maWd1cmF0aW9uOwoJfQp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Beacon Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.200MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgYmVhY29uTnVtYmVyID0gQmVhY29uIE51bWJlcjsKbG9jYWwgYmVhY29uVGlja3MgPSBCZWFjb24gVGlja3M7CgovKgogKiBTd2l0Y2hlZCBJbnB1dAogKi8Kc3RhdGljIGxvY2FsIG1haW5FZGdlUHJldmlvdXMgPSAweDA7CnN0YXRpYyBsb2NhbCBzcGxpdEVkZ2VQcmV2aW91cyA9IDB4MDsKaWYgKE1haW4uSW5wdXQgbmVxIG1haW5FZGdlUHJldmlvdXMpCnsKCWxvY2FsIEJlYWNvbkRlbHRhID0gU3lzdGVtLlRpY2tzQmV0d2VlbihCZWFjb24gVGlja3MsIE1haW4uSW5wdXQpICogU3lzdGVtLlRpY2tQZXJpb2QoKTsKCWlmICgoQmVhY29uLk1haW4gbmVxIEJlYWNvbiBOdW1iZXIpIG9yIChCZWFjb25EZWx0YSA+IEJlYWNvbi5JZ25vcmUgVGltZSkpCgl7CgkJYmVhY29uTnVtYmVyID0gQmVhY29uLk1haW47CgkJYmVhY29uVGlja3MgPSBNYWluLklucHV0OwoJfQp9CmVsc2UgaWYgKFNwbGl0LklucHV0IG5lcSBzcGxpdEVkZ2VQcmV2aW91cyBhbmQgQmVhY29uLk1haW4gPiAwKQp7Cglsb2NhbCBCZWFjb25EZWx0YSA9IFN5c3RlbS5UaWNrc0JldHdlZW4oQmVhY29uIFRpY2tzLCBTcGxpdC5JbnB1dCkgKiBTeXN0ZW0uVGlja1BlcmlvZCgpOwoJaWYgKCgoQmVhY29uLk1haW4gKyAxKSBuZXEgQmVhY29uIE51bWJlcikgb3IgKEJlYWNvbkRlbHRhID4gQmVhY29uLklnbm9yZSBUaW1lKSkKCXsKCQliZWFjb25OdW1iZXIgPSBCZWFjb24uTWFpbiArIDE7CgkJYmVhY29uVGlja3MgPSBTcGxpdC5JbnB1dDsKCX0KfQptYWluRWRnZVByZXZpb3VzID0gTWFpbi5JbnB1dDsKc3BsaXRFZGdlUHJldmlvdXMgPSBTcGxpdC5JbnB1dDsKCi8qCiAqIEJSMgogKi8KaWYgKFRoaXMuQlIyLkRpYWdub3N0aWMgZXEgVGhpcy5CUjIuRGlhZ25vc3RpYy5JbnZhbGlkIENBTiBCdXMgb3IgVGhpcy5CUjIuRGlhZ25vc3RpYyBlcSBUaGlzLkJSMi5EaWFnbm9zdGljLk5vdCBpbiBVc2UpCnsKCS8qIEZpcm13YXJlIHJlc3RhcnQgcmVxdWlyZWQgdG8gZml4IHRoaXMgKi8KfQplbHNlIGlmIChMaWJyYXJ5LkJSMi5UaW1lb3V0KCkpCnsKCVRoaXMuQlIyLkRpYWdub3N0aWMgPSBUaGlzLkJSMi5EaWFnbm9zdGljLkNBTiBCdXMgVGltZW91dDsKCVRoaXMuQlIyLkJhdHRlcnkgVm9sdGFnZSA9IENhbGN1bGF0ZS5OQU4oKTsKCVRoaXMuQlIyLkJpYXMgPSBDYWxjdWxhdGUuTkFOKCk7CglUaGlzLkJSMi5EZXRlY3RvciBCYWNrZ3JvdW5kID0gQ2FsY3VsYXRlLk5BTigpOwoJVGhpcy5CUjIuRmlybXdhcmUgVmVyc2lvbiA9IDA7CglUaGlzLkJSMi5JbnRlcm5hbCAxMFYgPSBDYWxjdWxhdGUuTkFOKCk7CglUaGlzLlRoaXMuQlIyLkludGVybmFsIDEyViA9IENhbGN1bGF0ZS5OQU4oKTsKCVRoaXMuQlIyLkludGVybmFsIFRlbXBlcmF0dXJlID0gQ2FsY3VsYXRlLk5BTigpOwoJVGhpcy5CUjIuTGF0ZXN0IERldGVjdG9yIFBlYWsgPSBDYWxjdWxhdGUuTkFOKCk7CglUaGlzLkJSMi5Ob2lzZSBCaXRzID0gMDsKCVRoaXMuQlIyLlJlc2V0IFNvdXJjZSA9IDA7CglUaGlzLkJSMi5TZWNvbmRhcnkgVGhyZXNob2xkID0gQ2FsY3VsYXRlLk5BTigpOwoJVGhpcy5CUjIuVHJpZ2dlciBUaHJlc2hvbGQgPSBDYWxjdWxhdGUuTkFOKCk7CglUaGlzLkJSMi5WYWxpZCBSZWNlcHRpb25zID0gMDsKCVRoaXMuQlIyLkRldGVjdG9yIFBlYWsgPSBDYWxjdWxhdGUuTkFOKCk7CglUaGlzLkJSMi5EZXRlY3Rpb24gVGltZSA9IENhbGN1bGF0ZS5OQU4oKTsKCVRoaXMuQlIyLkJlYWNvbiBDb3VudCA9IDA7Cn0KZWxzZQp7CgkvKiBVcGRhdGUgRGlhZ25vc3RpYyAqLwoJVGhpcy5CUjIuRXJyb3IgQ29kZSA9IExpYnJhcnkuQlIyLkVycm9yQ29kZSgpOwoJaWYgKFRoaXMuQlIyLkVycm9yIENvZGUgZXEgMCkgewoJCVRoaXMuQlIyLkRpYWdub3N0aWMgPSBUaGlzLkJSMi5EaWFnbm9zdGljLk9LOwoJfSBlbHNlIGlmIChUaGlzLkJSMi5FcnJvciBDb2RlIGVxIDEwKSB7CgkJVGhpcy5CUjIuRGlhZ25vc3RpYyA9IFRoaXMuQlIyLkRpYWdub3N0aWMuQ29uZmlndXJhdGlvbiBWZXJzaW9uOwoJfSBlbHNlIGlmIChUaGlzLkJSMi5FcnJvciBDb2RlIGVxIDExKSB7CgkJVGhpcy5CUjIuRGlhZ25vc3RpYyA9IFRoaXMuQlIyLkRpYWdub3N0aWMuQ29uZmlndXJhdGlvbiBDUkM7Cgl9IGVsc2UgaWYgKFRoaXMuQlIyLkVycm9yIENvZGUgZXEgMzEpIHsKCQlUaGlzLkJSMi5EaWFnbm9zdGljID0gVGhpcy5CUjIuRGlhZ25vc3RpYy5DQU4gSGFyZHdhcmU7Cgl9IGVsc2UgaWYgKFRoaXMuQlIyLkVycm9yIENvZGUgZXEgMzQpIHsKCQlUaGlzLkJSMi5EaWFnbm9zdGljID0gVGhpcy5CUjIuRGlhZ25vc3RpYy5DQU4gV2FybmluZzsKCX0gZWxzZSBpZiAoVGhpcy5CUjIuRXJyb3IgQ29kZSBlcSA0MikgewoJCVRoaXMuQlIyLkRpYWdub3N0aWMgPSBUaGlzLkJSMi5EaWFnbm9zdGljLkVFIFdyaXRlIEZhaWx1cmU7Cgl9IGVsc2UgaWYgKFRoaXMuQlIyLkVycm9yIENvZGUgZXEgMTAwKSB7CgkJVGhpcy5CUjIuRGlhZ25vc3RpYyA9IFRoaXMuQlIyLkRpYWdub3N0aWMuT3V0cHV0IERpYWdub3N0aWM7Cgl9IGVsc2UgaWYgKFRoaXMuQlIyLkVycm9yIENvZGUgZXEgMTAxKSB7CgkJVGhpcy5CUjIuRGlhZ25vc3RpYyA9IFRoaXMuQlIyLkRpYWdub3N0aWMuUmVjZWl2ZXIgTm9pc2U7Cgl9IGVsc2UgewoJCVRoaXMuQlIyLkRpYWdub3N0aWMgPSBUaGlzLkJSMi5EaWFnbm9zdGljLkludGVybmFsIEVycm9yOwoJfQoKCVRoaXMuQlIyLkJhdHRlcnkgVm9sdGFnZSA9IExpYnJhcnkuQlIyLkJhdHRlcnlWb2x0YWdlKCk7CglUaGlzLkJSMi5CaWFzID0gTGlicmFyeS5CUjIuQmlhcygpOwoJVGhpcy5CUjIuRGV0ZWN0b3IgQmFja2dyb3VuZCA9IExpYnJhcnkuQlIyLkRldGVjdG9yQmFja2dyb3VuZCgpOwoJVGhpcy5CUjIuRmlybXdhcmUgVmVyc2lvbiA9IExpYnJhcnkuQlIyLkZpcm13YXJlVmVyc2lvbigpOwoJVGhpcy5CUjIuSW50ZXJuYWwgMTBWID0gTGlicmFyeS5CUjIuSW50ZXJuYWwxMFYoKTsKCVRoaXMuQlIyLkludGVybmFsIDEyViA9IExpYnJhcnkuQlIyLkludGVybmFsMTJWKCk7CglUaGlzLkJSMi5JbnRlcm5hbCBUZW1wZXJhdHVyZSA9IExpYnJhcnkuQlIyLkludGVybmFsVGVtcGVyYXR1cmUoKTsKCVRoaXMuQlIyLkxhdGVzdCBEZXRlY3RvciBQZWFrID0gTGlicmFyeS5CUjIuTGF0ZXN0RGV0ZWN0b3JQZWFrKCk7CglUaGlzLkJSMi5Ob2lzZSBCaXRzID0gTGlicmFyeS5CUjIuTm9pc2VCaXRzKCk7CglUaGlzLkJSMi5SZXNldCBTb3VyY2UgPSBMaWJyYXJ5LkJSMi5SZXNldFNvdXJjZSgpOwoJVGhpcy5CUjIuU2Vjb25kYXJ5IFRocmVzaG9sZCA9IExpYnJhcnkuQlIyLlNlY29uZGFyeVRocmVzaG9sZCgpOwoJVGhpcy5CUjIuVHJpZ2dlciBUaHJlc2hvbGQgPSBMaWJyYXJ5LkJSMi5UcmlnZ2VyVGhyZXNob2xkKCk7CglUaGlzLkJSMi5WYWxpZCBSZWNlcHRpb25zID0gTGlicmFyeS5CUjIuVmFsaWRSZWNlcHRpb25zKCk7CglUaGlzLkJSMi5EZXRlY3RvciBQZWFrID0gTGlicmFyeS5CUjIuRGV0ZWN0b3JQZWFrKCk7CglUaGlzLkJSMi5EZXRlY3Rpb24gVGltZSA9IExpYnJhcnkuQlIyLkRldGVjdGlvblRpbWUoKTsKCVRoaXMuQlIyLkJlYWNvbiBDb3VudCA9IExpYnJhcnkuQlIyLkJlYWNvbkNvdW50KCk7CgkKCWlmIChMaWJyYXJ5LkJSMi5CZWFjb24oKSkKCXsKCQliZWFjb25UaWNrcyA9IExpYnJhcnkuQlIyLkJlYWNvblRpY2tzKCk7CgkJYmVhY29uTnVtYmVyID0gTGlicmFyeS5CUjIuQmVhY29uTnVtYmVyKCk7Cgl9Cn0KCi8qCiAqIEdQUwogKi8KaWYgKFRoaXMuR1BTLkRpYWdub3N0aWMuQXNJbnRlZ2VyKCkgPD0gMCkKewoJLyogRmlybXdhcmUgcmVzdGFydCByZXF1aXJlZCB0byBmaXggdGhpcyAqLwp9CmVsc2UKewoJbG9jYWwgdCA9IEdQU0xhcC5CZWFjb25UaWNrcygpOwoJbG9jYWwgbiA9IEdQU0xhcC5CZWFjb25OdW1iZXIoKTsgLyogbiBpcyBhbHdheXMgY2xvc2VzdCBiZWFjb24gZXZlbiBpZiBub3QgY3Jvc3NlZCAqLwoJc3RhdGljIGxvY2FsIDxVbnNpZ25lZCBJbnRlZ2VyPnByZXZUaWNrcyA9IDA7IC8qIG9ubHkgcHJvY2VzcyBiZWFjb24gb25jZSBhcyBwZXIgTGlicmFyeS5CUjIuQmVhY29uKCkgKi8KCglpZiAocHJldlRpY2tzIG5lcSB0KSAvKiBuZXcgYmVhY29uIGNyb3NzZWQgKi8KCXsKCQlwcmV2VGlja3MgPSB0OwoJCS8qCgkJICogU3RhbmRhcmQgYmVhY29uIGlnbm9yZSBiZWhhdmlvdXIgYXMgcGVyIGJyMl90aHJlYWQoKSBpbiBTREsKCQkgKi8KCQlpZiAoKEJlYWNvbi5NYWluIGVxIDApIG9yICgobiAvIDEwMCkgZXEgKEJlYWNvbi5NYWluIC8gMTAwKSkpCgkJewoJCQliZWFjb25OdW1iZXIgPSBuOwoJCQliZWFjb25UaWNrcyA9IHQ7CgkJfQoJfQoJVGhpcy5HUFMuQ2xvc2VzdCBCZWFjb24gPSBuOwp9CgpCZWFjb24gTnVtYmVyID0gYmVhY29uTnVtYmVyOwpCZWFjb24gVGlja3MgPSBiZWFjb25UaWNrczsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.Lap Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[bG9jYWwgc3RvcHBlZCA9IERlbGF5LlJpc2luZyhWZWhpY2xlIFNwZWVkIDw9IDAuMCwgMi4wKTsgLyogbm90IHN0b3BwZWQgd2hlbiBWZWhpY2xlIFNwZWVkIGlzIE5hTiAqLwpzdGF0aWMgbG9jYWwgUHJldkJlYWNvblRpY2tzID0gMHgwOyAvKiB1bnNpZ25lZCAqLwpzdGF0aWMgbG9jYWwgU2VjdG9yQmVhY29uVGlja3MgPSAweDA7IC8qIHVuc2lnbmVkICovCnN0YXRpYyBsb2NhbCBMYXBCZWFjb25UaWNrcyA9IDB4MDsgLyogdW5zaWduZWQgKi8Kc3RhdGljIGxvY2FsIExhcFN0YXJ0RGlzdGFuY2UgPSAwLjA7CmxvY2FsIGV0ID0gU3lzdGVtLkVsYXBzZWRUaW1lKCk7CmxvY2FsIERpc3RhbmNlRGVsdGEgPSBWZWhpY2xlIFNwZWVkICogZXQ7Cgp3aGVuIChTdGF0ZSkKewoJaXMgKERpc2FibGVkKQoJewoJCVRpbWUgPSAwLjA7CgkJVGltZS5SdW5uaW5nID0gMC4wOwoJCVRpbWUuU3RvcHBlZCA9IDAuMDsKCQlUaW1lLlNlY3RvciA9IDAuMDsKCQlUaW1lLlNwbGl0ID0gMC4wOwoJCURpc3RhbmNlID0gMC4wOwoJCURpc3RhbmNlLlNlc3Npb24gPSAwLjA7CgkJTnVtYmVyID0gMDsKCQlOdW1iZXIuU2Vzc2lvbiA9IDA7CgkJaWYgKEVuYWJsZSBlcSBFbmFibGUuRW5hYmxlZCkKCQl7CgkJCVN0YXRlID0gU3RhdGUuUGl0OwoJCX0KCX0KCWlzIChQaXQpCgl7CgkJVGltZS5TdG9wcGVkICs9IGV0OwoJCWlmIChFbmFibGUgZXEgRW5hYmxlLkRpc2FibGVkKQoJCXsKCQkJU3RhdGUgPSBTdGF0ZS5EaXNhYmxlZDsKCQl9CgkJZWxzZSBpZiAobm90IHN0b3BwZWQpCgkJewoJCQlOdW1iZXIgPSAwOwoJCQlMYXBCZWFjb25UaWNrcyA9IFN5c3RlbS5UaWNrcygpOwoJCQlMYXBTdGFydERpc3RhbmNlID0gRGlzdGFuY2UuU2Vzc2lvbjsKCQkJU3RhdGUgPSBTdGF0ZS5PdXQgTGFwOwoJCX0KCX0KCWlzIChPdXQgTGFwIG9yIFRpbWVkIExhcCkKCXsKCQlpZiAoRW5hYmxlIGVxIEVuYWJsZS5EaXNhYmxlZCkKCQl7CgkJCVN0YXRlID0gU3RhdGUuRGlzYWJsZWQ7CgkJfQoJCWVsc2UgaWYgKFByZXZCZWFjb25UaWNrcyBuZXEgQmVhY29uIFRpY2tzKQoJCXsKCQkJbG9jYWwgU2VjdG9yRGVsdGEgPSBTeXN0ZW0uVGlja3NCZXR3ZWVuKFNlY3RvckJlYWNvblRpY2tzLCBCZWFjb24gVGlja3MpICogU3lzdGVtLlRpY2tQZXJpb2QoKTsKCQkJbG9jYWwgTGFwRGVsdGEgPSBTeXN0ZW0uVGlja3NCZXR3ZWVuKExhcEJlYWNvblRpY2tzLCBCZWFjb24gVGlja3MpICogU3lzdGVtLlRpY2tQZXJpb2QoKTsKCQkJbG9jYWwgTGFwQmVhY29uRXZlbnQgPSAoQmVhY29uIE51bWJlciBlcSBCZWFjb24uTWFpbikKCQkJCW9yIChCZWFjb24uTWFpbiBlcSAwKTsgLyogdXNlIGFueSBiZWFjb24gKi8KCgkJCWlmIChMYXBCZWFjb25FdmVudCkKCQkJewoJCQkJaWYgKExhcERlbHRhID4gQmVhY29uLklnbm9yZSBUaW1lKQoJCQkJewoJCQkJCU51bWJlciArPSAxOwoJCQkJCU51bWJlci5TZXNzaW9uICs9IDE7CgkJCQkJaWYgKFN0YXRlIGVxIFN0YXRlLlRpbWVkIExhcCkKCQkJCQl7CgkJCQkJCVRpbWUgPSBMYXBEZWx0YTsKCQkJCQkJaWYgKFNlY3RvckRlbHRhIDwgTGFwRGVsdGEpCgkJCQkJCXsKCQkJCQkJCVRpbWUuU2VjdG9yID0gU2VjdG9yRGVsdGE7CgkJCQkJCX0KCQkJCQl9CgkJCQkJZWxzZQoJCQkJCXsKCQkJCQkJVGltZS5TcGxpdCA9IExhcERlbHRhOwoJCQkJCQlTdGF0ZSA9IFN0YXRlLlRpbWVkIExhcDsKCQkJCQl9CgkJCQkJTGFwQmVhY29uVGlja3MgPSBTZWN0b3JCZWFjb25UaWNrcyA9IEJlYWNvbiBUaWNrczsKCQkJCQlMYXBTdGFydERpc3RhbmNlID0gRGlzdGFuY2UuU2Vzc2lvbjsKCQkJCX0KCQkJfQoJCQllbHNlIGlmIChTZWN0b3JEZWx0YSA+IEJlYWNvbi5JZ25vcmUgVGltZSkKCQkJewoJCQkJVGltZS5TZWN0b3IgPSBTZWN0b3JEZWx0YTsKCQkJCVRpbWUuU3BsaXQgPSBMYXBEZWx0YTsKCQkJCVNlY3RvckJlYWNvblRpY2tzID0gQmVhY29uIFRpY2tzOwoJCQl9CgkJfQoJCWVsc2UgaWYgKHN0b3BwZWQpCgkJewoJCQlTdGF0ZSA9IFN0YXRlLlBpdDsKCQl9CgkJbG9jYWwgVGltZVJ1bm5pbmcgPSBTeXN0ZW0uVGlja3NCZXR3ZWVuKExhcEJlYWNvblRpY2tzLCBTeXN0ZW0uVGlja3MoKSkgKiBTeXN0ZW0uVGlja1BlcmlvZCgpOwoJCWlmIChWZWhpY2xlIFNwZWVkID4gMC4wKQoJCXsKCQkJVGltZS5SdW5uaW5nID0gVGltZVJ1bm5pbmc7CgkJfQoJCWVsc2UgaWYgKFRpbWVSdW5uaW5nID4gNS4wKQoJCXsKCQkJVGltZS5TdG9wcGVkID0gVGltZVJ1bm5pbmcgLSBUaW1lLlJ1bm5pbmc7CgkJfQoJCURpc3RhbmNlLlNlc3Npb24gKz0gRGlzdGFuY2VEZWx0YTsKCQlEaXN0YW5jZSA9IERpc3RhbmNlLlNlc3Npb24gLSBMYXBTdGFydERpc3RhbmNlOwoJfQp9ClByZXZCZWFjb25UaWNrcyA9IEJlYWNvbiBUaWNrczsK]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.MethodUser" Name="Base.GPS Calculation">
+        <Props>
+         <List.Triggers>
+          <Entry Value="res.knl.10MS"/>
+         </List.Triggers>
+        </Props>
+        <Code Encoding="base64">
+<![CDATA[LyoKICogTmVlZHMgdG8gYmUgaW4gYSBzZXBhcmF0ZSBmdW5jdGlvbiB0byBydW4gZmFzdGVyCiAqLwppZiAoVGhpcy5HUFMuTW9kZSBlcSBUaGlzLkdQUy5Nb2RlLkVuYWJsZWQpCnsKCVRoaXMuR1BTLkRpYWdub3N0aWMuU2V0KEdQU0xhcC5DYWxjdWxhdGUoQmFzZS5HUFMuR1BTIERpYWdub3N0aWMuQXNJbnRlZ2VyKCkgPj0gMSwgVGhpcy5HUFMuTGF0aXR1ZGUsIFRoaXMuR1BTLkxvbmdpdHVkZSwgVGhpcy5HUFMuVGlja3MpICsgMSk7Cn0KIA==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 2.Latitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-8.50000000000000000e+001" ValMax="8.50000000000000000e+001" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Latitude of custom GPS beacon 2.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 2.Latitude.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 2.Latitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 2.Longitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-1.80000000000000000e+002" ValMax="1.80000000000000000e+002" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Longitude of custom GPS beacon 2.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 2.Longitude.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 2.Longitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 2.Number">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Beacon number of custom GPS beacon 2.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 2.Number.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 1.Latitude.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 3.Latitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-8.50000000000000000e+001" ValMax="8.50000000000000000e+001" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Latitude of custom GPS beacon 3.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 3.Latitude.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 3.Latitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 3.Longitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-1.80000000000000000e+002" ValMax="1.80000000000000000e+002" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Longitude of custom GPS beacon 3.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 3.Longitude.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 3.Longitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 1.Longitude.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 3.Number.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 1.Latitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 4.Latitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-8.50000000000000000e+001" ValMax="8.50000000000000000e+001" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Latitude of custom GPS beacon 4.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 4.Latitude.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 4.Latitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 4.Longitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-1.80000000000000000e+002" ValMax="1.80000000000000000e+002" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Longitude of custom GPS beacon 4.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 4.Longitude.Value"/>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 4.Longitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 4.Number">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Beacon number of custom GPS beacon 4.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 4.Number.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 1.Latitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-8.50000000000000000e+001" ValMax="8.50000000000000000e+001" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Latitude of custom GPS beacon 1.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Radius">
+        <Props Qty="m" Validation="MinMax" ValMin="1.00000000000000000e+000" ValMax="1.00000000000000000e+003">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="0"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Detection radius for GPS lap detection calculation.</p>
+                  <p class="device_help">This value defines the distance from the beacon point to detect beacon crossings. It must be set
+                    to a value large enough to avoid missing beacons due to track width and GPS drift, but to a value
+                    small enough to avoid incorrectly triggered beacons due to proximity of other beacons or portions
+                    of track.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Mode">
+        <Props Type="MoTeC Types.Subsystem Enable Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Set to <em class="device_enum">Enabled</em> to enable the GPS lap detection calculation.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Channel" Name="Base.GPS.Closest Beacon">
+        <Props Type="u32">
+         <List.UserTags>
+          <Entry Value="Advanced"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Number of the closest beacon within a 1km radius of the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.CalFuncUser" Name="Base.GPS.Beacon 1.Longitude.Quick Adjust">
+        <Code Encoding="base64">
+<![CDATA[aWYgKEdQUy5HUFMgRGlhZ25vc3RpYy5Bc0ludGVnZXIoKSA8IDEpCnsKCVVJLlByb21wdE9LKCJJbnZhbGlkIEdQUyBEYXRhIiwKCQkiR1BTIGRhdGEgaXMgaW52YWxpZC4iCgkpOwp9CmVsc2UKewoJUGFyZW50LkxhdGl0dWRlID0gQmFzZS5HUFMuTGF0aXR1ZGU7CglQYXJlbnQuTG9uZ2l0dWRlID0gQmFzZS5HUFMuTG9uZ2l0dWRlOwp9Cg==]]>
+        </Code>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 1.Number">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Beacon number of custom GPS beacon 1.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.GPS.Beacon 1.Number.Value"/>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 1.Longitude">
+        <Props Type="s32e7" Qty="rad" Validation="MinMax" ValMin="-1.80000000000000000e+002" ValMax="1.80000000000000000e+002" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+         <Locale>
+          <Default DPS="7"/>
+         </Locale>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Longitude of custom GPS beacon 1.</p>
+                  <p class="device_help">Use the quick adust ('Q') function to use the current GPS location.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.Beacon 3.Number">
+        <Props Type="s32" Validation="MinMax" ValMin="0" ValClampMax="false" TargetCreation="AutoParam" Target="This.Value">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Beacon number of custom GPS beacon 3.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Split.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Split.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Split.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Split.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Split.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Split.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Main.Voltage.Input Resolution">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Main.Voltage.Input Minimum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Main.Voltage.Input Bandwidth">
+        <Props Qty="Hz"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Main.Voltage.Input Maximum">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Main.Voltage.Input Source">
+        <Props Qty="V"/>
+       </Component>
+       <Component Classname="BuiltIn.IOCharacteristic" Caps="AutoCreated" Name="Base.Main.Voltage.Input Impedance">
+        <Props Qty="ohm"/>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Split.Input Resource.Value">
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Split.Input Resource">
+        <Props OldName="Edge.Resource" NameCreation="AutoParam" NameTarget="This.Value">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The resource connected to the wired split beacon input.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceParameter" Name="Base.Main.Input Resource.Value">
+        <Comment>
+<![CDATA[<!-- Empty -->]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.IOResourceValueInput" Name="Base.Main.Input Resource">
+        <Props OldName="Edge.Resource" NameCreation="AutoParam" NameTarget="This.Value">
+         <List.UserTags>
+          <Entry Value="Input"/>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">The resource connected to the wired main beacon input.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Parameter" Name="Base.BR2.CAN Bus.Value"/>
+       <Component Classname="BuiltIn.Parameter" Name="Base.Mode">
+        <Props Type="MoTeC Types.Subsystem Enable Enumeration">
+         <List.UserTags>
+          <Entry Value="Setup"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Set to <em class="device_enum">Enabled</em> to configure and use lap timing.</p>]]>
+        </Comment>
+       </Component>
+       <Component Classname="BuiltIn.Reference" Name="Base.GPS.GPS Diagnostic">
+        <Props Type="MoTeC GPS.GPS Diagnostic">
+         <List.UserTags>
+          <Entry Value="Diagnostic"/>
+         </List.UserTags>
+        </Props>
+        <Comment>
+<![CDATA[<p class="device_help">Detection radius for GPS lap detection calculation.</p>
+                  <p class="device_help">This value defines the distance from the beacon point to detect beacon crossings. It must be set
+                    to a value large enough to avoid missing beacons due to track width and GPS drift, but to a value
+                    small enough to avoid incorrectly triggered beacons due to proximity of other beacons or portions
+                    of track.</p>]]>
+        </Comment>
+       </Component>
+      </List>
+      <Organisation>
+       <Component Name="Base">
+        <Component Name="Mode"/>
+        <Component Name="Distance">
+         <Component Name="Value"/>
+         <Component Name="Session"/>
+        </Component>
+        <Component Name="Time">
+         <Component Name="Value"/>
+         <Component Name="Running"/>
+         <Component Name="Stopped"/>
+         <Component Name="Sector"/>
+         <Component Name="Split"/>
+        </Component>
+        <Component Name="Number">
+         <Component Name="Value"/>
+         <Component Name="Session"/>
+        </Component>
+        <Component Name="State"/>
+        <Component Name="Enable"/>
+        <Component Name="Beacon Ticks"/>
+        <Component Name="Beacon Number"/>
+        <Component Name="Beacon Number Main"/>
+        <Component Name="Beacon">
+         <Component Name="Main">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Ignore Time">
+          <Component Name="Value"/>
+         </Component>
+        </Component>
+        <Component Name="BR2">
+         <Component Name="CAN Bus">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Diagnostic"/>
+         <Component Name="Battery Voltage"/>
+         <Component Name="Beacon Count"/>
+         <Component Name="Bias"/>
+         <Component Name="Detection Time"/>
+         <Component Name="Detector Background"/>
+         <Component Name="Detector Peak"/>
+         <Component Name="Error Code"/>
+         <Component Name="Firmware Version"/>
+         <Component Name="Internal 10V"/>
+         <Component Name="Internal 12V"/>
+         <Component Name="Internal Temperature"/>
+         <Component Name="Latest Detector Peak"/>
+         <Component Name="Noise Bits"/>
+         <Component Name="Reset Source"/>
+         <Component Name="Secondary Threshold"/>
+         <Component Name="Trigger Threshold"/>
+         <Component Name="Valid Receptions"/>
+        </Component>
+        <Component Name="Main">
+         <Component Name="Input Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Input">
+          <Component Name="Edge Ticks"/>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Pin">
+          <Component Name="Diagnostic"/>
+          <Component Name="Pullup Control">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Active Edge">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Threshold">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Hysteresis">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Debounce">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Absolute"/>
+          <Component Name="Minimum"/>
+          <Component Name="Maximum"/>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+          <Component Name="GetStatistics"/>
+          <Component Name="Input Impedance"/>
+          <Component Name="Input Source"/>
+          <Component Name="Input Bandwidth"/>
+          <Component Name="Input Minimum"/>
+          <Component Name="Input Maximum"/>
+          <Component Name="Input Resolution"/>
+         </Component>
+        </Component>
+        <Component Name="Split">
+         <Component Name="Input Resource">
+          <Component Name="Value"/>
+         </Component>
+         <Component Name="Input">
+          <Component Name="Edge Ticks"/>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Pin">
+          <Component Name="Diagnostic"/>
+          <Component Name="Pullup Control">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Active Edge">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Threshold">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Hysteresis">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Debounce">
+           <Component Name="Value"/>
+          </Component>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Initialise"/>
+          <Component Name="Update"/>
+         </Component>
+         <Component Name="Voltage">
+          <Component Name="Absolute"/>
+          <Component Name="Minimum"/>
+          <Component Name="Maximum"/>
+          <Component Name="Resource"/>
+          <Component Name="Reserve"/>
+          <Component Name="Release"/>
+          <Component Name="Update"/>
+          <Component Name="GetStatistics"/>
+          <Component Name="Input Impedance"/>
+          <Component Name="Input Source"/>
+          <Component Name="Input Bandwidth"/>
+          <Component Name="Input Minimum"/>
+          <Component Name="Input Maximum"/>
+          <Component Name="Input Resolution"/>
+         </Component>
+        </Component>
+        <Component Name="GPS">
+         <Component Name="Mode"/>
+         <Component Name="Diagnostic"/>
+         <Component Name="Radius"/>
+         <Component Name="Beacon 1">
+          <Component Name="Latitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Longitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Number">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Beacon 2">
+          <Component Name="Latitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Longitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Number">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Beacon 3">
+          <Component Name="Latitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Longitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Number">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Beacon 4">
+          <Component Name="Latitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Longitude">
+           <Component Name="Value"/>
+           <Component Name="Quick Adjust"/>
+          </Component>
+          <Component Name="Number">
+           <Component Name="Value"/>
+          </Component>
+         </Component>
+         <Component Name="Closest Beacon"/>
+         <Component Name="GPS Diagnostic"/>
+         <Component Name="Latitude"/>
+         <Component Name="Longitude"/>
+         <Component Name="Ticks"/>
+        </Component>
+        <Component Name="Vehicle Speed"/>
+        <Component Name="SetEnable"/>
+        <Component Name="Startup"/>
+        <Component Name="Beacon Calculation"/>
+        <Component Name="Lap Calculation"/>
+        <Component Name="GPS Calculation"/>
+       </Component>
+      </Organisation>
+     </ComponentStream>
+    </Module>
+   </List>
+   <Organisation>
+    <ModuleGroup Name="Calculations">
+     <Module Name="Lap Time"/>
+    </ModuleGroup>
+   </Organisation>
+  </ModuleStream>
+ </Modules>
+</MoTecM1BuildModuleSet>
